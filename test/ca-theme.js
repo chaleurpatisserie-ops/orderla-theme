@@ -164,8 +164,8 @@
       '.nav-scroller .nav-link{border:1.5px solid '+BURG+'!important;border-radius:999px!important;color:'+BURG+'!important;padding:8px 14px!important;margin:6px 0!important;line-height:1.2}',
       '.nav-scroller li.is_current .nav-link{background:'+BURG+'!important;color:'+CREAM+'!important}',
       '.ca-li{padding-left:2px!important;padding-right:2px!important}',
-      '.ca-li > div{background:#FFFAF3;border-radius:18px;margin:8px 0;padding:10px 12px;box-shadow:0 6px 14px -10px rgba(82,51,37,.45)}',
-      '.ca-li > div > div{padding:0!important}',
+      '.ca-li > .ca-lr{background:#FFFAF3;border-radius:18px;margin:8px 0;padding:10px 12px;box-shadow:0 6px 14px -10px rgba(82,51,37,.45)}',
+      '.ca-lr > div{padding:0!important}',
       '.ca-rimg{margin-right:12px!important;flex:0 0 84px}',
       '.ca-rimg img{width:84px!important;height:84px!important;object-fit:cover;border-radius:14px!important}',
       '.ca-ri{display:grid!important;grid-template-columns:1fr auto;column-gap:10px;align-items:start}',
@@ -428,9 +428,9 @@
     }
     function tagRows(){
       var rs=document.querySelectorAll('.col-12 > div[style*="cursor: pointer"]');
-      for(var i=0;i<rs.length;i++){ var r=rs[i], col=r.parentElement; if(col.classList.contains('ca-li')) continue;
-        var info=r.querySelector('[style*="flex: 1 1 0%"]'), img=r.querySelector('img'); if(!info || !img || info.children.length<2) continue;
-        col.classList.add('ca-li'); info.classList.add('ca-ri'); info.children[0].classList.add('ca-rt'); info.children[1].classList.add('ca-rb');
+      for(var i=0;i<rs.length;i++){ var r=rs[i];
+        var info=r.querySelector('[style*="flex: 1 1 0%"]'), img=r.querySelector('img'); if(!info || !img || info.children.length<2 || info.classList.contains('ca-ri')) continue;
+        r.parentElement.classList.add('ca-li'); r.classList.add('ca-lr'); info.classList.add('ca-ri'); info.children[0].classList.add('ca-rt'); info.children[1].classList.add('ca-rb');
         var w=img.closest('.lazyload-wrapper'); (w && w.parentElement ? w.parentElement : img.parentElement).classList.add('ca-rimg'); }
     }
     function start(){
