@@ -262,12 +262,14 @@
       var old=m.querySelector('.ca-pm'); if(old && old.getAttribute('data-n')===name) return; if(old) old.remove();
       var leaves=$$('p,div,span',m).filter(function(e){ return !e.children.length && (e.innerText||'').trim().length>30 && !/Add to Cart|LIMIT/i.test(e.innerText) && !e.closest('.ca-pm'); });
       var desc=leaves.sort(function(a,b){ return b.innerText.length-a.innerText.length; })[0];
-      if(!desc) return;
-      var I=introFor(name, desc.innerText);
+      if(!desc){ desc=$$('p,div',m).filter(function(e){ return !e.querySelector('img,button,input,a') && !e.closest('.ca-pm') && (e.innerText||'').trim().length>30 && !/Add to Cart|LIMIT|AVAILABILITY/i.test(e.innerText); }).sort(function(a,b){ return a.innerText.length-b.innerText.length; }).pop(); }
+      var foot=m.querySelector('.cart-product-modal-footer');
+      if(!desc && !foot) return;
+      var I=introFor(name, desc?desc.innerText:'');
       var img = I.who==='gdn' ? CA_IMG+'feuille-'+(['happy','love','gateau'][Math.floor(Math.random()*3)])+'.webp' : CA_IMG+'host-hello.webp';
       var w=document.createElement('div'); w.className='ca-pm'+(I.who==='gdn'?' g':''); w.setAttribute('data-n',name);
       w.innerHTML='<img alt="" src="'+img+'"><div class="pb"><small>'+(I.who==='gdn'?'Chaleur\'s gardener says':'Our host says')+'</small><span></span></div>';
-      desc.parentNode.insertBefore(w, desc.nextSibling);
+      if(desc) desc.parentNode.insertBefore(w, desc.nextSibling); else foot.parentNode.insertBefore(w, foot);
       setTimeout(function(){ typeOut(w.querySelector('.pb span'), I.t); },350);
       w.querySelector('img').addEventListener('click',function(){ w.classList.remove('hop'); void w.offsetWidth; w.classList.add('hop'); });
     }
