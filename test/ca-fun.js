@@ -299,6 +299,9 @@
     }
     function giftRow(re){ var b=$$('a.form-add-item-btn').filter(function(b){ var r=b.closest('.col-12'); return r && re.test(r.innerText); })[0]; return b; }
     function prizeAvailable(re){ var b=giftRow(re); if(!b) return false; var r=b.closest('.col-12'); return !/sold\s*out|out of stock|unavailable/i.test(r.innerText); }
+    function soldOut(re){ var b=giftRow(re); if(!b) return false; return /sold\s*out|out of stock|unavailable/i.test(b.closest('.col-12').innerText); }
+    /* when both the free cookies and the surprise petits are gone, the whole hunt stops (everything = nothing) */
+    function huntOver(){ return soldOut(/Christmas Gift - .*Cookie/i) && soldOut(/Surprise Petit/i); }
     function petitAvailable(){ return prizeAvailable(/Surprise Petit/i); }
     function draw(){
       var r=Math.random(), o='none', acc=0;
@@ -438,6 +441,7 @@
       if(G && G.code) checkout();
       if(G && G.done) return;
       if(tot===null) return;
+      if(huntOver()){ clearSpots(); return; }
       if(tot>=MIN){
         if(!G){ G=draw(); save(G); }
         if(!document.querySelector('.ca-spot') && !popupOpen() && $('.form-bottom-bar')){
