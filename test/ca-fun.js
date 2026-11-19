@@ -284,8 +284,8 @@
       santa:['Santa\'s sack is full of letters 💌 Keep looking!','Ho ho… not this one!']
     };
     var PRIZE={
-      cookie:{big:'🍪',h:'A free cookie!',p:'One Chocolate Chips Walnut Cookie, on us. It\'s in your cart now. Joyeux Noël!'},
-      petit:{big:'🧁',h:'A surprise petit gâteau!',p:'Chef\'s surprise flavour, just for RM6.99. Want it in your order?'},
+      cookie:{big:'🍪',h:'A free cookie!',add:'One Chocolate Chips Walnut Cookie, on us. We\'ve added it to your cart. Don\'t want it? Just remove it in your cart.',price:'free',re:/Christmas Gift - .*Cookie/i,ok:'Your free cookie is in the cart! 🍪'},
+      petit:{big:'🧁',h:'A surprise petit gâteau!',add:'Chef\'s surprise flavour, just RM6.99. We\'ve added it to your cart. Don\'t want it? Just remove it in your cart.',price:'RM6.99',re:/Surprise Petit/i,ok:'Your surprise petit gâteau is in the cart! 🧁'},
       rm5:{big:'🎁',h:'RM5 off your order!',p:'We\'ll apply it for you at checkout. Merci & Joyeux Noël!',code:'XMASGIFT5',v:5},
       rm10:{big:'🎉',h:'RM10 off your order!',p:'We\'ll apply it for you at checkout. Merci & Joyeux Noël!',code:'XMASGIFT10',v:10},
       rm20:{big:'🌟',h:'Wow, RM20 off!',p:'Lucky you! We\'ll apply it for you at checkout. Joyeux Noël!',code:'XMASGIFT20',v:20}
@@ -298,11 +298,13 @@
       var m=(bar.innerText||'').match(/RM\s*([\d,]+\.\d{2})/g); return m? parseFloat(m[m.length-1].replace(/[^\d.]/g,'')) : null;
     }
     function giftRow(re){ var b=$$('a.form-add-item-btn').filter(function(b){ var r=b.closest('.col-12'); return r && re.test(r.innerText); })[0]; return b; }
-    function petitAvailable(){ var b=giftRow(/Surprise Petit/i); if(!b) return false; var r=b.closest('.col-12'); return !/sold\s*out|out of stock|unavailable/i.test(r.innerText); }
+    function prizeAvailable(re){ var b=giftRow(re); if(!b) return false; var r=b.closest('.col-12'); return !/sold\s*out|out of stock|unavailable/i.test(r.innerText); }
+    function petitAvailable(){ return prizeAvailable(/Surprise Petit/i); }
     function draw(){
       var r=Math.random(), o='none', acc=0;
       for(var k in ODDS){ acc+=ODDS[k]; if(r<acc){ o=k; break; } }
       if(o==='petit' && !petitAvailable()) o='none';
+      if(o==='cookie' && !prizeAvailable(/Christmas Gift - .*Cookie/i)) o='none';
       return { o:o, spot:SPOTS[Math.floor(Math.random()*SPOTS.length)], opened:[], done:false, t:Date.now() };
     }
     var SVG={
@@ -358,16 +360,10 @@
     function reveal(){
       confetti();
       var P=PRIZE[G.o];
-      if(G.o==='cookie'){
-        modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>Found in '+SPOT_NAME[G.found]+'! '+P.p+'</p><button class="bt" type="button">Yay! Back to my order</button>',function(m,close){ m.querySelector('.bt').addEventListener('click',close); });
-        G.claim='yes'; save(G); setTimeout(function(){ addPrize(/Free Chocolate Chips Walnut Cookie/i,'Your free cookie is in the cart! 🍪'); },900);
-        return;
-      }
-      if(G.o==='petit'){
-        modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>Found in '+SPOT_NAME[G.found]+'! '+P.p+'</p><button class="bt y" type="button">Yes, add it for RM6.99</button><button class="bt o n" type="button">No thanks</button>',function(m,close){
-          m.querySelector('.y').addEventListener('click',function(){ close(); G.claim='yes'; save(G); addPetit(); });
-          m.querySelector('.n').addEventListener('click',function(){ close(); G.claim='no'; save(G); host('No worries! Maybe next time 🎄',3500); });
-        });
+      if(P.price){
+        G.claim='yes'; save(G);
+        modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>Found in '+SPOT_NAME[G.found]+'! '+P.add+'</p><button class="bt" type="button">Yay! Back to my order</button>',function(m,close){ m.querySelector('.bt').addEventListener('click',close); });
+        setTimeout(function(){ if(G.o==='petit') addPetit(); else addPrize(P.re, P.ok); },900);
       } else {
         G.code=P.code; G.v=P.v; save(G);
         modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>Found in '+SPOT_NAME[G.found]+'! '+P.p+'</p><button class="bt" type="button">Yay! Back to my order</button>',function(m,close){ m.querySelector('.bt').addEventListener('click',close); });
@@ -376,7 +372,7 @@
     /* nobody can add the prize by itself: block "Add to Cart" in its popup unless it was won */
     var allowPetit=false;
     function guardPrize(){
-      var m=$$('.modal-content-wrapper,.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Surprise Petit|Christmas Gift - Free/i.test(x.innerText||''); })[0];
+      var m=$$('.modal-content-wrapper,.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Surprise Petit|Christmas Gift - .*Cookie/i.test(x.innerText||''); })[0];
       if(!m) return;
       var add=$$('button',m).filter(function(x){ return /Add to Cart|Gift hunt prize/i.test(x.innerText); })[0];
       if(!add || allowPetit) return;
@@ -398,7 +394,7 @@
       allowPetit=true; b.click();
       var n=0, iv=setInterval(function(){
         var add=$$('button').filter(function(x){ return /^\s*Add to Cart\s*$/i.test(x.innerText) && x.getClientRects().length; })[0];
-        if(add){ clearInterval(iv); add.click(); G.added=1; save(G); setTimeout(function(){ allowPetit=false; },1500); setTimeout(function(){ host('Your surprise petit gâteau is in the cart! 🧁',4500); },600); }
+        if(add){ clearInterval(iv); add.click(); G.added=1; save(G); setTimeout(function(){ allowPetit=false; },1500); setTimeout(function(){ host('Your surprise petit gâteau is in the cart! Remove it there if you change your mind 🧁',5000); },600); }
         else if(++n>25){ clearInterval(iv); allowPetit=false; host('Tap the surprise petit in your cart to add it 🧁',4500); }
       },200);
     }
