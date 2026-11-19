@@ -171,6 +171,7 @@
       '.ca-ri{display:grid!important;grid-template-columns:1fr auto;column-gap:10px;align-items:start}',
       '.ca-rt{grid-column:1;grid-row:1 / span 2;display:block!important}',
       '.ca-rt > div:first-child{display:block}',
+      '.ca-rt br{display:none}',
       '.ca-rt span{display:block;font-size:14px!important;font-weight:700!important;color:'+BURG+'!important;line-height:1.3!important}',
       '.ca-rt p{font-size:12px!important;color:'+CARAMEL+'!important;margin:4px 0 0!important;line-height:1.45!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
       '.ca-rb{display:contents!important}',
@@ -181,10 +182,10 @@
       '.ca-li + hr,.ca-band hr{display:none!important}',
       '#ca-van{position:relative;height:104px;overflow:hidden;border-radius:16px;margin:0 0 12px;background:linear-gradient(180deg,#C5D0E5 0,#C5D0E5 72%,#F4DCBC 72%)}',
       '#ca-van .road{position:absolute;left:0;right:0;bottom:12px;height:2px;background:repeating-linear-gradient(90deg,#7A4926 0 14px,transparent 14px 26px)}',
-      '#ca-van .van{position:absolute;bottom:8px;left:0;width:140px;animation:caDrive 2.2s cubic-bezier(.15,.75,.3,1) both}',
+      '#ca-van .van{position:absolute;bottom:8px;left:0;width:140px;z-index:1;animation:caDrive 2.2s cubic-bezier(.15,.75,.3,1) both}',
       '#ca-van .vsv{width:100%;height:auto;display:block;animation:caBumpy .35s ease-in-out 6}',
       '#ca-van .wh{transform-box:fill-box;transform-origin:center;animation:caSpin .45s linear 5}',
-      '#ca-van .drv{position:absolute;left:96px;top:-6px;width:30px;animation:caDrive 2.2s cubic-bezier(.15,.75,.3,1) both;display:none}',
+      '#ca-van .drv{position:absolute;left:96px;bottom:44px;width:30px;z-index:-1}',
       '#ca-van .bub{position:absolute;left:160px;right:10px;top:12px;background:#fff;color:'+BURG+'!important;border:1.5px solid '+BURG+';border-radius:14px 14px 14px 4px;padding:8px 10px;font-size:12px!important;font-weight:700!important;line-height:1.35;opacity:0;transform:scale(.8);transform-origin:left bottom;animation:caBub .35s ease 2.1s forwards}',
       '#ca-van .bub small{display:block;font-weight:500!important;font-size:10.5px!important;color:'+BROWN+'!important;margin-top:2px}',
       '@keyframes caDrive{0%{transform:translateX(-170px)}100%{transform:translateX(14px)}}',
@@ -417,7 +418,7 @@
       var b=document.getElementById('ca-xmas-banner'); if(b && b.previousElementSibling!==w){ b.classList.add('ca-pill'); w.parentNode.insertBefore(b, w.nextSibling); }
       var s=document.querySelector('section[id^="section-"]'); var band=s&&s.parentElement; if(band && !band.classList.contains('ca-band')) band.classList.add('ca-band');
     }
-    var VAN_HTML='<div class="road"></div><div class="van"><svg class="vsv" viewBox="0 0 160 84" aria-hidden="true"><rect x="4" y="18" width="100" height="46" rx="10" fill="#780C14"/><path d="M104 30 h26 q10 0 16 12 l8 14 v8 h-50 z" fill="#780C14"/><path d="M110 35 h18 q6 0 10 8 l4 8 h-32 z" fill="#C5D0E5"/><rect x="14" y="26" width="58" height="22" rx="6" fill="#FFF0DC"/><text x="43" y="42" text-anchor="middle" font-family="Montserrat" font-weight="800" font-size="13" fill="#780C14">CA</text><rect x="146" y="52" width="10" height="5" rx="2" fill="#F4DCBC"/><g class="wh"><circle cx="34" cy="66" r="12" fill="#523325"/><circle cx="34" cy="66" r="4" fill="#7A4926"/><rect x="33" y="56" width="2" height="20" fill="#7A4926"/></g><g class="wh"><circle cx="126" cy="66" r="12" fill="#523325"/><circle cx="126" cy="66" r="4" fill="#7A4926"/><rect x="125" y="56" width="2" height="20" fill="#7A4926"/></g></svg></div><p class="bub">Free delivery on orders RM120 &amp; above! 🎉<small>Within 18 km of our Larkin HQ</small></p>';
+    var VAN_HTML='<div class="road"></div><div class="van"><img class="drv" alt="" src="'+CA_IMG+'host-hello.webp"><svg class="vsv" viewBox="0 0 160 84" aria-hidden="true"><rect x="4" y="18" width="100" height="46" rx="10" fill="#780C14"/><path d="M104 30 h26 q10 0 16 12 l8 14 v8 h-50 z" fill="#780C14"/><path d="M110 35 h18 q6 0 10 8 l4 8 h-32 z" fill="#C5D0E5"/><rect x="14" y="26" width="58" height="22" rx="6" fill="#FFF0DC"/><text x="43" y="42" text-anchor="middle" font-family="Montserrat" font-weight="800" font-size="13" fill="#780C14">CA</text><rect x="146" y="52" width="10" height="5" rx="2" fill="#F4DCBC"/><g class="wh"><circle cx="34" cy="66" r="12" fill="#523325"/><circle cx="34" cy="66" r="4" fill="#7A4926"/><rect x="33" y="56" width="2" height="20" fill="#7A4926"/></g><g class="wh"><circle cx="126" cy="66" r="12" fill="#523325"/><circle cx="126" cy="66" r="4" fill="#7A4926"/><rect x="125" y="56" width="2" height="20" fill="#7A4926"/></g></svg></div><p class="bub">Free delivery on orders RM120 &amp; above! 🎉<small>Within 18 km of our Larkin HQ</small></p>';
     function addVan(){
       var ms=document.querySelectorAll('.ReactModal__Content, .modal.show');
       for(var i=0;i<ms.length;i++){ var m=ms[i]; if(!/Start Order/.test(m.innerText||'') || m.querySelector('#ca-van')) continue;
