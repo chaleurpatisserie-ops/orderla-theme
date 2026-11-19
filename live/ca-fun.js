@@ -248,7 +248,7 @@
       if(CAKE_LINES[key] && !/box|7-inch|6-inch/i.test(name)) return {who: fn?'gdn':'host', t:CAKE_LINES[key]};
       var d=(desc||'').replace(/\s+/g,' ').trim(); var first=d.split(/(?<=[.!])\s/)[0]||''; if(first.length>150) first=first.slice(0,147).replace(/\s+\S*$/,'')+'…';
       var o=HOST_OPEN[Math.floor(Math.random()*HOST_OPEN.length)];
-      if(/box/i.test(name)) return {who:'host', t:o+' '+(first||'A box of our petit gâteaux, packed with love.')};
+      if(/box|hamper|set/i.test(name)){ var bn=(name.match(/of\s*(\d+)/i)||[])[1]; var BOXL=['Ready to share, ready to gift! 🎁','A little box of happiness, packed by hand.','Perfect for a party, or a very good night in, hehe.','Our chef picked these to go beautifully together.']; return {who:'host', t:o+' '+(bn? bn+' petit gâteaux in one box. ':'')+BOXL[Math.floor(Math.random()*BOXL.length)]+' The list above shows what\'s inside.'}; }
       if(/coffee|latte|tea|matcha|chocolate drink|cold brew|beverage|soda|juice/i.test(name+' '+d)) return {who:'host', t:o+' '+(first||'A lovely drink to go with your cake.')+' ☕'};
       return {who: fn?'gdn':'host', t:o+' '+(first||'Made fresh in our atelier.')};
     }
