@@ -315,14 +315,24 @@
         modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>Found in '+SPOT_NAME[G.found]+'! '+P.p+'</p><button class="bt" type="button">Yay! Back to my order</button>',function(m,close){ m.querySelector('.bt').addEventListener('click',close); });
       }
     }
+    /* nobody can add the prize by itself: block "Add to Cart" in its popup unless it was won */
+    var allowPetit=false;
+    function guardPrize(){
+      var m=$$('.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Surprise Petit/i.test(x.innerText||''); })[0];
+      if(!m) return;
+      var add=$$('button',m).filter(function(x){ return /Add to Cart|Gift hunt prize/i.test(x.innerText); })[0];
+      if(!add || allowPetit) return;
+      if(!add.__caG){ add.__caG=1; add.textContent='Gift hunt prize only 🎁'; add.disabled=true; add.style.opacity='.6';
+        add.addEventListener('click',function(e){ if(!allowPetit){ e.preventDefault(); e.stopImmediatePropagation(); } },true); }
+    }
     function addPetit(){
       var b=giftRow(/Surprise Petit/i);
       if(!b || !petitAvailable()){ host('Oh no, the surprise petits just ran out! Sorry 🥲',5000); G.claim='soldout'; save(G); return; }
-      b.click();
+      allowPetit=true; b.click();
       var n=0, iv=setInterval(function(){
         var add=$$('button').filter(function(x){ return /^\s*Add to Cart\s*$/i.test(x.innerText) && x.getClientRects().length; })[0];
-        if(add){ clearInterval(iv); add.click(); G.added=1; save(G); setTimeout(function(){ host('Your surprise petit gâteau is in the cart! 🧁',4500); },600); }
-        else if(++n>25){ clearInterval(iv); host('Tap the surprise petit in your cart to add it 🧁',4500); }
+        if(add){ clearInterval(iv); add.click(); G.added=1; save(G); setTimeout(function(){ allowPetit=false; },1500); setTimeout(function(){ host('Your surprise petit gâteau is in the cart! 🧁',4500); },600); }
+        else if(++n>25){ clearInterval(iv); allowPetit=false; host('Tap the surprise petit in your cart to add it 🧁',4500); }
       },200);
     }
     /* coupon at checkout: apply the gift code unless the customer's own code saves more */
@@ -360,7 +370,7 @@
     var lastTot=null, teased=false;
     function hunt(){
       if(Date.now()>GIFT_END) { clearSpots(); return; }
-      hideGift();
+      hideGift(); guardPrize();
       var tot=cartTotal();
       if(G && G.code) checkout();
       if(G && G.done) return;
