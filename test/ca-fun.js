@@ -441,7 +441,6 @@
       if(G && G.code) checkout();
       if(G && G.done) return;
       if(tot===null) return;
-      if(huntOver()){ clearSpots(); return; }
       if(tot>=MIN){
         if(!G){ G=draw(); save(G); }
         if(!document.querySelector('.ca-spot') && !popupOpen() && $('.form-bottom-bar')){
