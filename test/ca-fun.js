@@ -54,7 +54,7 @@
       '.ca-band > :not(#ca-garden){position:relative;z-index:1}',
       '#ca-garden{position:absolute;left:0;right:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,#EEF5E4 0%,#DDEBCB 55%,#CFE2B6 100%);opacity:0;transition:opacity .6s}',
       '#ca-garden.on{opacity:1}',
-      '#ca-garden .lv{position:absolute;inset:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%27120%27%3E%3Cg fill=%27%23A9C68A%27%3E%3Cpath d=%27M18 22c10-10 24-8 26 0-8 8-20 10-26 0z%27/%3E%3Cpath d=%27M84 70c8-12 22-12 26-4-6 10-18 14-26 4z%27/%3E%3Cpath d=%27M40 96c6-9 17-9 20-3-5 7-14 10-20 3z%27/%3E%3C/g%3E%3Cg fill=%27%23E8B4A0%27%3E%3Ccircle cx=%2796%27 cy=%2720%27 r=%273%27/%3E%3Ccircle cx=%2716%27 cy=%2770%27 r=%272.5%27/%3E%3C/g%3E%3C/svg%3E");background-size:120px 120px}',
+      '#ca-garden .lv{position:absolute;inset:0;opacity:.38;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%27120%27%3E%3Cg fill=%27%23A9C68A%27%3E%3Cpath d=%27M18 22c10-10 24-8 26 0-8 8-20 10-26 0z%27/%3E%3Cpath d=%27M84 70c8-12 22-12 26-4-6 10-18 14-26 4z%27/%3E%3Cpath d=%27M40 96c6-9 17-9 20-3-5 7-14 10-20 3z%27/%3E%3C/g%3E%3Cg fill=%27%23E8B4A0%27%3E%3Ccircle cx=%2796%27 cy=%2720%27 r=%273%27/%3E%3Ccircle cx=%2716%27 cy=%2770%27 r=%272.5%27/%3E%3C/g%3E%3C/svg%3E");background-size:120px 120px}',
       '#ca-garden .hedge{position:absolute;left:0;right:0;top:-22px;height:24px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 60 24%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0 24V14C4 4 12 4 15 12 18 2 28 2 30 11 33 3 42 3 45 12 48 4 56 4 60 14V24Z%27 fill=%27%23EEF5E4%27/%3E%3C/svg%3E");background-size:60px 24px;background-repeat:repeat-x}',
       '#ca-garden .grass{position:absolute;left:0;right:0;bottom:-2px;height:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 80 34%27%3E%3Cg fill=%27%237E9E58%27%3E%3Cpath d=%27M0 34 6 10 9 34Z%27/%3E%3Cpath d=%27M10 34 18 4 20 34Z%27/%3E%3Cpath d=%27M24 34 28 14 32 34Z%27/%3E%3Cpath d=%27M36 34 44 6 46 34Z%27/%3E%3Cpath d=%27M50 34 55 16 58 34Z%27/%3E%3Cpath d=%27M60 34 68 2 70 34Z%27/%3E%3Cpath d=%27M72 34 76 12 80 34Z%27/%3E%3C/g%3E%3Ccircle cx=%2730%27 cy=%2713%27 r=%273%27 fill=%27%23780C14%27/%3E%3Ccircle cx=%2757%27 cy=%2715%27 r=%272.5%27 fill=%27%23FFF0DC%27/%3E%3C/svg%3E");background-size:80px 34px;background-repeat:repeat-x}',
       '#ca-garden .sign{position:absolute;right:10px;top:8px;background:'+CARAMEL+';color:'+CREAM+';font:800 10px Montserrat,sans-serif;letter-spacing:.14em;padding:5px 9px;border-radius:6px;transform:rotate(3deg);box-shadow:0 2px 0 '+BROWN+'}',
@@ -65,6 +65,12 @@
       '#ca-gard .gb{position:absolute;left:calc(100% + 6px);bottom:28px;width:'+(mobile?190:230)+'px;background:#fff;border:2px solid #7E9E58;border-radius:14px 14px 14px 4px;padding:8px 10px;font:600 12.5px/1.35 Montserrat,sans-serif;color:'+BROWN+';text-align:left;opacity:0;transform:scale(.6);transform-origin:left bottom;transition:all .3s}',
       '#ca-gard.talk .gb{opacity:1;transform:none}',
       'body.ca-popup #ca-gard,body.ca-mopen #ca-gard{display:none}',
+      '.ca-pm{display:flex;align-items:flex-end;gap:10px;margin:14px 0 6px;animation:caPop .45s cubic-bezier(.2,.9,.3,1.4) both}',
+      '.ca-pm img{width:74px;flex:none;cursor:pointer;filter:drop-shadow(0 3px 4px rgba(82,51,37,.25))}',
+      '.ca-pm.hop img{animation:caHop .5s ease-in-out 2}',
+      '.ca-pm .pb{position:relative;flex:1;background:#fff;border:2px solid '+BURG+';border-radius:16px 16px 16px 4px;padding:9px 12px;font:600 13px/1.4 Montserrat,sans-serif;color:'+BROWN+';min-height:44px}',
+      '.ca-pm .pb small{display:block;font:800 10px Montserrat,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:'+CARAMEL+';margin-bottom:2px}',
+      '.ca-pm.g .pb{border-color:#7E9E58;background:#F3F8EC}',
       /* ---------- gift hunt ---------- */
       '.ca-hide{display:none!important}',
       '.ca-spot{position:fixed;z-index:2147483002;border:none;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:caPop .5s cubic-bezier(.2,.9,.3,1.5) both}',
@@ -83,7 +89,7 @@
       '#ca-s-sleigh{left:12px;top:38%;width:36px}',
       '#ca-s-sleigh.fall{animation:caFall 2.2s cubic-bezier(.3,.6,.4,1) both}',
       '@keyframes caFall{0%{transform:translate(60vw,-60vh) rotate(-30deg)}70%{transform:translate(0,6px) rotate(8deg)}85%{transform:translate(0,-6px)}100%{transform:none}}',
-      '#ca-s-santa{right:'+(mobile?92:112)+'px;bottom:80px;width:'+(mobile?50:60)+'px}',
+      '#ca-s-santa{z-index:2147483003;right:'+(mobile?92:112)+'px;bottom:80px;width:'+(mobile?50:60)+'px}',
       '#ca-s-santa.walk{animation:caWalk 3.2s linear both}',
       '#ca-s-santa.walk svg{animation:caBob2 .35s ease-in-out 9}',
       '@keyframes caWalk{from{transform:translateX(calc(100vw))}to{transform:none}}',
@@ -91,12 +97,12 @@
       'body.ca-popup .ca-spot,body.ca-mopen .ca-spot{display:none}',
       '#ca-gh{position:fixed;left:50%;top:70px;transform:translate(-50%,-160%);z-index:2147483006;width:min(92vw,420px);background:'+BURG+';color:'+CREAM+';border-radius:16px;padding:12px 40px 12px 14px;font:600 13px/1.4 Montserrat,sans-serif;box-shadow:0 8px 24px rgba(82,51,37,.35);transition:transform .5s cubic-bezier(.2,.9,.3,1.3)}',
       '#ca-gh.in{transform:translate(-50%,0)}',
-      '#ca-gh b{font-weight:800;font-size:15px;display:block;margin-bottom:2px}',
+      '#ca-gh b{font-weight:800;font-size:15px;display:block;margin-bottom:2px;color:'+CREAM+'!important}',
       '#ca-gh .x{position:absolute;right:8px;top:8px;border:none;background:none;color:'+CREAM+';font-size:18px;cursor:pointer}',
       '#ca-gm{position:fixed;inset:0;z-index:2147483007;background:rgba(82,51,37,.45);display:flex;align-items:center;justify-content:center;font-family:Montserrat,sans-serif}',
       '#ca-gm .cd{width:min(88vw,360px);background:'+CREAM+';border-radius:22px;padding:22px 20px 18px;text-align:center;color:'+BROWN+';animation:caPop .45s cubic-bezier(.2,.9,.3,1.5)}',
       '#ca-gm .big{font-size:54px;line-height:1}',
-      '#ca-gm h3{font:800 20px Montserrat,sans-serif;color:'+BURG+';margin:10px 0 6px}',
+      '#ca-gm h3,#ca-gm p{color:inherit}','#ca-gm h3{font:800 20px Montserrat,sans-serif;color:'+BURG+';margin:10px 0 6px}',
       '#ca-gm p{font-size:13.5px;line-height:1.45;margin:0 0 14px}',
       '#ca-gm .bt{display:block;width:100%;border:none;border-radius:999px;padding:12px;font:800 14px Montserrat,sans-serif;background:'+BURG+';color:'+CREAM+';cursor:pointer;margin-top:8px}',
       '#ca-gm .bt.o{background:transparent;color:'+BURG+';border:2px solid '+BURG+'}',
@@ -222,6 +228,40 @@
       else if(!now && inGarden){ inGarden=false; gard.classList.remove('in','talk'); }
     }
 
+
+    /* ---------- mascot introduces every product in its popup ---------- */
+    var CAKE_LINES={"Mochi Strawberry Shortcake": "Fresh strawberries and vanilla chantilly, wrapped in a soft mochi skin. So bouncy!", "Noir": "Noir is for chocolate lovers: 70% dark chocolate mousse, crémeux and a crunchy base.", "Camellia": "Pink guava and elderflower, light and floral. My prettiest bloom!", "Mrs. Bunny": "Mrs. Bunny hides raspberry mousse with a strawberry lychee centre. Hop hop!", "La Fleur": "Black sesame mousse with a bright yuzu heart. Nutty meets zesty!", "Apam Balik": "Peanut sponge, sweet corn and peanut butter chantilly. Like apam balik, but fancy!", "Pecan Tartlet": "Maple-glazed pecans on a pecan frangipane tart. I cracked every nut myself, hehe.", "Rudolph": "Rudolph is toffee mousse with caramel and vanilla chantilly. He flies best with a friend!", "Ornament": "Blueberry and lavender in a little bauble. Too pretty to hang on a tree!", "Cherry": "Sour cherry compote inside chocolate mousse. Picked from my cherry tree!", "Acorn": "Hazelnut mousse, chocolate crémeux and a hazelnut rocher. Squirrels are jealous.", "Strawberry": "Strawberry compote, vanilla mousse and a crisp sablé. A classic from my patch!", "Raspberry": "Raspberry mousse and compote on a vanilla sablé. Tangy and bright!", "Mango": "Mango compote with vanilla mousse. Sunshine in a cake!", "Pistachio": "100% pistachio mousse with crunchy kunafa. Nutty heaven!", "Kurma": "Dates and hazelnut with crème vanille and a crisp feuilletine. Rich and cosy!", "Coconut": "Coconut mousse with pandan and gula melaka. A taste of home!", "Passionfruit": "Passionfruit and mango, light and tropical. Wakes up the whole box!", "Pear": "Yuzu pear compote with a vanilla pear parfait. Juicy, straight from the tree!"};
+    var FN_CAKES=['Acorn','Pear','Coconut','Cherry','Mango','Strawberry','Pistachio','Raspberry','Passionfruit'];
+    var HOST_OPEN=['Ooh, good eye!','Bonjour! Let me introduce…','One of my favourites!','Excellent choice, chéri!'];
+    function introFor(name, desc){
+      var key=name.split(' (')[0].replace(/\s+(7-inch|6-inch|petit)$/i,'').trim();
+      var fn=FN_CAKES.indexOf(key)>-1;
+      if(/Gift hunt|Christmas Gift -/i.test(name)) return {who:'host', t:'A little prize from our Christmas gift hunt. Joyeux Noël! 🎁'};
+      if(CAKE_LINES[key] && !/box|7-inch|6-inch/i.test(name)) return {who: fn?'gdn':'host', t:CAKE_LINES[key]};
+      var d=(desc||'').replace(/\s+/g,' ').trim(); var first=d.split(/(?<=[.!])\s/)[0]||''; if(first.length>150) first=first.slice(0,147).replace(/\s+\S*$/,'')+'…';
+      var o=HOST_OPEN[Math.floor(Math.random()*HOST_OPEN.length)];
+      if(/box/i.test(name)) return {who:'host', t:o+' '+(first||'A box of our petit gâteaux, packed with love.')};
+      if(/coffee|latte|tea|matcha|chocolate drink|cold brew|beverage|soda|juice/i.test(name+' '+d)) return {who:'host', t:o+' '+(first||'A lovely drink to go with your cake.')+' ☕'};
+      return {who: fn?'gdn':'host', t:o+' '+(first||'Made fresh in our atelier.')};
+    }
+    function typeOut(el, txt){ var i=0; el.textContent=''; (function step(){ if(!document.body.contains(el)) return; el.textContent=txt.slice(0,i+=2); if(i<txt.length) setTimeout(step,18); })(); }
+    function popupIntro(){
+      var m=$$('.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Add to Cart|Gift hunt prize/i.test(x.innerText||''); })[0];
+      if(!m) return;
+      var lines=(m.innerText||'').split('\n').map(function(x){return x.trim();}).filter(function(x){ return x && x!=='×'; });
+      var name=lines[0]||''; if(!name) return;
+      var old=m.querySelector('.ca-pm'); if(old && old.getAttribute('data-n')===name) return; if(old) old.remove();
+      var leaves=$$('p,div,span',m).filter(function(e){ return !e.children.length && (e.innerText||'').trim().length>30 && !/Add to Cart|LIMIT/i.test(e.innerText) && !e.closest('.ca-pm'); });
+      var desc=leaves.sort(function(a,b){ return b.innerText.length-a.innerText.length; })[0];
+      if(!desc) return;
+      var I=introFor(name, desc.innerText);
+      var img = I.who==='gdn' ? CA_IMG+'feuille-'+(['happy','love','gateau'][Math.floor(Math.random()*3)])+'.webp' : CA_IMG+'host-hello.webp';
+      var w=document.createElement('div'); w.className='ca-pm'+(I.who==='gdn'?' g':''); w.setAttribute('data-n',name);
+      w.innerHTML='<img alt="" src="'+img+'"><div class="pb"><small>'+(I.who==='gdn'?'Chaleur\'s gardener says':'Our host says')+'</small><span></span></div>';
+      desc.parentNode.insertBefore(w, desc.nextSibling);
+      setTimeout(function(){ typeOut(w.querySelector('.pb span'), I.t); },350);
+      w.querySelector('img').addEventListener('click',function(){ w.classList.remove('hop'); void w.offsetWidth; w.classList.add('hop'); });
+    }
     /* ---------- Christmas gift hunt ---------- */
     var KEY='caGift26';
     var SPOTS=['stock','tree','box','sleigh','santa'];
@@ -396,6 +436,7 @@
       try { buildMenu(); } catch(e){}
       try { garden(); } catch(e){}
       try { hunt(); } catch(e){}
+      try { popupIntro(); } catch(e){}
     }
     setInterval(tick, 500); tick();
     window.addEventListener('scroll', function(){ try { garden(); } catch(e){} }, {passive:true});
