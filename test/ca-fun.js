@@ -246,7 +246,7 @@
     }
     function typeOut(el, txt){ var i=0; el.textContent=''; (function step(){ if(!document.body.contains(el)) return; el.textContent=txt.slice(0,i+=2); if(i<txt.length) setTimeout(step,18); })(); }
     function popupIntro(){
-      var m=$$('.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Add to Cart|Gift hunt prize/i.test(x.innerText||''); })[0];
+      var m=$$('.modal-content-wrapper,.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Add to Cart|Gift hunt prize/i.test(x.innerText||''); })[0];
       if(!m) return;
       var lines=(m.innerText||'').split('\n').map(function(x){return x.trim();}).filter(function(x){ return x && x!=='×'; });
       var name=lines[0]||''; if(!name) return;
@@ -358,7 +358,7 @@
     /* nobody can add the prize by itself: block "Add to Cart" in its popup unless it was won */
     var allowPetit=false;
     function guardPrize(){
-      var m=$$('.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Surprise Petit/i.test(x.innerText||''); })[0];
+      var m=$$('.modal-content-wrapper,.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Surprise Petit/i.test(x.innerText||''); })[0];
       if(!m) return;
       var add=$$('button',m).filter(function(x){ return /Add to Cart|Gift hunt prize/i.test(x.innerText); })[0];
       if(!add || allowPetit) return;
