@@ -239,7 +239,7 @@
 
     /* ---------- mascot introduces every product in its popup ---------- */
     var CAKE_LINES={"Mochi Strawberry Shortcake": "Fresh strawberries and vanilla chantilly, wrapped in a soft mochi skin. So bouncy!", "Noir": "Noir is for chocolate lovers: 70% dark chocolate mousse, crémeux and a crunchy base.", "Camellia": "Pink guava and elderflower, light and floral. My prettiest bloom!", "Mrs. Bunny": "Mrs. Bunny hides raspberry mousse with a strawberry lychee centre. Hop hop!", "La Fleur": "Black sesame mousse with a bright yuzu heart. Nutty meets zesty!", "Apam Balik": "Peanut sponge, sweet corn and peanut butter chantilly. Like apam balik, but fancy!", "Pecan Tartlet": "Maple-glazed pecans on a pecan frangipane tart. I cracked every nut myself, hehe.", "Rudolph": "Rudolph is toffee mousse with caramel and vanilla chantilly. He flies best with a friend!", "Ornament": "Blueberry and lavender in a little bauble. Too pretty to hang on a tree!", "Cherry": "Sour cherry compote inside chocolate mousse. Picked from my cherry tree!", "Acorn": "Hazelnut mousse, chocolate crémeux and a hazelnut rocher. Squirrels are jealous.", "Strawberry": "Strawberry compote, vanilla mousse and a crisp sablé. A classic from my patch!", "Raspberry": "Raspberry mousse and compote on a vanilla sablé. Tangy and bright!", "Mango": "Mango compote with vanilla mousse. Sunshine in a cake!", "Pistachio": "100% pistachio mousse with crunchy kunafa. Nutty heaven!", "Kurma": "Dates and hazelnut with crème vanille and a crisp feuilletine. Rich and cosy!", "Coconut": "Coconut mousse with pandan and gula melaka. A taste of home!", "Passionfruit": "Passionfruit and mango, light and tropical. Wakes up the whole box!", "Pear": "Yuzu pear compote with a vanilla pear parfait. Juicy, straight from the tree!"};
-    var FN_CAKES=['Acorn','Pear','Coconut','Cherry','Mango','Strawberry','Pistachio','Raspberry','Passionfruit'];
+    var FN_CAKES=['Acorn','Pear','Coconut','Cherry','Mango','Strawberry','Pistachio','Raspberry','Passionfruit','Kurma'];
     var HOST_OPEN=['Ooh, good eye!','Bonjour! Let me introduce…','One of my favourites!','Excellent choice, chéri!'];
     function introFor(name, desc){
       var key=name.split(' (')[0].replace(/\s+(7-inch|6-inch|petit)$/i,'').trim();
@@ -271,6 +271,8 @@
       w.querySelector('img').addEventListener('click',function(){ w.classList.remove('hop'); void w.offsetWidth; w.classList.add('hop'); });
     }
     /* ---------- Christmas gift hunt ---------- */
+    /* chances (must add up to 1). Change here only. */
+    var ODDS={ none:.20, cookie:.25, petit:.25, rm5:.15, rm10:.10, rm20:.05 };
     var KEY='caGift26';
     var SPOTS=['stock','tree','box','sleigh','santa'];
     var SPOT_NAME={stock:'the stocking',tree:'under the tree',box:'the gift box',sleigh:'the sleigh drop',santa:'Santa\'s sack'};
@@ -282,6 +284,7 @@
       santa:['Santa\'s sack is full of letters 💌 Keep looking!','Ho ho… not this one!']
     };
     var PRIZE={
+      cookie:{big:'🍪',h:'A free cookie!',p:'One Chocolate Chips Walnut Cookie, on us. It\'s in your cart now. Joyeux Noël!'},
       petit:{big:'🧁',h:'A surprise petit gâteau!',p:'Chef\'s surprise flavour, just for RM6.99. Want it in your order?'},
       rm5:{big:'🎁',h:'RM5 off your order!',p:'We\'ll apply it for you at checkout. Merci & Joyeux Noël!',code:'XMASGIFT5',v:5},
       rm10:{big:'🎉',h:'RM10 off your order!',p:'We\'ll apply it for you at checkout. Merci & Joyeux Noël!',code:'XMASGIFT10',v:10},
@@ -297,7 +300,8 @@
     function giftRow(re){ var b=$$('a.form-add-item-btn').filter(function(b){ var r=b.closest('.col-12'); return r && re.test(r.innerText); })[0]; return b; }
     function petitAvailable(){ var b=giftRow(/Surprise Petit/i); if(!b) return false; var r=b.closest('.col-12'); return !/sold\s*out|out of stock|unavailable/i.test(r.innerText); }
     function draw(){
-      var r=Math.random(), o = r<.30?'none' : r<.60?'petit' : r<.80?'rm5' : r<.90?'rm10' : 'rm20';
+      var r=Math.random(), o='none', acc=0;
+      for(var k in ODDS){ acc+=ODDS[k]; if(r<acc){ o=k; break; } }
       if(o==='petit' && !petitAvailable()) o='none';
       return { o:o, spot:SPOTS[Math.floor(Math.random()*SPOTS.length)], opened:[], done:false, t:Date.now() };
     }
@@ -354,6 +358,11 @@
     function reveal(){
       confetti();
       var P=PRIZE[G.o];
+      if(G.o==='cookie'){
+        modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>Found in '+SPOT_NAME[G.found]+'! '+P.p+'</p><button class="bt" type="button">Yay! Back to my order</button>',function(m,close){ m.querySelector('.bt').addEventListener('click',close); });
+        G.claim='yes'; save(G); setTimeout(function(){ addPrize(/Free Chocolate Chips Walnut Cookie/i,'Your free cookie is in the cart! 🍪'); },900);
+        return;
+      }
       if(G.o==='petit'){
         modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>Found in '+SPOT_NAME[G.found]+'! '+P.p+'</p><button class="bt y" type="button">Yes, add it for RM6.99</button><button class="bt o n" type="button">No thanks</button>',function(m,close){
           m.querySelector('.y').addEventListener('click',function(){ close(); G.claim='yes'; save(G); addPetit(); });
@@ -367,12 +376,21 @@
     /* nobody can add the prize by itself: block "Add to Cart" in its popup unless it was won */
     var allowPetit=false;
     function guardPrize(){
-      var m=$$('.modal-content-wrapper,.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Surprise Petit/i.test(x.innerText||''); })[0];
+      var m=$$('.modal-content-wrapper,.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Surprise Petit|Christmas Gift - Free/i.test(x.innerText||''); })[0];
       if(!m) return;
       var add=$$('button',m).filter(function(x){ return /Add to Cart|Gift hunt prize/i.test(x.innerText); })[0];
       if(!add || allowPetit) return;
       if(!add.__caG){ add.__caG=1; add.textContent='Gift hunt prize only 🎁'; add.disabled=true; add.style.opacity='.6';
         add.addEventListener('click',function(e){ if(!allowPetit){ e.preventDefault(); e.stopImmediatePropagation(); } },true); }
+    }
+    function addPrize(re, msg){
+      var b=giftRow(re); if(!b) return;
+      allowPetit=true; b.click();
+      var n=0, iv=setInterval(function(){
+        var add=$$('button').filter(function(x){ return /^\s*Add to Cart\s*$/i.test(x.innerText) && x.getClientRects().length; })[0];
+        if(add){ clearInterval(iv); add.click(); G.added=1; save(G); setTimeout(function(){ allowPetit=false; },1500); setTimeout(function(){ host(msg,4500); },600); }
+        else if(++n>25){ clearInterval(iv); allowPetit=false; }
+      },200);
     }
     function addPetit(){
       var b=giftRow(/Surprise Petit/i);
