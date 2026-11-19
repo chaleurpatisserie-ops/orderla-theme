@@ -269,8 +269,8 @@
     }
 
     /* Feuille, the Chaleur crew mascot (from the Feuille SVG pack) */
-    var FEUILLE_HELLO='<img alt="" aria-hidden="true" src="https://cdn.jsdelivr.net/gh/chaleurpatisserie-ops/orderla-theme@main/img/feuille-hello.webp">';
-    var CA_IMG='https://cdn.jsdelivr.net/gh/chaleurpatisserie-ops/orderla-theme@main/img/';
+    var FEUILLE_HELLO='<img alt="" aria-hidden="true" src="https://chaleurpatisserie-ops.github.io/orderla-theme/img/feuille-hello.webp">';
+    var CA_IMG='https://chaleurpatisserie-ops.github.io/orderla-theme/img/';
     var HOST_HELLO='<img alt="" aria-hidden="true" src="'+CA_IMG+'host-hello.webp">';
     var HOST_CHEEKY='<img alt="" aria-hidden="true" src="'+CA_IMG+'host-cheeky.webp">';
     function addFeuille(){

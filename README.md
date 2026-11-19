@@ -2,7 +2,7 @@
 
 Chaleur Atelier's Orderla store look: brand theme, W1 Christmas waves, snow and sleigh, the béret host and Feuille the gardener, and the build-your-own box builder.
 
-Each Orderla form's **Analytics Script** only holds a short loader that pulls these files in through jsDelivr. Each form also keeps its own voucher check block, which is not in this repo.
+Each Orderla form's **Analytics Script** only holds a short loader that pulls these files in from GitHub Pages: `https://chaleurpatisserie-ops.github.io/orderla-theme/`. A push shows on the stores within about 10 minutes. Each form also keeps its own voucher check block, which is not in this repo.
 
 | Folder | Used by |
 |---|---|
@@ -12,8 +12,6 @@ Each Orderla form's **Analytics Script** only holds a short loader that pulls th
 Files:
 - `ca-theme.js`: theme, mascots, box builder
 - `ca-xmas.js`: Christmas banner, snow, sleigh, tree
+- `img/`: mascot faces (Feuille the gardener and the béret host)
 
-After pushing a change, purge the jsDelivr cache for the changed file so stores pick it up within minutes:
-`https://purge.jsdelivr.net/gh/chaleurpatisserie-ops/orderla-theme@main/test/ca-theme.js`
-
-If jsDelivr or GitHub is ever down, the stores keep taking orders. They just show the plain Orderla look until the files load again.
+If GitHub Pages is ever down, the stores keep taking orders. They just show the plain Orderla look until the files load again.
