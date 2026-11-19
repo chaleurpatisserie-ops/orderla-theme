@@ -1,11 +1,11 @@
-/* Chaleur Atelier – store theme (matches the CA website: cream page, burgundy header, Montserrat + Libre Bodoni, burgundy pill buttons, rounded cards). Remove this block to go back to Orderla's orange look. */
+/* Chaleur Atelier – store theme (matches the CA website: cream page, burgundy header, Montserrat only, burgundy pill buttons, rounded cards). Remove this block to go back to Orderla's orange look. */
 (function(){
   if (window.__caTheme) return; window.__caTheme = true;
   try {
     var BURG='#780C14', BURG_D='#5E0A10', CREAM='#FFF0DC', CARD='#FFF7EC', BEIGE='#F4DCBC', BROWN='#523325', CARAMEL='#7A4926', BLUE='#C5D0E5';
 
     var lk=document.createElement('link'); lk.rel='stylesheet';
-    lk.href='https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Libre+Bodoni:ital,wght@0,400;0,500;1,400&display=swap';
+    lk.href='https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap';
     document.head.appendChild(lk);
 
     var css=document.createElement('style'); css.id='ca-theme-css';
@@ -20,7 +20,7 @@
       '.fas,.fa-solid{font-weight:900!important}',
       '.material-icons{font-family:"Material Icons"!important}',
       'h1,h2,h3,h4,h5,h6,strong,b{color:'+BURG+'!important;letter-spacing:-.01em}',
-      '.ca-desc,.ca-desc *{font-family:"Libre Bodoni",Georgia,serif!important;color:'+BROWN+'!important;font-size:15.5px!important;line-height:1.6!important}',
+      '.ca-desc,.ca-desc *{font-family:Montserrat,sans-serif!important;color:'+BROWN+'!important;font-size:14px!important;line-height:1.6!important}',
       '.ca-desc em,.ca-desc i{color:'+CARAMEL+'!important}',
       /* white blocks become cream cards */
       '.ca-white{background-color:'+CREAM+'!important}',
@@ -163,6 +163,36 @@
       '.nav-scroller li{border-bottom:none!important;margin-right:6px}',
       '.nav-scroller .nav-link{border:1.5px solid '+BURG+'!important;border-radius:999px!important;color:'+BURG+'!important;padding:8px 14px!important;margin:6px 0!important;line-height:1.2}',
       '.nav-scroller li.is_current .nav-link{background:'+BURG+'!important;color:'+CREAM+'!important}',
+      '.ca-li{padding-left:2px!important;padding-right:2px!important}',
+      '.ca-li > div{background:#FFFAF3;border-radius:18px;margin:8px 0;padding:10px 12px;box-shadow:0 6px 14px -10px rgba(82,51,37,.45)}',
+      '.ca-li > div > div{padding:0!important}',
+      '.ca-rimg{margin-right:12px!important;flex:0 0 84px}',
+      '.ca-rimg img{width:84px!important;height:84px!important;object-fit:cover;border-radius:14px!important}',
+      '.ca-ri{display:grid!important;grid-template-columns:1fr auto;column-gap:10px;align-items:start}',
+      '.ca-rt{grid-column:1;grid-row:1 / span 2;display:block!important}',
+      '.ca-rt > div:first-child{display:block}',
+      '.ca-rt span{display:block;font-size:14px!important;font-weight:700!important;color:'+BURG+'!important;line-height:1.3!important}',
+      '.ca-rt p{font-size:12px!important;color:'+CARAMEL+'!important;margin:4px 0 0!important;line-height:1.45!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+      '.ca-rb{display:contents!important}',
+      '.ca-rb > div:first-child{grid-column:2;grid-row:1;text-align:right;white-space:nowrap}',
+      '.ca-rb > div:first-child span{font-size:14px!important;font-weight:700!important;color:'+BROWN+'!important}',
+      '.ca-rb > div:last-child{grid-column:2;grid-row:2;width:auto!important;padding:8px 0 0!important;justify-content:flex-end!important;align-self:end}',
+      '.ca-li a.form-add-item-btn{background:'+BURG+'!important;color:'+CREAM+'!important;border-radius:999px!important;height:auto!important;padding:8px 14px!important;font-size:12px!important;line-height:1.2!important;border:none!important;white-space:nowrap}',
+      '.ca-li + hr,.ca-band hr{display:none!important}',
+      '#ca-van{position:relative;height:104px;overflow:hidden;border-radius:16px;margin:0 0 12px;background:linear-gradient(180deg,#C5D0E5 0,#C5D0E5 72%,#F4DCBC 72%)}',
+      '#ca-van .road{position:absolute;left:0;right:0;bottom:12px;height:2px;background:repeating-linear-gradient(90deg,#7A4926 0 14px,transparent 14px 26px)}',
+      '#ca-van .van{position:absolute;bottom:8px;left:0;width:140px;animation:caDrive 2.2s cubic-bezier(.15,.75,.3,1) both}',
+      '#ca-van .vsv{width:100%;height:auto;display:block;animation:caBumpy .35s ease-in-out 6}',
+      '#ca-van .wh{transform-box:fill-box;transform-origin:center;animation:caSpin .45s linear 5}',
+      '#ca-van .drv{position:absolute;left:96px;top:-6px;width:30px;animation:caDrive 2.2s cubic-bezier(.15,.75,.3,1) both;display:none}',
+      '#ca-van .bub{position:absolute;left:160px;right:10px;top:12px;background:#fff;color:'+BURG+'!important;border:1.5px solid '+BURG+';border-radius:14px 14px 14px 4px;padding:8px 10px;font-size:12px!important;font-weight:700!important;line-height:1.35;opacity:0;transform:scale(.8);transform-origin:left bottom;animation:caBub .35s ease 2.1s forwards}',
+      '#ca-van .bub small{display:block;font-weight:500!important;font-size:10.5px!important;color:'+BROWN+'!important;margin-top:2px}',
+      '@keyframes caDrive{0%{transform:translateX(-170px)}100%{transform:translateX(14px)}}',
+      '@keyframes caBumpy{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}',
+      '@keyframes caSpin{to{transform:rotate(360deg)}}',
+      '@keyframes caBub{to{opacity:1;transform:none}}',
+      '@media (max-width:380px){#ca-van .bub{left:150px;font-size:11px!important}}',
+      '@media (prefers-reduced-motion: reduce){#ca-van .van,#ca-van .vsv,#ca-van .wh{animation:none}#ca-van .van{transform:translateX(14px)}#ca-van .bub{animation:none;opacity:1;transform:none}}',
       '.ca-bx-hide{display:none!important}',
       '.modal-content-wrapper{border-radius:24px!important;overflow:hidden}'
     ].join('\n');
@@ -239,9 +269,10 @@
     }
 
     /* Feuille, the Chaleur crew mascot (from the Feuille SVG pack) */
-    var FEUILLE_HELLO='<img alt="" aria-hidden="true" src="/storage/img/CXUvNBlvyJU5avaOOMBaaybv7QhXq5WwVVZfv97B.webp">';
-    var HOST_HELLO='<img alt="" aria-hidden="true" src="/storage/img/w8EFMEsi1B1bceneJIylh3CmSnbBFgQOZZTBjNZK.webp">';
-    var HOST_CHEEKY='<img alt="" aria-hidden="true" src="/storage/img/a7yPPIlVd7p4vZatnYngP6oMNhaxeuku4s50E1nd.webp">';
+    var FEUILLE_HELLO='<img alt="" aria-hidden="true" src="https://cdn.jsdelivr.net/gh/chaleurpatisserie-ops/orderla-theme@main/img/feuille-hello.webp">';
+    var CA_IMG='https://cdn.jsdelivr.net/gh/chaleurpatisserie-ops/orderla-theme@main/img/';
+    var HOST_HELLO='<img alt="" aria-hidden="true" src="'+CA_IMG+'host-hello.webp">';
+    var HOST_CHEEKY='<img alt="" aria-hidden="true" src="'+CA_IMG+'host-cheeky.webp">';
     function addFeuille(){
       if (document.getElementById('ca-feuille')) return;
       var f=document.createElement('button'); f.type='button'; f.id='ca-feuille'; f.setAttribute('aria-label','Our atelier host says hello');
@@ -252,6 +283,21 @@
       f.addEventListener('click', function(){ var b=f.querySelector('.bub'); var s=f.querySelector('img,svg'); if(s){ s.outerHTML=HOST_CHEEKY; setTimeout(function(){ var s2=f.querySelector('img,svg'); if(s2) s2.outerHTML=HOST_HELLO; },1400); } talk(f.getAttribute('data-tap')||'Tap a cake to see what is inside', 3500); });
       window.__caFeuille={ el:f, talk:talk, setPose:function(svg){ var b=f.querySelector('.bub'); f.innerHTML=svg; f.appendChild(b); } };
       setTimeout(function(){ talk(null, 4500); }, 1800);
+      var HOST_TIPS=['Tap any cake to see what\'s inside.','Free delivery on orders RM120 and above, within 18 km of our Larkin HQ.','Can\'t choose? Build your own box of 4, 6 or 9!','No alcohol, no pork, no lard in our cakes.'], ti=0;
+      setInterval(function(){ if(document.body.classList.contains('ca-popup') || f.classList.contains('talk')) return; talk(HOST_TIPS[ti++ % HOST_TIPS.length], 5000); }, 40000);
+      function wink(){ var s=f.querySelector('img,svg'); if(s){ s.outerHTML=HOST_CHEEKY; setTimeout(function(){ var s2=f.querySelector('img,svg'); if(s2) s2.outerHTML=HOST_HELLO; },1600); } }
+      var lastCount=null, freeSaid=false, YAY=['Great choice!','Ooh, that one\'s lovely.','Added! Anything else catch your eye?','Merci! Good taste, hehe.'];
+      setInterval(function(){
+        var bar=document.querySelector('.form-bottom-bar'); if(!bar) return;
+        var txt=bar.innerText||'', c=parseInt((txt.match(/^\s*(\d+)/)||[])[1],10), m=txt.match(/RM\s*([\d,]+\.\d{2})/g), tot=m?parseFloat(m[m.length-1].replace(/[^\d.]/g,'')):0;
+        if(isNaN(c)) return;
+        if(lastCount!==null && c>lastCount && !document.body.classList.contains('ca-popup')){
+          wink();
+          if(tot>=120 && !freeSaid){ freeSaid=true; talk('RM'+tot.toFixed(2)+' in your cart: free delivery within 18 km of Larkin HQ! 🚚', 5500); }
+          else talk(YAY[Math.floor(Math.random()*YAY.length)], 3500);
+        }
+        if(lastCount===null || !document.body.classList.contains('ca-popup')) lastCount=c;
+      }, 700);
     }
 
     /* Build-your-own box: turns Orderla's "Choose your N cakes" picker into a visual box. Orderla's own +/- buttons still do the ordering. */
@@ -281,14 +327,14 @@
       var choc=picks.filter(function(x){return GDN_CHOC.indexOf(x)>=0}).length, fruit=picks.filter(function(x){return GDN_FRUIT.indexOf(x)>=0}).length;
       var uniq=picks.filter(function(x,i,a){return a.indexOf(x)===i}).length;
       ui.__tips=ui.__tips||{};
-      if(!left) return N===9 ? 'Your box is full, what a harvest! 🌱 And Box of 9 gets 10% off every cake. Smart choice!' : 'Your box is full, what a harvest! 🌱 Tap Add to Cart when you\'re ready.';
-      if(left===1) return 'One spot left. Make it count!';
-      if(same===2) return 'Two '+k+'s? You know what you like, hehe.';
-      if(choc>=3 && !fruit && !ui.__tips.c){ ui.__tips.c=1; return 'Lots of chocolate! A fruity one like Pear or Mango keeps the box fresh.'; }
-      if(fruit>=3 && !choc && !ui.__tips.f){ ui.__tips.f=1; return 'So fruity! Add Noir or Acorn for a rich bite in between.'; }
-      if(uniq>=5 && uniq===picks.length && !ui.__tips.u){ ui.__tips.u=1; return uniq+' different flavours. Perfect for sharing!'; }
-      if(picks.length===Math.ceil(N/2) && !ui.__tips.h){ ui.__tips.h=1; return 'Halfway there! '+(GDN_LINES[k]||''); }
-      return GDN_LINES[k] || 'Good pick!';
+      if(!left) return [N===9 ? 'Your box is full, what a harvest! 🌱 And Box of 9 gets 10% off every cake. Smart choice!' : 'Your box is full, what a harvest! 🌱 Tap Add to Cart when you\'re ready.','celebrate'];
+      if(left===1) return ['One spot left. Make it count!','gateau'];
+      if(same===2) return ['Two '+k+'s? You know what you like, hehe.','love'];
+      if(choc>=3 && !fruit && !ui.__tips.c){ ui.__tips.c=1; return ['Lots of chocolate! A fruity one like Pear or Mango keeps the box fresh.','love']; }
+      if(fruit>=3 && !choc && !ui.__tips.f){ ui.__tips.f=1; return ['So fruity! Add Noir or Acorn for a rich bite in between.','love']; }
+      if(uniq>=5 && uniq===picks.length && !ui.__tips.u){ ui.__tips.u=1; return [uniq+' different flavours. Perfect for sharing!','love']; }
+      if(picks.length===Math.ceil(N/2) && !ui.__tips.h){ ui.__tips.h=1; return ['Halfway there! '+(GDN_LINES[k]||''),'gateau']; }
+      return [GDN_LINES[k] || 'Good pick!','happy'];
     }
     function boxBuilder(){
       var heads=document.querySelectorAll('.modal-content-wrapper strong, .ReactModal__Content strong');
@@ -304,7 +350,7 @@
           head.parentElement.insertBefore(ui, list);
           ui.__picks=[]; ui.__N=N;
           list.classList.add('ca-bx-hide');
-          (function(g,u){ var tm, gb=g.querySelector('.gb'); function say(txt){ if(txt) gb.textContent=txt; g.classList.remove('on'); void g.offsetWidth; g.classList.add('on'); clearTimeout(tm); tm=setTimeout(function(){ g.classList.remove('on'); },6500); } u.__say=say; g.querySelector('.gf').addEventListener('click',function(){ say(GDN_INTRO[Math.floor(Math.random()*GDN_INTRO.length)]); }); setTimeout(function(){ say(GDN_INTRO[Math.floor(Math.random()*GDN_INTRO.length)]); },700); })(ui.querySelector('.gdn'),ui);
+          (function(g,u){ var tm, gb=g.querySelector('.gb'); var im=g.querySelector('.gf img'), idle; function say(txt,pose){ if(Array.isArray(txt)){ pose=txt[1]; txt=txt[0]; } if(txt) gb.textContent=txt; if(im) im.src=CA_IMG+'feuille-'+(pose||'hello')+'.webp'; g.classList.remove('on'); void g.offsetWidth; g.classList.add('on'); clearTimeout(tm); tm=setTimeout(function(){ g.classList.remove('on'); },6500); clearTimeout(idle); idle=setTimeout(function(){ if(document.body.contains(g) && g.getClientRects().length) say('Zzz… tap a cake to wake me up!','sleepy'); },30000); } u.__say=say; g.querySelector('.gf').addEventListener('click',function(){ say(GDN_INTRO[Math.floor(Math.random()*GDN_INTRO.length)]); }); setTimeout(function(){ say(GDN_INTRO[Math.floor(Math.random()*GDN_INTRO.length)]); },700); })(ui.querySelector('.gdn'),ui);
           ui.querySelector('.tog').addEventListener('click', function(ev){ var u=ev.target.closest('.ca-bx'), l=u.nextElementSibling; var hidden=l.classList.toggle('ca-bx-hide'); ev.target.textContent=hidden?'Show as list':'Hide list'; });
           ui.querySelector('.grid').style.gridTemplateColumns='repeat('+(N===4?2:3)+',1fr)'; ui.querySelector('.box').style.maxWidth=(N===4?200:280)+'px';
         }
@@ -340,7 +386,7 @@
       ui.querySelector('.sum').innerHTML= left ? (picks.length? '<b>'+picks.length+'</b> of '+N+' chosen · '+left+' to go' : 'Fill your box! Pick any <b>'+N+'</b> cakes') : '<b>Yay, your box is full!</b> 🎉 Tap Add to Cart below.';
       ui.querySelector('.bar i').style.width=(picks.length/N*100)+'%';
       var rd=ui.querySelector('.redo'); rd.hidden=!picks.length;
-      rd.onclick=function(){ if(rd.__busy) return; rd.__busy=true; ui.__picks=[]; ui.__tips={}; try{ ui.__say && ui.__say('Fresh start! Let\'s plant a new box. 🌱'); }catch(e){} var clicks=[]; bxRows(list).forEach(function(r){ for(var q=0;q<r.qty;q++) clicks.push(r.name); });
+      rd.onclick=function(){ if(rd.__busy) return; rd.__busy=true; ui.__picks=[]; ui.__tips={}; try{ ui.__say && ui.__say('Fresh start! Let\'s plant a new box. 🌱','hello'); }catch(e){} var clicks=[]; bxRows(list).forEach(function(r){ for(var q=0;q<r.qty;q++) clicks.push(r.name); });
         (function next(){ if(!clicks.length){ rd.__busy=false; ui.__celebrate=false; ui.__sig=''; bxSync(ui,list); return; } var n=clicks.shift(), r=bxRows(list).filter(function(x){return x.name===n})[0]; if(r && !r.minus.disabled) r.minus.click(); setTimeout(next,60); })(); };
       var wasFull=ui.classList.contains('full'); ui.classList.toggle('full', !left);
       if(!left && !wasFull && ui.__celebrate){ bxBurst(ui.querySelector('.box')); } ui.__celebrate=true;
@@ -348,8 +394,8 @@
       rows.forEach(function(r,idx){ var nm=r.name.split(' (')[0].replace('Mochi Strawberry Shortcake','Mochi Strawberry'), fl=(r.name.match(/\(([^)]+)\)/)||[])[1]||''; ph+='<button type="button" class="pk'+(r.qty?' has':'')+'" data-idx="'+idx+'" title="'+(nm+(fl?' · '+fl:'')).replace(/"/g,'')+'" aria-label="Add '+r.name.replace(/"/g,'')+'"><span class="ci"><img alt="" src="'+bxImg(r.name)+'"></span>'+(r.qty?'<span class="q">'+r.qty+'</span>':'')+'<span class="nm">'+nm+'</span><span class="pr">'+r.price+'</span></button>'; });
       var sl=pick.scrollLeft;
       var keep=pick.scrollLeft; pick.innerHTML=ph; pick.scrollLeft=keep;
-      grid.querySelectorAll('.slot').forEach(function(s){ s.onclick=function(){ var i=+s.getAttribute('data-i'), n=ui.__picks[i]; if(!n) return; var r=bxRows(list).filter(function(x){return x.name===n})[0]; if(r && !r.minus.disabled){ ui.__picks.splice(i,1); r.minus.click(); try{ ui.__say && ui.__say('Swapping '+gdnKey(n)+'? Pick another one!'); }catch(e){} setTimeout(function(){ ui.__sig=''; bxSync(ui,list); },120); } }; });
-      pick.querySelectorAll('.pk').forEach(function(b){ b.onclick=function(){ var cur=bxRows(list), r=cur[+b.getAttribute('data-idx')]; if(!r) return; var tot=cur.reduce(function(a,x){return a+x.qty},0); if(tot>=N || r.plus.disabled){ var s=ui.querySelector('.sum'); s.innerHTML='<b>Your box is full!</b> Tap a cake in the box to swap it.'; try{ ui.__say && ui.__say('No more room! Tap a cake in the box to swap it.'); }catch(e){} ui.classList.remove('nope'); void ui.offsetWidth; ui.classList.add('nope'); return; } var ti=ui.__picks.length; bxFly(b.querySelector('img'), ui.querySelectorAll('.slot')[ti]); ui.__new=ti; ui.__picks.push(r.name); r.plus.click(); try{ ui.__say && ui.__say(gdnPick(ui, r.name)); }catch(e){} setTimeout(function(){ ui.__sig=''; bxSync(ui,list); },120); }; });
+      grid.querySelectorAll('.slot').forEach(function(s){ s.onclick=function(){ var i=+s.getAttribute('data-i'), n=ui.__picks[i]; if(!n) return; var r=bxRows(list).filter(function(x){return x.name===n})[0]; if(r && !r.minus.disabled){ ui.__picks.splice(i,1); r.minus.click(); try{ ui.__say && ui.__say('Swapping '+gdnKey(n)+'? Pick another one!','oops'); }catch(e){} setTimeout(function(){ ui.__sig=''; bxSync(ui,list); },120); } }; });
+      pick.querySelectorAll('.pk').forEach(function(b){ b.onclick=function(){ var cur=bxRows(list), r=cur[+b.getAttribute('data-idx')]; if(!r) return; var tot=cur.reduce(function(a,x){return a+x.qty},0); if(tot>=N || r.plus.disabled){ var s=ui.querySelector('.sum'); s.innerHTML='<b>Your box is full!</b> Tap a cake in the box to swap it.'; try{ ui.__say && ui.__say('No more room! Tap a cake in the box to swap it.','oops'); }catch(e){} ui.classList.remove('nope'); void ui.offsetWidth; ui.classList.add('nope'); return; } var ti=ui.__picks.length; bxFly(b.querySelector('img'), ui.querySelectorAll('.slot')[ti]); ui.__new=ti; ui.__picks.push(r.name); r.plus.click(); try{ ui.__say && ui.__say(gdnPick(ui, r.name)); }catch(e){} setTimeout(function(){ ui.__sig=''; bxSync(ui,list); },120); }; });
     }
 
     var pending=false, queue=[];
@@ -371,12 +417,27 @@
       var b=document.getElementById('ca-xmas-banner'); if(b && b.previousElementSibling!==w){ b.classList.add('ca-pill'); w.parentNode.insertBefore(b, w.nextSibling); }
       var s=document.querySelector('section[id^="section-"]'); var band=s&&s.parentElement; if(band && !band.classList.contains('ca-band')) band.classList.add('ca-band');
     }
+    var VAN_HTML='<div class="road"></div><div class="van"><svg class="vsv" viewBox="0 0 160 84" aria-hidden="true"><rect x="4" y="18" width="100" height="46" rx="10" fill="#780C14"/><path d="M104 30 h26 q10 0 16 12 l8 14 v8 h-50 z" fill="#780C14"/><path d="M110 35 h18 q6 0 10 8 l4 8 h-32 z" fill="#C5D0E5"/><rect x="14" y="26" width="58" height="22" rx="6" fill="#FFF0DC"/><text x="43" y="42" text-anchor="middle" font-family="Montserrat" font-weight="800" font-size="13" fill="#780C14">CA</text><rect x="146" y="52" width="10" height="5" rx="2" fill="#F4DCBC"/><g class="wh"><circle cx="34" cy="66" r="12" fill="#523325"/><circle cx="34" cy="66" r="4" fill="#7A4926"/><rect x="33" y="56" width="2" height="20" fill="#7A4926"/></g><g class="wh"><circle cx="126" cy="66" r="12" fill="#523325"/><circle cx="126" cy="66" r="4" fill="#7A4926"/><rect x="125" y="56" width="2" height="20" fill="#7A4926"/></g></svg></div><p class="bub">Free delivery on orders RM120 &amp; above! 🎉<small>Within 18 km of our Larkin HQ</small></p>';
+    function addVan(){
+      var ms=document.querySelectorAll('.modal.show'); 
+      for(var i=0;i<ms.length;i++){ var m=ms[i]; if(!/Start Order/.test(m.innerText||'') || m.querySelector('#ca-van')) continue;
+        var host=m.querySelector('.modal-body') || m.querySelector('.modal-content'); if(!host) continue;
+        var v=document.createElement('div'); v.id='ca-van'; v.setAttribute('role','note'); v.innerHTML=VAN_HTML; host.insertBefore(v, host.firstChild); }
+    }
+    function tagRows(){
+      var rs=document.querySelectorAll('.col-12 > div[style*="cursor: pointer"]');
+      for(var i=0;i<rs.length;i++){ var r=rs[i], col=r.parentElement; if(col.classList.contains('ca-li')) continue;
+        var info=r.querySelector('[style*="flex: 1 1 0%"]'), img=r.querySelector('img'); if(!info || !img || info.children.length<2) continue;
+        col.classList.add('ca-li'); info.classList.add('ca-ri'); info.children[0].classList.add('ca-rt'); info.children[1].classList.add('ca-rb');
+        var w=img.closest('.lazyload-wrapper'); (w && w.parentElement ? w.parentElement : img.parentElement).classList.add('ca-rimg'); }
+    }
     function start(){
       addHead(); scan(document.body); addFeuille();
       setInterval(function(){
         var p=document.querySelector('.modal.show, .modal-content-wrapper, .ReactModal__Content'); document.body.classList.toggle('ca-popup', !!(p && p.getClientRects().length));
         try { boxBuilder(); } catch(e){}
         try { addWaves(); } catch(e){}
+        try { tagRows(); addVan(); } catch(e){}
         var bs=document.querySelectorAll('.btn-outline-dark'); for (var i=0;i<bs.length;i++){ var b=bs[i]; b.classList.remove('ca-sel'); var bg=getComputedStyle(b).backgroundColor; var m=/rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?/.exec(bg); if(m && (m[4]===undefined || +m[4]>0.2) && +m[1]<235 && Math.abs(m[1]-m[2])<12) b.classList.add('ca-sel'); }
       }, 400);
       mo.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','disabled']});
