@@ -1,4 +1,5 @@
 /* Chaleur Atelier – store theme (matches the CA website: cream page, burgundy header, Montserrat only, burgundy pill buttons, rounded cards). Remove this block to go back to Orderla's orange look. */
+window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript.src);
 (function(){
   if (window.__caTheme) return; window.__caTheme = true;
   try {
@@ -436,6 +437,7 @@
     }
     function start(){
       addHead(); scan(document.body); addFeuille();
+      try { var fx=document.createElement('script'); fx.src=(window.__caSelf||'https://chaleurpatisserie-ops.github.io/orderla-theme/test/ca-theme.js').replace(/ca-theme\.js.*$/,'ca-fun.js')+'?v='+Date.now().toString().slice(0,-5); document.head.appendChild(fx); } catch(e){}
       setInterval(function(){
         var p=document.querySelector('.modal.show, .modal-content-wrapper, .ReactModal__Content'); document.body.classList.toggle('ca-popup', !!(p && p.getClientRects().length));
         try { boxBuilder(); } catch(e){}
