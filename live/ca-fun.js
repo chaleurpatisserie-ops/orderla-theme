@@ -258,7 +258,7 @@
       if(!m) return;
       var lines=(m.innerText||'').split('\n').map(function(x){return x.trim();}).filter(function(x){ return x && x!=='×'; });
       var name=lines[0]||''; if(!name) return;
-      if(m.querySelector('.ca-bx')) return;   /* box builder has its own gardener */
+      if(m.querySelector('.ca-bx')){ var ob=m.querySelector('.ca-pm'); if(ob) ob.remove(); return; }   /* box builder has its own gardener */
       var old=m.querySelector('.ca-pm'); if(old && old.getAttribute('data-n')===name) return; if(old) old.remove();
       var leaves=$$('p,div,span',m).filter(function(e){ return !e.children.length && (e.innerText||'').trim().length>30 && !/Add to Cart|LIMIT/i.test(e.innerText) && !e.closest('.ca-pm'); });
       var desc=leaves.sort(function(a,b){ return b.innerText.length-a.innerText.length; })[0];
