@@ -51,7 +51,7 @@
       '#ca-menu .ft{padding:10px 16px 16px;font-size:11px;color:'+CARAMEL+';text-align:center}',
       'body.ca-popup #ca-mbtn{display:none}',
       /* ---------- fruits & nuts garden ---------- */
-      '.ca-band > :not(#ca-garden){position:relative;z-index:1}',
+      '.ca-gpar{position:relative!important}','.ca-gpar > :not(#ca-garden){position:relative;z-index:1}',
       '#ca-garden{position:absolute;left:0;right:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,#EEF5E4 0%,#DDEBCB 55%,#CFE2B6 100%);opacity:0;transition:opacity .6s}',
       '#ca-garden.on{opacity:1}',
       '#ca-garden .lv{position:absolute;inset:0;opacity:.38;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%27120%27%3E%3Cg fill=%27%23A9C68A%27%3E%3Cpath d=%27M18 22c10-10 24-8 26 0-8 8-20 10-26 0z%27/%3E%3Cpath d=%27M84 70c8-12 22-12 26-4-6 10-18 14-26 4z%27/%3E%3Cpath d=%27M40 96c6-9 17-9 20-3-5 7-14 10-20 3z%27/%3E%3C/g%3E%3Cg fill=%27%23E8B4A0%27%3E%3Ccircle cx=%2796%27 cy=%2720%27 r=%273%27/%3E%3Ccircle cx=%2716%27 cy=%2770%27 r=%272.5%27/%3E%3C/g%3E%3C/svg%3E");background-size:120px 120px}',
@@ -213,7 +213,7 @@
       var s=sections().filter(function(x){ return isGarden(x.name); })[0];
       var layer=document.getElementById('ca-garden');
       if(!s){ if(layer) layer.classList.remove('on'); return; }
-      var band=s.el.parentElement; if(!band) return;
+      var band=s.el.parentElement; if(!band) return; band.classList.add('ca-gpar');
       if(!layer || layer.parentElement!==band){
         if(layer) layer.remove();
         layer=document.createElement('div'); layer.id='ca-garden'; layer.setAttribute('aria-hidden','true');
