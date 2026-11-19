@@ -17,7 +17,7 @@
     var css = [
       /* ---------- side menu ---------- */
       '#ca-mbtn{position:fixed;right:0;top:44%;z-index:2147483003;background:'+BURG+';color:'+CREAM+';border:none;border-radius:16px 0 0 16px;padding:10px 8px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:-3px 3px 12px rgba(82,51,37,.3);cursor:pointer;font:700 10px Montserrat,sans-serif;letter-spacing:.12em;-webkit-tap-highlight-color:transparent;transition:transform .25s}',
-      '#ca-mbtn .ic{display:flex;flex-direction:column;gap:3px}',
+      '#ca-mbtn{touch-action:none;user-select:none}','#ca-mbtn.drag{transition:none;box-shadow:-6px 6px 18px rgba(82,51,37,.45);transform:scale(1.06)}','#ca-mbtn .gr{display:block;width:14px;height:3px;border-top:2px dotted rgba(255,240,220,.6);margin-top:2px}','#ca-mbtn .ic{display:flex;flex-direction:column;gap:3px}',
       '#ca-mbtn .ic i{display:block;width:18px;height:2.5px;border-radius:2px;background:'+CREAM+';transition:width .3s}',
       '#ca-mbtn .ic i:nth-child(2){width:13px}',
       '#ca-mbtn:hover .ic i{width:18px}',
@@ -147,13 +147,21 @@
     function buildMenu(){
       if(document.getElementById('ca-mbtn')) return;
       mb=document.createElement('button'); mb.id='ca-mbtn'; mb.type='button'; mb.setAttribute('aria-label','Open menu');
-      mb.innerHTML='<span class="ic"><i></i><i></i><i></i></span>MENU';
+      mb.innerHTML='<span class="ic"><i></i><i></i><i></i></span>MENU<span class="gr"></span>'; mb.title='Tap to open, drag to move';
       var bg=document.createElement('div'); bg.id='ca-mbg';
       menu=document.createElement('nav'); menu.id='ca-menu'; menu.setAttribute('aria-label','Menu');
       menu.innerHTML='<div class="hd"><b>Where to, chéri?</b><span>Tap a section and off we go!</span><button class="x" type="button" aria-label="Close">×</button></div><ul></ul><div class="ft">Swipe right to close</div>';
       list=menu.querySelector('ul');
       document.body.appendChild(mb); document.body.appendChild(bg); document.body.appendChild(menu);
-      mb.addEventListener('click',openMenu); bg.addEventListener('click',closeMenu); menu.querySelector('.x').addEventListener('click',closeMenu);
+      /* drag the button up/down so it never blocks the view; a short tap opens the menu */
+      try { var sv=parseFloat(localStorage.getItem('caMenuY')); if(sv>0 && sv<1) mb.style.top=(sv*100)+'%'; } catch(e){}
+      var dy=null, moved=false, top0=0;
+      mb.addEventListener('pointerdown',function(e){ dy=e.clientY; moved=false; top0=mb.getBoundingClientRect().top; try{ mb.setPointerCapture(e.pointerId); }catch(x){} });
+      mb.addEventListener('pointermove',function(e){ if(dy===null) return; var d=e.clientY-dy; if(Math.abs(d)>6) moved=true; if(moved){ var t=Math.max(70, Math.min(window.innerHeight-130, top0+d)); mb.style.top=t+'px'; mb.classList.add('drag'); } });
+      function up(){ if(dy===null) return; dy=null; mb.classList.remove('drag'); if(moved){ try{ localStorage.setItem('caMenuY', (mb.getBoundingClientRect().top/window.innerHeight).toFixed(3)); }catch(x){} } else openMenu(); }
+      mb.addEventListener('pointerup',up); mb.addEventListener('pointercancel',function(){ dy=null; mb.classList.remove('drag'); });
+      mb.addEventListener('click',function(e){ e.preventDefault(); });
+      bg.addEventListener('click',closeMenu); menu.querySelector('.x').addEventListener('click',closeMenu);
       var sx=null;
       menu.addEventListener('touchstart',function(e){ sx=e.touches[0].clientX; },{passive:true});
       menu.addEventListener('touchend',function(e){ if(sx!==null && e.changedTouches[0].clientX-sx>60) closeMenu(); sx=null; },{passive:true});
@@ -399,8 +407,8 @@
       }
       function placeNote(msg){
         if(!msg){ if(note) note.remove(); return; }
-        if(!note){ note=document.createElement('div'); note.id='ca-gnote'; var host2=$$('div').filter(function(d){ return /^Date & Time Slot/.test((d.innerText||'').trim()) && d.children.length<4; })[0]; var tgt=anchor||host2; if(!tgt) return; tgt.parentNode.insertBefore(note, tgt.nextSibling); }
-        note.textContent=msg;
+        if(!note){ note=document.createElement('div'); note.id='ca-gnote'; var host2=$$('div').filter(function(d){ var t=(d.innerText||'').trim(); return /^Date & Time Slot/.test(t) && t.length<90; }).pop(); var tgt=host2||anchor; if(!tgt) return; tgt.parentNode.insertBefore(note, tgt.nextSibling); }
+        note.textContent=msg; if(!document.body.contains(note)) note=null;
       }
     }
     function useCode(inp, code){
