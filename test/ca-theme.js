@@ -419,9 +419,11 @@
     }
     var VAN_HTML='<div class="road"></div><div class="van"><svg class="vsv" viewBox="0 0 160 84" aria-hidden="true"><rect x="4" y="18" width="100" height="46" rx="10" fill="#780C14"/><path d="M104 30 h26 q10 0 16 12 l8 14 v8 h-50 z" fill="#780C14"/><path d="M110 35 h18 q6 0 10 8 l4 8 h-32 z" fill="#C5D0E5"/><rect x="14" y="26" width="58" height="22" rx="6" fill="#FFF0DC"/><text x="43" y="42" text-anchor="middle" font-family="Montserrat" font-weight="800" font-size="13" fill="#780C14">CA</text><rect x="146" y="52" width="10" height="5" rx="2" fill="#F4DCBC"/><g class="wh"><circle cx="34" cy="66" r="12" fill="#523325"/><circle cx="34" cy="66" r="4" fill="#7A4926"/><rect x="33" y="56" width="2" height="20" fill="#7A4926"/></g><g class="wh"><circle cx="126" cy="66" r="12" fill="#523325"/><circle cx="126" cy="66" r="4" fill="#7A4926"/><rect x="125" y="56" width="2" height="20" fill="#7A4926"/></g></svg></div><p class="bub">Free delivery on orders RM120 &amp; above! 🎉<small>Within 18 km of our Larkin HQ</small></p>';
     function addVan(){
-      var ms=document.querySelectorAll('.modal.show'); 
+      var ms=document.querySelectorAll('.ReactModal__Content, .modal.show');
       for(var i=0;i<ms.length;i++){ var m=ms[i]; if(!/Start Order/.test(m.innerText||'') || m.querySelector('#ca-van')) continue;
-        var host=m.querySelector('.modal-body') || m.querySelector('.modal-content'); if(!host) continue;
+        var host=null, all=m.querySelectorAll('div');
+        for(var j=0;j<all.length;j++){ var oy=getComputedStyle(all[j]).overflowY; if((oy==='auto'||oy==='scroll') && all[j].scrollHeight>all[j].clientHeight+20){ host=all[j]; break; } }
+        host=host || m.querySelector('.modal-body') || m.querySelector('.card') || m; 
         var v=document.createElement('div'); v.id='ca-van'; v.setAttribute('role','note'); v.innerHTML=VAN_HTML; host.insertBefore(v, host.firstChild); }
     }
     function tagRows(){
