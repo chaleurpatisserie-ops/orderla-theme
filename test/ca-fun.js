@@ -115,7 +115,7 @@
     }
     function isGiftSec(n){ return /gift hunt/i.test(n); }
     function isGarden(n){ return /fruits?\s*(&|and)\s*nuts?/i.test(n); }
-    function secEls(anchor){ var out=[], n=anchor.nextElementSibling; while(n && n.tagName!=='SECTION'){ out.push(n); n=n.nextElementSibling; } return out; }
+    function secEls(anchor){ var out=[], n=anchor.nextElementSibling; while(n && n.tagName!=='SECTION'){ if(!/^ca-/.test(n.id||'')) out.push(n); n=n.nextElementSibling; } return out; }
     function nice(n){ return n.toLowerCase().replace(/(^|[\s(&-])([a-zà-ÿ])/g,function(m,p,c){return p+c.toUpperCase();}).replace(/\bOf\b/g,'of'); }
     function icon(n){
       var t=n.toLowerCase();
@@ -208,7 +208,7 @@
       }
       var els=secEls(s.el), last=els[els.length-1]||s.el;
       var br=band.getBoundingClientRect(), t=s.el.getBoundingClientRect().top-br.top, b=last.getBoundingClientRect().bottom-br.top;
-      layer.style.top=(t+2)+'px'; layer.style.height=Math.max(60,b-t+10)+'px'; layer.classList.add('on');
+      layer.classList.remove('ca-hide'); layer.style.top=(t+2)+'px'; layer.style.height=Math.max(60,b-t+10)+'px'; layer.classList.add('on');
       // gardener
       if(!gard){
         gard=document.createElement('button'); gard.id='ca-gard'; gard.type='button'; gard.setAttribute('aria-label','Chaleur\'s gardener');
