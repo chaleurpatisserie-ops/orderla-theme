@@ -46,7 +46,7 @@
         var target = null;
         for (var i=0;i<els.length;i++){ var t=(els[i].textContent||'').trim(); if (t==='Christmas Hamper'){ target=els[i]; break; } }
         if (!target) for (var j=0;j<els.length;j++){ var u=(els[j].textContent||'').trim().toUpperCase(); if (u.indexOf('CHRISTMAS 2026')===0 && u.length<20){ target=els[j]; break; } }
-        if (target) { target.scrollIntoView({behavior:'smooth', block:'center'}); var card=target.closest('.col-6, .col-md-4, a, [role=button]'); if (card) setTimeout(function(){ card.click(); }, 650); }
+        if (target) { target.scrollIntoView({behavior:'smooth', block:'center'}); var card=target.closest('[style*="cursor: pointer"], .col-6, .col-md-4, a, [role=button]'); if (card) setTimeout(function(){ card.click(); }, 650); }
         else { location.href = 'https://chaleurpatisserie.orderla.my/chaleur-atelier-patisserie-larkin'; }
       });
       document.body.insertBefore(b, document.body.firstChild);
