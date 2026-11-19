@@ -65,10 +65,10 @@
       '#ca-gard .gb{position:absolute;left:calc(100% + 6px);bottom:28px;width:'+(mobile?190:230)+'px;background:#fff;border:2px solid #7E9E58;border-radius:14px 14px 14px 4px;padding:8px 10px;font:600 12.5px/1.35 Montserrat,sans-serif;color:'+BROWN+';text-align:left;opacity:0;transform:scale(.6);transform-origin:left bottom;transition:all .3s}',
       '#ca-gard.talk .gb{opacity:1;transform:none}',
       'body.ca-popup #ca-gard,body.ca-mopen #ca-gard{display:none}',
-      '.ca-pm{display:flex;align-items:flex-end;gap:10px;margin:14px 0 6px;animation:caPop .45s cubic-bezier(.2,.9,.3,1.4) both}',
+      '.ca-pm{box-sizing:border-box;max-width:100%;padding-right:2px;display:flex;align-items:flex-end;gap:10px;margin:14px 0 6px;animation:caPop .45s cubic-bezier(.2,.9,.3,1.4) both}',
       '.ca-pm img{width:74px;flex:none;cursor:pointer;filter:drop-shadow(0 3px 4px rgba(82,51,37,.25))}',
       '.ca-pm.hop img{animation:caHop .5s ease-in-out 2}',
-      '.ca-pm .pb{position:relative;flex:1;background:#fff;border:2px solid '+BURG+';border-radius:16px 16px 16px 4px;padding:9px 12px;font:600 13px/1.4 Montserrat,sans-serif;color:'+BROWN+';min-height:44px}',
+      '.ca-pm .pb{position:relative;flex:1;min-width:0;box-sizing:border-box;background:#fff;border:2px solid '+BURG+';border-radius:16px 16px 16px 4px;padding:9px 12px;font:600 13px/1.4 Montserrat,sans-serif;color:'+BROWN+';min-height:44px}',
       '.ca-pm .pb small{display:block;font:800 10px Montserrat,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:'+CARAMEL+';margin-bottom:2px}',
       '.ca-pm.g .pb{border-color:#7E9E58;background:#F3F8EC}',
       /* ---------- gift hunt ---------- */
@@ -327,6 +327,7 @@
         if(k==='sleigh' && first){ b.classList.add('fall'); }
         if(k==='santa' && first){ b.classList.add('walk'); }
         b.addEventListener('click',function(){ openSpot(k,b); });
+        b.addEventListener('animationend',function(e){ if(e.target===b){ b.classList.remove('fall','walk'); b.style.animation='none'; } });
         document.body.appendChild(b);
       });
       if(first){ var sl=document.getElementById('ca-xmas-sleigh'); if(sl){ sl.classList.remove('go'); void sl.offsetWidth; sl.classList.add('go'); } }
