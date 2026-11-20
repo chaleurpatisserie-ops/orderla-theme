@@ -497,7 +497,7 @@
     function dropRows(){ prizeRows().forEach(function(r){ var minus=r.querySelector('[class*="btn-minus-selection"]');
       if(minus && !minus.__caX){ minus.__caX=1; minus.click(); setTimeout(function(){ var ok=$$('.alerty-action .btn-ok').filter(function(b){ return b.getClientRects().length && /Remove/i.test(b.textContent); })[0]; if(ok) ok.click(); },350); setTimeout(function(){ minus.__caX=0; },1500); } }); }
     var follow=0;
-    function visModal(){ return $$('.modal-content-wrapper,.ReactModal__Content,#ca-gm,#ca-lead').some(function(x){ return x.getClientRects().length && x.offsetHeight>0; }); }
+    function visModal(){ return $$('.modal-content-wrapper,.ReactModal__Content,#ca-gm,#ca-lead').some(function(x){ return x.getClientRects().length && x.offsetHeight>0 && !x.querySelector('[class*="btn-minus-selection"]'); }); }   /* the cart itself doesn't count */
     function followCart(){
       var P=PR[D.prize]; if(!P || P.code || D.expired) return;
       var tot=cartSub(); if(tot===null) return;
@@ -609,8 +609,13 @@
     /* fill the number into Orderla's Customer Details, follow the cart, mark ordered */
     function leadTick(){
       if(!L || !L.phone) return;
-      var ph=$$('input').filter(function(i){ return i.getClientRects().length && /phone|tel/i.test((i.name||'')+' '+(i.type||'')+' '+(i.placeholder||'')+' '+(i.id||'')) && !i.closest('#ca-lead'); })[0];
-      if(ph && !ph.value){ var set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; set.call(ph, L.phone.slice(2)); ph.dispatchEvent(new Event('input',{bubbles:true})); }
+      var ph=$$('input[type="tel"]').filter(function(i){ return i.getClientRects().length && !i.closest('#ca-lead'); })[0];
+      var setv=function(el,v){ var set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; set.call(el,v); el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); };
+      if(ph && !ph.__caF){ ph.__caF=1; var want='0'+L.phone.slice(2); if(ph.value.replace(/\D/g,'')!==want) setv(ph,want);
+        ph.addEventListener('change',function(){ var n=normPhone(ph.value); if(n && n!==L.phone){ L.phone=n; lsave(L); lastSent=''; sendLead('details'); } }); }
+      if(ph && L.name){ var box=ph.closest('form')||document; var nm=$$('input[type="text"]',box).filter(function(i){ return i.getClientRects().length && !i.closest('#ca-lead') && /name/i.test(((i.closest('div')||{}).parentElement||{}).innerText||''); })[0];
+        if(nm && !nm.__caF){ nm.__caF=1; if((nm.value||'').trim().toLowerCase()!==L.name.toLowerCase()) setv(nm,L.name);
+          nm.addEventListener('change',function(){ var v=(nm.value||'').trim(); if(v && v!==L.name){ L.name=v.slice(0,60); lsave(L); lastSent=''; sendLead('details'); } }); } }
       var stage = /Order Summary/.test(document.body.innerText||'') && $('input.text-monospace') ? 'summary' : (/Customer Details/.test(document.body.innerText||'') && ph ? 'details' : 'cart');
       sendLead(stage);
     }
