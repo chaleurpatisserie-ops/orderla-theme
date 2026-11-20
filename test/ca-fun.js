@@ -109,6 +109,7 @@
       '.coin:not(.up):active .in{transform:scale(.94)}',
       '.dg-msg{margin:12px 0 0!important;font-weight:700}',
       '#ca-hold{position:fixed;left:50%;transform:translateX(-50%);top:62px;z-index:2147483003;background:'+BURG+';color:'+CREAM+';font:700 12.5px Montserrat,sans-serif;padding:8px 14px;border-radius:999px;box-shadow:0 6px 16px rgba(82,51,37,.35);white-space:nowrap;pointer-events:none}',
+      '#ca-hold b{color:'+CREAM+'!important;font-weight:800}',
       '#ca-hold.hot{background:#9A1822;animation:caHop .6s ease-in-out infinite}',
       '#ca-dchip{position:fixed;left:12px;bottom:150px;z-index:2147483002;border:none;border-radius:999px;background:'+BURG+';color:'+CREAM+';font:800 13px Montserrat,sans-serif;padding:10px 14px;display:flex;gap:6px;align-items:center;box-shadow:0 6px 16px rgba(82,51,37,.35);animation:caWig 1.2s ease-in-out infinite;cursor:pointer}',
       'body.ca-popup #ca-dchip,body.ca-mopen #ca-dchip{display:none}',
@@ -491,8 +492,8 @@
       if(!D.expired){ D.expired=1; dsave(D); }
       if(!expTold){ expTold=true; host('Your Lucky Draw prize has expired ⏱ (10 minutes are up).',6000); }
       /* take prize items out of the cart when the cart is open */
-      $$('div').filter(function(r){ return r.children.length>1 && /^\s*Christmas Lucky Draw - /.test(r.innerText||'') && (r.innerText||'').length<400; }).forEach(function(r){
-        var minus=$$('button',r).filter(function(b){ return (b.innerText||'').trim()==='-' && b.getClientRects().length; })[0];
+      $$('tr').filter(function(r){ return /Christmas Lucky Draw - /.test(r.innerText||'') && r.querySelector('.btn-minus-selection'); }).forEach(function(r){
+        var minus=r.querySelector('.btn-minus-selection');
         if(minus && !minus.__caX){ minus.__caX=1; minus.click(); setTimeout(function(){ minus.__caX=0; },800); }
       });
     }
