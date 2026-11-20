@@ -53,7 +53,7 @@
       /* Build Your Own Box: 2 big picture cards per row (like Orderla's grid) */
       '.ca-big{display:grid!important;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0 10px}',
       '.ca-big > .col-12{max-width:100%!important;flex:none!important;width:auto!important}',
-      '.ca-big .ca-lr{height:100%;margin:0!important;padding:8px 8px 12px!important;border-radius:20px!important}',
+      '.ca-big .ca-lr{height:100%;margin:0!important;padding:5px 5px 10px!important;border-radius:20px!important}',
       '.ca-big .ca-lr > div{height:100%}',
       '.ca-big .ca-lr > div > div{flex-direction:column!important}',
       '.ca-big .ca-rimg{flex:none!important;margin:0 0 10px!important;width:100%}',
@@ -364,7 +364,7 @@
     }
     function intro(){
       modal('<div class="dg-h"><img alt="" src="'+CA_IMG+'feuille-celebrate.webp"><div><small>CHRISTMAS LUCKY DRAW</small><h3>Flip &amp; match!</h3></div></div>'+
-        '<ol class="dg-rules"><li>9 cake coins are hiding face-down.</li><li>You get <b>3 flips</b> and <b>30 seconds</b>.</li><li>Flip <b>2 of the same cake</b> and you win a prize!</li></ol>'+
+        '<ol class="dg-rules"><li>9 cake coins are hiding face-down.</li><li>Each turn, flip <b>2 coins</b>. No match? They flip back.</li><li>You get <b>3 turns</b> in <b>30 seconds</b>.</li><li>Find <b>2 of the same cake</b> and you win a prize!</li></ol>'+
         '<p class="dg-prz">🍰 Extra cake 50% off · 🧁 RM6.99 surprise cake · 🍪 free cookie · 🎂 free birthday kit</p>'+
         '<button class="bt go" type="button">Start the game</button><button class="bt o later" type="button">Maybe later</button><p class="dg-fine">One game per phone · while stocks last · until 31 Dec 2026</p>',
         function(m,close){ m.querySelector('.go').onclick=function(){ close(); play(); }; m.querySelector('.later').onclick=function(){ close(); D.later=1; dsave(D); showChip(); host('Tap the 🎁 button whenever you\'re ready to play!',5000); }; }, 'dg');
@@ -377,33 +377,45 @@
     function play(){
       D.started=Date.now(); var win=Math.random()<WIN, prize=win?pickPrize():null; if(!prize) win=false;
       D.win=win; D.prize=prize; dsave(D);
-      var faces=[], flips=0, pairAt= win ? (Math.random()<0.5?2:3) : 0, ended=false;
+      var TURNS=3, turn=1, inTurn=[], ended=false, busy=false, coinFace={}, used=[];
+      /* the turn that wins (if this game wins): turn 2 or 3 most often */
+      var r=Math.random(), winTurn= !win ? 0 : (r<.2?1:(r<.6?2:3));
       var pool=FACES.slice().sort(function(){return Math.random()-.5;});
-      var A=pool[0], B=pool[1], C=pool[2];
+      function fresh(){ var f=pool.filter(function(x){ return used.indexOf(x)<0; })[0]; used.push(f); return f; }
       var cells=''; for(var i=0;i<9;i++) cells+='<button type="button" class="coin" data-i="'+i+'"><span class="in"><span class="bk"><b>CA</b></span><span class="fr"><img alt="" src=""></span></span></button>';
-      var close=modal('<div class="dg-top"><span class="tm">⏱ <b>30</b>s</span><span class="fl">Flips left: <b>3</b></span></div><div class="dg-grid">'+cells+'</div><p class="dg-msg">Find 2 of the same cake!</p>', function(m){
+      var close=modal('<div class="dg-top"><span class="tm">⏱ <b>30</b>s</span><span class="fl">Turn <b>1</b> of 3</span></div><div class="dg-grid">'+cells+'</div><p class="dg-msg">Flip 2 coins. Find 2 of the same cake!</p>', function(m){
         var tEl=m.querySelector('.tm b'), fEl=m.querySelector('.fl b'), msg=m.querySelector('.dg-msg'), left=LIMIT;
         var tk=setInterval(function(){ if(ended) return clearInterval(tk); left--; tEl.textContent=left; if(left<=10) m.querySelector('.tm').classList.add('hot'); if(left<=0){ clearInterval(tk); finish(false,'time'); } },1000);
-        function faceFor(n){ /* n = 1st,2nd,3rd flip */
-          if(n===1) return A;
-          if(n===2) return (win && pairAt===2) ? A : B;
-          return (win && pairAt===3) ? (Math.random()<.5?A:B) : C;
+        function faceFor(idx){
+          if(coinFace[idx]) return coinFace[idx];          /* a coin keeps its cake */
+          var f;
+          if(inTurn.length===1 && win && turn>=winTurn) f=coinFace[inTurn[0]];   /* winning turn: 2nd coin matches */
+          else f=fresh();                                   /* otherwise always a new cake, so no accidental pair */
+          coinFace[idx]=f; return f;
         }
         m.querySelectorAll('.coin').forEach(function(b){ b.onclick=function(){
-          if(ended || b.classList.contains('up') || flips>=FLIPS) return;
-          flips++; var f=faceFor(flips); faces[+b.getAttribute('data-i')]=f;
-          b.querySelector('img').src=faceImg(f); b.classList.add('up'); fEl.textContent=FLIPS-flips;
-          var shown=faces.filter(Boolean), pair=shown.length!==new Set(shown).size;
-          if(pair){ m.querySelectorAll('.coin.up').forEach(function(x){ if(faces[+x.getAttribute('data-i')]===f) x.classList.add('match'); }); return setTimeout(function(){ finish(true); },700); }
-          if(flips>=FLIPS) setTimeout(function(){ finish(false,'flips'); },700);
-          else msg.textContent= flips===1 ? 'Nice! Now find its twin…' : 'Last flip! You can do it!';
+          var idx=+b.getAttribute('data-i');
+          if(ended || busy || b.classList.contains('up')) return;
+          var f=faceFor(idx); inTurn.push(idx);
+          b.querySelector('img').src=faceImg(f); b.classList.add('up');
+          if(inTurn.length===1){ msg.textContent='Now flip one more…'; return; }
+          busy=true;
+          if(coinFace[inTurn[0]]===coinFace[inTurn[1]]){
+            inTurn.forEach(function(k){ m.querySelectorAll('.coin')[k].classList.add('match'); });
+            return setTimeout(function(){ finish(true); },800);
+          }
+          if(turn>=TURNS){ msg.textContent='Not a match…'; return setTimeout(function(){ finish(false,'flips'); },1000); }
+          msg.textContent='Not a match! Flipping back…';
+          setTimeout(function(){
+            if(ended) return;
+            inTurn.forEach(function(k){ m.querySelectorAll('.coin')[k].classList.remove('up'); });
+            inTurn=[]; turn++; fEl.textContent=turn; busy=false;
+            msg.textContent= turn===TURNS ? 'Last turn! Flip 2 coins.' : 'Turn '+turn+'! Flip 2 coins.';
+          },1100);
         }; });
         function finish(won, why){
           if(ended) return; ended=true; clearInterval(tk); D.done=1; D.result=won?D.prize:'none'; dsave(D);
-          /* show the rest of the board */
-          var rest=FACES.filter(function(x){ return faces.indexOf(x)<0; });
-          m.querySelectorAll('.coin').forEach(function(x,i){ if(!faces[i]){ x.querySelector('img').src=faceImg(rest[i%rest.length]); x.classList.add('up','dim'); } });
-          setTimeout(function(){ close(); result(won, why); },1400);
+          setTimeout(function(){ close(); result(won, why); },1200);
         }
       }, 'dg');
     }

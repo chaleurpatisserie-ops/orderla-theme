@@ -63,14 +63,14 @@
       size(); addEventListener('resize', size);
       var N = mobile ? 35 : 60;
       var cols = [C.blue, C.blue, C.cream, C.blue];
-      for (var i=0;i<N;i++) flakes.push({x:Math.random()*W, y:Math.random()*H, r:1.5+Math.random()*3, s:.3+Math.random()*.9, d:Math.random()*6.28, c:cols[i%4]});
+      for (var i=0;i<N;i++) flakes.push({x:Math.random()*W, y:Math.random()*H, r:1.5+Math.random()*3, s:.12+Math.random()*.33, d:Math.random()*6.28, c:cols[i%4]});
       var run = true;
       document.addEventListener('visibilitychange', function(){ run = !document.hidden; if (run) requestAnimationFrame(tick); });
       function tick(){
         if (!run) return;
         ctx.clearRect(0,0,W,H);
         for (var i=0;i<flakes.length;i++){
-          var f = flakes[i]; f.d += .01; f.y += f.s; f.x += Math.sin(f.d)*.4;
+          var f = flakes[i]; f.d += .006; f.y += f.s; f.x += Math.sin(f.d)*.22;
           if (f.y > H+5){ f.y = -5; f.x = Math.random()*W; }
           ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283);
           ctx.fillStyle = f.c; ctx.globalAlpha = .85; ctx.fill();
