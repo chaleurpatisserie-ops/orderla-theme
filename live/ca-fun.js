@@ -50,10 +50,23 @@
       '@keyframes caHop{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}',
       '#ca-menu .ft{padding:10px 16px 16px;font-size:11px;color:'+CARAMEL+';text-align:center}',
       'body.ca-popup #ca-mbtn{display:none}',
+      /* Build Your Own Box: 2 big picture cards per row (like Orderla's grid) */
+      '.ca-big{display:grid!important;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0 10px}',
+      '.ca-big > .col-12{max-width:100%!important;flex:none!important;width:auto!important}',
+      '.ca-big .ca-lr{height:100%;margin:0!important;padding:5px 5px 10px!important;border-radius:20px!important}',
+      '.ca-big .ca-lr > div{height:100%}',
+      '.ca-big .ca-lr > div > div{flex-direction:column!important}',
+      '.ca-big .ca-rimg{flex:none!important;margin:0 0 10px!important;width:100%}',
+      '.ca-big .ca-rimg img{width:100%!important;height:auto!important;aspect-ratio:1/1;border-radius:14px!important}',
+      '.ca-big .ca-ri{display:flex!important;flex-direction:column;gap:4px;padding:0 4px}',
+      '.ca-big .ca-rt span{font-size:14px!important}',
+      '.ca-big .ca-rt p{display:none!important}',
+      '.ca-big .ca-rb > div:first-child{text-align:left}',
+      '.ca-big .ca-rb > div:last-child{justify-content:flex-start!important;padding-top:6px!important}',
       /* ---------- fruits & nuts garden ---------- */
       '.ca-gpar{position:relative!important}','.ca-gpar > :not(#ca-garden){position:relative;z-index:1}',
       '#ca-garden{position:absolute;left:0;right:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,#EEF5E4 0%,#DDEBCB 55%,#CFE2B6 100%);opacity:0;transition:opacity .6s}',
-      '#ca-garden.on{opacity:1}',
+      '#ca-garden.on{opacity:1}','.ca-aftergdn{padding-top:30px!important}',
       '#ca-garden .lv{position:absolute;inset:0;opacity:.38;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%27120%27%3E%3Cg fill=%27%23A9C68A%27%3E%3Cpath d=%27M18 22c10-10 24-8 26 0-8 8-20 10-26 0z%27/%3E%3Cpath d=%27M84 70c8-12 22-12 26-4-6 10-18 14-26 4z%27/%3E%3Cpath d=%27M40 96c6-9 17-9 20-3-5 7-14 10-20 3z%27/%3E%3C/g%3E%3Cg fill=%27%23E8B4A0%27%3E%3Ccircle cx=%2796%27 cy=%2720%27 r=%273%27/%3E%3Ccircle cx=%2716%27 cy=%2770%27 r=%272.5%27/%3E%3C/g%3E%3C/svg%3E");background-size:120px 120px}',
       '#ca-garden .hedge{position:absolute;left:0;right:0;top:-22px;height:24px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 60 24%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0 24V14C4 4 12 4 15 12 18 2 28 2 30 11 33 3 42 3 45 12 48 4 56 4 60 14V24Z%27 fill=%27%23EEF5E4%27/%3E%3C/svg%3E");background-size:60px 24px;background-repeat:repeat-x}',
       '#ca-garden .grass{position:absolute;left:0;right:0;bottom:-2px;height:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 80 34%27%3E%3Cg fill=%27%237E9E58%27%3E%3Cpath d=%27M0 34 6 10 9 34Z%27/%3E%3Cpath d=%27M10 34 18 4 20 34Z%27/%3E%3Cpath d=%27M24 34 28 14 32 34Z%27/%3E%3Cpath d=%27M36 34 44 6 46 34Z%27/%3E%3Cpath d=%27M50 34 55 16 58 34Z%27/%3E%3Cpath d=%27M60 34 68 2 70 34Z%27/%3E%3Cpath d=%27M72 34 76 12 80 34Z%27/%3E%3C/g%3E%3Ccircle cx=%2730%27 cy=%2713%27 r=%273%27 fill=%27%23780C14%27/%3E%3Ccircle cx=%2757%27 cy=%2715%27 r=%272.5%27 fill=%27%23FFF0DC%27/%3E%3C/svg%3E");background-size:80px 34px;background-repeat:repeat-x}',
@@ -71,6 +84,32 @@
       '.ca-pm .pb{position:relative;flex:1;min-width:0;box-sizing:border-box;background:#fff;border:2px solid '+BURG+';border-radius:16px 16px 16px 4px;padding:9px 12px;font:600 13px/1.4 Montserrat,sans-serif;color:'+BROWN+';min-height:44px}',
       '.ca-pm .pb small{display:block;font:800 10px Montserrat,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:'+CARAMEL+';margin-bottom:2px}',
       '.ca-pm.g .pb{border-color:#7E9E58;background:#F3F8EC}',
+      /* ---------- lucky draw game ---------- */
+      '#ca-gm.dg .cd{width:min(92vw,380px);padding:18px 16px 16px}',
+      '.dg-h{display:flex;align-items:center;gap:10px;text-align:left;margin-bottom:6px}',
+      '.dg-h img{width:64px}',
+      '.dg-h small{font:800 11px Montserrat,sans-serif;letter-spacing:.14em;color:'+CARAMEL+'}',
+      '.dg-h h3{margin:2px 0 0!important}',
+      '.dg-rules{text-align:left;margin:8px 0 10px;padding-left:22px;font-size:14px;line-height:1.55}',
+      '.dg-prz{font-size:12.5px!important;background:#fff;border-radius:12px;padding:8px 10px;margin:0 0 6px!important}',
+      '.dg-fine{font-size:11px!important;color:'+CARAMEL+';margin:10px 0 0!important}',
+      '.dg-top{display:flex;justify-content:space-between;font:700 14px Montserrat,sans-serif;margin-bottom:10px}',
+      '.dg-top .hot{color:'+BURG+';animation:caHop .5s ease-in-out infinite}',
+      '.dg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}',
+      '.coin{aspect-ratio:1;border:none;background:none;padding:0;perspective:600px;cursor:pointer;-webkit-tap-highlight-color:transparent}',
+      '.coin .in{position:relative;display:block;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}',
+      '.coin.up .in{transform:rotateY(180deg)}',
+      '.coin .bk,.coin .fr{position:absolute;inset:0;border-radius:50%;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;align-items:center;justify-content:center}',
+      '.coin .bk{background:radial-gradient(circle at 35% 30%,#9A1822,'+BURG+' 70%);border:4px solid '+BEIGE+';box-shadow:0 4px 10px rgba(82,51,37,.3)}',
+      '.coin .bk b{font:800 22px Montserrat,sans-serif;color:'+CREAM+';letter-spacing:.06em}',
+      '.coin .fr{background:'+CREAM+';border:4px solid '+CARAMEL+';transform:rotateY(180deg);overflow:hidden}',
+      '.coin .fr img{width:86%;height:86%;object-fit:contain}',
+      '.coin.match .fr{border-color:#7E9E58;box-shadow:0 0 0 4px rgba(126,158,88,.35)}',
+      '.coin.dim{opacity:.55}',
+      '.coin:not(.up):active .in{transform:scale(.94)}',
+      '.dg-msg{margin:12px 0 0!important;font-weight:700}',
+      '#ca-dchip{position:fixed;left:12px;bottom:150px;z-index:2147483002;border:none;border-radius:999px;background:'+BURG+';color:'+CREAM+';font:800 13px Montserrat,sans-serif;padding:10px 14px;display:flex;gap:6px;align-items:center;box-shadow:0 6px 16px rgba(82,51,37,.35);animation:caWig 1.2s ease-in-out infinite;cursor:pointer}',
+      'body.ca-popup #ca-dchip,body.ca-mopen #ca-dchip{display:none}',
       /* ---------- gift hunt ---------- */
       '.ca-hide{display:none!important}',
       '.ca-spot{position:fixed;z-index:2147483002;border:none;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:caPop .5s cubic-bezier(.2,.9,.3,1.5) both}',
@@ -119,7 +158,7 @@
         return { a:a, id:id, el:el, name:(a.innerText||'').trim() };
       }).filter(function(s){ return s.el; });
     }
-    function isGiftSec(n){ return /gift hunt/i.test(n); }
+    function isGiftSec(n){ return /gift hunt|lucky draw/i.test(n); }
     function isGarden(n){ return /fruits?\s*(&|and)\s*nuts?/i.test(n); }
     function secEls(anchor){ var out=[], n=anchor.nextElementSibling; while(n && n.tagName!=='SECTION'){ if(!/^ca-/.test(n.id||'')) out.push(n); n=n.nextElementSibling; } return out; }
     function nice(n){ return n.toLowerCase().replace(/(^|[\s(&-])([a-zà-ÿ])/g,function(m,p,c){return p+c.toUpperCase();}).replace(/\bOf\b/g,'of'); }
@@ -194,6 +233,9 @@
       return cur;
     }
 
+    function bigBoxes(){
+      sections().forEach(function(x){ if(!/build your own box/i.test(x.name)) return; secEls(x.el).forEach(function(e){ if(e.classList.contains('row')) e.classList.add('ca-big'); }); });
+    }
     /* ---------- Fruits & Nuts garden ---------- */
     var GARD_IN=[
       'Psst! You\'re in the freshest corner of Chaleur: my garden! 🌱',
@@ -221,8 +263,9 @@
         band.appendChild(layer);
       }
       var els=secEls(s.el), last=els[els.length-1]||s.el;
+      var na=last.nextElementSibling; while(na&&na.tagName!=='SECTION') na=na.nextElementSibling; if(na&&na.nextElementSibling) na.nextElementSibling.classList.add('ca-aftergdn');
       var br=band.getBoundingClientRect(), t=s.el.getBoundingClientRect().top-br.top, b=last.getBoundingClientRect().bottom-br.top;
-      layer.classList.remove('ca-hide'); layer.style.top=(t+2)+'px'; layer.style.height=Math.max(60,b-t+10)+'px'; layer.classList.add('on');
+      if(!(last.innerText||'').trim() && last.offsetHeight<90) b=last.getBoundingClientRect().top-br.top+12; layer.classList.remove('ca-hide'); layer.style.top=(t+2)+'px'; layer.style.height=Math.max(60,b-t)+'px'; layer.classList.add('on');
       // gardener
       if(!gard){
         gard=document.createElement('button'); gard.id='ca-gard'; gard.type='button'; gard.setAttribute('aria-label','Chaleur\'s gardener');
@@ -273,202 +316,216 @@
       setTimeout(function(){ typeOut(w.querySelector('.pb span'), I.t); },350);
       w.querySelector('img').addEventListener('click',function(){ w.classList.remove('hop'); void w.offsetWidth; w.classList.add('hop'); });
     }
-    /* ---------- Christmas gift hunt ---------- */
-    /* chances (must add up to 1). Change here only. */
-    var ODDS={ none:.20, cookie:.25, petit:.25, rm5:.15, rm10:.10, rm20:.05 };
-    var KEY='caGift26';
-    var SPOTS=['stock','tree','box','sleigh','santa'];
-    var SPOT_NAME={stock:'the stocking',tree:'under the tree',box:'the gift box',sleigh:'the sleigh drop',santa:'Santa\'s sack'};
-    var DECOY={
-      stock:['Only snow in this stocking ❄️','Just a candy cane in here. Try another spot!'],
-      tree:['Pine needles and one very surprised squirrel 🐿️','Nothing under the tree… yet!'],
-      box:['This box is full of ribbons, hehe 🎀','Empty! Rudolph must have peeked first.'],
-      sleigh:['The sleigh dropped… a mitten 🧤','Just reindeer snacks in this one!'],
-      santa:['Santa\'s sack is full of letters 💌 Keep looking!','Ho ho… not this one!']
+    /* ---------- Christmas Lucky Draw (flip game) ---------- */
+    var DMIN=150, DKEY='caDraw26', WIN=0.70, LIMIT=30, FLIPS=3;
+    /* prize split among winners (must add up to 1) */
+    var PRIZE_W={ rm20:.005, half:.495, petit:.20, cookie:.15, kit:.15 };
+    var PR={
+      rm20:{code:'@', v:20, big:'🌟', h:'Jackpot! RM20 off!', p:'Lucky you! We\'ll apply it for you at checkout. Joyeux Noël!'},
+      half:{re:/Lucky Draw - Extra Petit/i, big:'🍰', h:'An extra cake at 50% off!', p:'Pick any petit gâteau at half price. We\'ve opened it for you: choose your cake and tap Add to Cart.', choose:true},
+      petit:{re:/Lucky Draw - Surprise Petit/i, big:'🧁', h:'A surprise petit gâteau for RM6.99!', p:'Chef\'s surprise flavour. We\'ve added it to your cart. Don\'t want it? Just remove it in your cart.', ok:'Your surprise petit gâteau is in the cart! 🧁'},
+      cookie:{re:/Lucky Draw - Free Chocolate/i, big:'🍪', h:'A free cookie!', p:'One Chocolate Chips Walnut Cookie, on us. It\'s in your cart now (remove it anytime).', ok:'Your free cookie is in the cart! 🍪'},
+      kit:{re:/Lucky Draw - Free Birthday Kit/i, big:'🎂', h:'A free Birthday Kit!', p:'Birthday tag + 6 candles, on us. It\'s in your cart now (remove it anytime).', ok:'Free Birthday Kit added! 🎂'}
     };
-    var PRIZE={
-      cookie:{big:'🍪',h:'A free cookie!',add:'One Chocolate Chips Walnut Cookie, on us. We\'ve added it to your cart. Don\'t want it? Just remove it in your cart.',price:'free',re:/Christmas Gift - .*Cookie/i,ok:'Your free cookie is in the cart! 🍪'},
-      petit:{big:'🧁',h:'A surprise petit gâteau!',add:'Chef\'s surprise flavour, just RM6.99. We\'ve added it to your cart. Don\'t want it? Just remove it in your cart.',price:'RM6.99',re:/Surprise Petit/i,ok:'Your surprise petit gâteau is in the cart! 🧁'},
-      rm5:{big:'🎁',h:'RM5 off your order!',p:'We\'ll apply it for you at checkout. Merci & Joyeux Noël!',code:'XMASGIFT5',v:5},
-      rm10:{big:'🎉',h:'RM10 off your order!',p:'We\'ll apply it for you at checkout. Merci & Joyeux Noël!',code:'XMASGIFT10',v:10},
-      rm20:{big:'🌟',h:'Wow, RM20 off!',p:'Lucky you! We\'ll apply it for you at checkout. Joyeux Noël!',code:'XMASGIFT20',v:20}
-    };
-    function load(){ try { return JSON.parse(localStorage.getItem(KEY)||'null'); } catch(e){ return null; } }
-    function save(g){ try { localStorage.setItem(KEY, JSON.stringify(g)); } catch(e){} }
-    var G=load();
-    function cartTotal(){
-      var bar=$('.form-bottom-bar'); if(!bar) return null;
-      var m=(bar.innerText||'').match(/RM\s*([\d,]+\.\d{2})/g); return m? parseFloat(m[m.length-1].replace(/[^\d.]/g,'')) : null;
-    }
-    function giftRow(re){ var b=$$('a.form-add-item-btn').filter(function(b){ var r=b.closest('.col-12'); return r && re.test(r.innerText); })[0]; return b; }
-    function prizeAvailable(re){ var b=giftRow(re); if(!b) return false; var r=b.closest('.col-12'); return !/sold\s*out|out of stock|unavailable/i.test(r.innerText); }
-    function soldOut(re){ var b=giftRow(re); if(!b) return false; return /sold\s*out|out of stock|unavailable/i.test(b.closest('.col-12').innerText); }
-    /* when both the free cookies and the surprise petits are gone, the whole hunt stops (everything = nothing) */
-    function huntOver(){ return soldOut(/Christmas Gift - .*Cookie/i) && soldOut(/Surprise Petit/i); }
-    function petitAvailable(){ return prizeAvailable(/Surprise Petit/i); }
-    function draw(){
-      var r=Math.random(), o='none', acc=0;
-      for(var k in ODDS){ acc+=ODDS[k]; if(r<acc){ o=k; break; } }
-      if(o==='petit' && !petitAvailable()) o='none';
-      if(o==='cookie' && !prizeAvailable(/Christmas Gift - .*Cookie/i)) o='none';
-      return { o:o, spot:SPOTS[Math.floor(Math.random()*SPOTS.length)], opened:[], done:false, t:Date.now() };
-    }
-    var SVG={
-      stock:'<svg viewBox="0 0 40 56"><rect x="6" y="2" width="22" height="9" rx="3" fill="#FFF0DC" stroke="#C5D0E5"/><path d="M8 11h18v20c0 4 2 6 6 8 6 3 6 13-3 13-5 0-9-2-13-6L9 40c-2-2-3-4-3-7V11z" fill="#780C14"/><path d="M8 20h18M8 28h18" stroke="#FFF0DC" stroke-width="2" stroke-dasharray="3 3"/></svg>',
-      tree:'<svg viewBox="0 0 40 32"><rect x="4" y="10" width="32" height="20" rx="3" fill="#C5D0E5"/><rect x="17" y="10" width="6" height="20" fill="#780C14"/><path d="M20 10c-4-8-12-6-9-1 2 2 6 2 9 1 3 1 7 1 9-1 3-5-5-7-9 1z" fill="#780C14"/></svg>',
-      box:'<svg viewBox="0 0 44 44"><rect x="4" y="16" width="36" height="26" rx="3" fill="#780C14"/><rect x="2" y="11" width="40" height="8" rx="2" fill="#9A1822"/><rect x="19" y="11" width="6" height="31" fill="#F4DCBC"/><path d="M22 11c-5-10-15-8-11-2 2 3 7 3 11 2 4 1 9 1 11-2 4-6-6-8-11 2z" fill="#F4DCBC"/></svg>',
-      sleigh:'<svg viewBox="0 0 40 52"><path d="M4 18C4 6 36 6 36 18z" fill="#FFF0DC" stroke="#C5D0E5" stroke-width="1.5"/><path d="M6 18l12 16M34 18L22 34M20 18v16" stroke="#7A4926" stroke-width="1"/><rect x="11" y="32" width="18" height="18" rx="2" fill="#7A4926"/><rect x="18" y="32" width="4" height="18" fill="#FFF0DC"/></svg>',
-      santa:'<svg viewBox="0 0 60 70"><ellipse cx="44" cy="44" rx="13" ry="16" fill="#7A4926"/><path d="M38 30c2-6 10-6 12 0" stroke="#523325" stroke-width="2" fill="none"/><rect x="14" y="34" width="22" height="26" rx="9" fill="#780C14"/><rect x="14" y="46" width="22" height="4" fill="#523325"/><rect x="16" y="58" width="7" height="9" rx="2" fill="#523325"/><rect x="27" y="58" width="7" height="9" rx="2" fill="#523325"/><circle cx="25" cy="24" r="10" fill="#F4DCBC"/><path d="M15 30c2 10 18 10 20 0-3 4-17 4-20 0z" fill="#fff"/><path d="M14 20c2-12 20-14 24 0z" fill="#780C14"/><circle cx="40" cy="13" r="3.5" fill="#fff"/><path d="M13 20h25" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="21" cy="24" r="1.3" fill="#523325"/><circle cx="29" cy="24" r="1.3" fill="#523325"/></svg>'
-    };
-    function confetti(){
-      var cols=[BURG,BLUE,BEIGE,CARAMEL,'#fff'];
-      for(var i=0;i<46;i++){ var c=document.createElement('i'); c.className='ca-conf'; c.style.left=(Math.random()*100)+'vw'; c.style.background=cols[i%cols.length]; c.style.animationDelay=(Math.random()*.6)+'s'; c.style.borderRadius=(i%3?'2px':'50%'); document.body.appendChild(c); (function(c){ setTimeout(function(){ c.remove(); },3600); })(c); }
-    }
-    function modal(html, wire){
-      var m=document.createElement('div'); m.id='ca-gm'; m.innerHTML='<div class="cd" role="dialog" aria-modal="true">'+html+'</div>';
-      document.body.appendChild(m); function close(){ m.remove(); } if(wire) wire(m, close);
-      m.addEventListener('click',function(e){ if(e.target===m) close(); });
-      return close;
-    }
-    function toast(html, ms){
-      var t=document.getElementById('ca-gh'); if(t) t.remove();
-      t=document.createElement('div'); t.id='ca-gh'; t.innerHTML=html+'<button class="x" type="button" aria-label="Close">×</button>';
-      document.body.appendChild(t); setTimeout(function(){ t.classList.add('in'); },30);
-      function hide(){ t.classList.remove('in'); setTimeout(function(){ t.remove(); },500); }
-      t.querySelector('.x').addEventListener('click',hide); setTimeout(hide, ms||9000);
-    }
-    function clearSpots(){ $$('.ca-spot').forEach(function(s){ s.remove(); }); }
-    function showSpots(first){
-      if(document.querySelector('.ca-spot')) return;
-      SPOTS.forEach(function(k,i){
-        if(G.opened.indexOf(k)>-1) return;
-        var b=document.createElement('button'); b.type='button'; b.className='ca-spot'; b.id='ca-s-'+k; b.setAttribute('aria-label','Search '+SPOT_NAME[k]);
-        b.innerHTML=SVG[k]; b.style.animationDelay=(first? i*0.25 : 0)+'s';
-        if(k==='sleigh' && first){ b.classList.add('fall'); }
-        if(k==='santa' && first){ b.classList.add('walk'); }
-        b.addEventListener('click',function(){ openSpot(k,b); });
-        b.addEventListener('animationend',function(e){ if(e.target===b){ b.classList.remove('fall','walk'); b.style.animation='none'; } });
-        document.body.appendChild(b);
-      });
-      if(first){ var sl=document.getElementById('ca-xmas-sleigh'); if(sl){ sl.classList.remove('go'); void sl.offsetWidth; sl.classList.add('go'); } }
-    }
-    function openSpot(k,b){
-      if(G.done || G.opened.indexOf(k)>-1) return;
-      G.opened.push(k); save(G);
-      if(G.o!=='none' && k===G.spot){ G.done=true; G.found=k; save(G); clearSpots(); reveal(); return; }
-      b.classList.add('empty'); setTimeout(function(){ b.remove(); },600);
-      var lines=DECOY[k]; host(lines[Math.floor(Math.random()*lines.length)], 3500);
-      if(G.o==='none' && G.opened.length>=2){
-        G.done=true; save(G);
-        setTimeout(function(){ clearSpots(); modal('<div class="big">☃️</div><h3>No gift this round</h3><p>Santa\'s elves hid nothing for you this time. Thank you for shopping with us, and Joyeux Noël!</p><button class="bt" type="button">Back to my order</button>',function(m,close){ m.querySelector('.bt').addEventListener('click',close); }); },700);
-      }
-    }
-    function reveal(){
-      confetti();
-      var P=PRIZE[G.o];
-      if(P.price){
-        G.claim='yes'; save(G);
-        modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>Found in '+SPOT_NAME[G.found]+'! '+P.add+'</p><button class="bt" type="button">Yay! Back to my order</button>',function(m,close){ m.querySelector('.bt').addEventListener('click',close); });
-        setTimeout(function(){ if(G.o==='petit') addPetit(); else addPrize(P.re, P.ok); },900);
-      } else {
-        G.code=P.code; G.v=P.v; save(G);
-        modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>Found in '+SPOT_NAME[G.found]+'! '+P.p+'</p><button class="bt" type="button">Yay! Back to my order</button>',function(m,close){ m.querySelector('.bt').addEventListener('click',close); });
-      }
-    }
-    /* nobody can add the prize by itself: block "Add to Cart" in its popup unless it was won */
-    var allowPetit=false;
+    var FACES=['rudolph','cherry','ornament','strawberry','acorn','pistachio','mango','raspberry','noir','pear','coconut','kurma'];
+    var BOX_IMG={rudolph:'Rudolph',cherry:'Cherry',ornament:'Ornament',strawberry:'Strawberry',acorn:'Acorn',pistachio:'Pistachio',mango:'Mango',raspberry:'Raspberry',noir:'Noir',pear:'Pear',coconut:'Coconut',kurma:'Kurma'};
+    function faceImg(k){ try { if(window.__caBxImg) return window.__caBxImg(BOX_IMG[k]); } catch(e){} return CA_IMG+'feuille-happy.webp'; }
+    function dload(){ try { return JSON.parse(localStorage.getItem(DKEY)||'null'); } catch(e){ return null; } }
+    function dsave(g){ try { localStorage.setItem(DKEY, JSON.stringify(g)); } catch(e){} }
+    var D=dload();
+    function cartTotal(){ var bar=$('.form-bottom-bar'); if(!bar) return null; var m=(bar.innerText||'').match(/RM\s*([\d,]+\.\d{2})/g); return m? parseFloat(m[m.length-1].replace(/[^\d.]/g,'')) : null; }
+    function giftRow(re){ return $$('a.form-add-item-btn').filter(function(b){ var r=b.closest('.col-12'); return r && re.test(r.innerText); })[0]; }
+    function prizeAvailable(re){ var b=giftRow(re); if(!b) return false; return !/sold\s*out|out of stock|unavailable/i.test(b.closest('.col-12').innerText); }
+    function confetti(){ var cols=[BURG,BLUE,BEIGE,CARAMEL,'#fff']; for(var i=0;i<46;i++){ var c=document.createElement('i'); c.className='ca-conf'; c.style.left=(Math.random()*100)+'vw'; c.style.background=cols[i%cols.length]; c.style.animationDelay=(Math.random()*.6)+'s'; c.style.borderRadius=(i%3?'2px':'50%'); document.body.appendChild(c); (function(c){ setTimeout(function(){ c.remove(); },3600); })(c); } }
+    function modal(html, wire, cls){ var m=document.createElement('div'); m.id='ca-gm'; if(cls) m.className=cls; m.innerHTML='<div class="cd" role="dialog" aria-modal="true">'+html+'</div>'; document.body.appendChild(m); function close(){ m.remove(); } if(wire) wire(m, close); return close; }
+    /* prize products can only be added by winners */
+    var allowPrize=false;
     function guardPrize(){
-      var m=$$('.modal-content-wrapper,.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Surprise Petit|Christmas Gift - .*Cookie/i.test(x.innerText||''); })[0];
+      var m=$$('.modal-content-wrapper,.ReactModal__Content,.modal.show').filter(function(x){ return x.getClientRects().length && /Lucky Draw -|Christmas Gift -/i.test(x.innerText||''); })[0];
       if(!m) return;
-      var add=$$('button',m).filter(function(x){ return /Add to Cart|Gift hunt prize/i.test(x.innerText); })[0];
-      if(!add || allowPetit) return;
-      if(!add.__caG){ add.__caG=1; add.textContent='Gift hunt prize only 🎁'; add.disabled=true; add.style.opacity='.6';
-        add.addEventListener('click',function(e){ if(!allowPetit){ e.preventDefault(); e.stopImmediatePropagation(); } },true); }
+      var add=$$('button',m).filter(function(x){ return /Add to Cart|Lucky draw prize/i.test(x.innerText); })[0];
+      if(!add || allowPrize) return;
+      if(!add.__caG){ add.__caG=1; add.textContent='Lucky draw prize only 🎁'; add.disabled=true; add.style.opacity='.6';
+        add.addEventListener('click',function(e){ if(!allowPrize){ e.preventDefault(); e.stopImmediatePropagation(); } },true); }
     }
-    function addPrize(re, msg){
-      var b=giftRow(re); if(!b) return;
-      allowPetit=true; b.click();
+    function addPrize(P){
+      var b=giftRow(P.re); if(!b){ host('Hmm, the prize is hiding. Please tell our staff 🙏',5000); return; }
+      allowPrize=true; b.click();
+      if(P.choose){ setTimeout(function(){ host('Pick your cake, it\'s half price! 🍰',6000); },900); setTimeout(function(){ allowPrize=false; },120000); return; }
       var n=0, iv=setInterval(function(){
         var add=$$('button').filter(function(x){ return /^\s*Add to Cart\s*$/i.test(x.innerText) && x.getClientRects().length; })[0];
-        if(add){ clearInterval(iv); add.click(); G.added=1; save(G); setTimeout(function(){ allowPetit=false; },1500); setTimeout(function(){ host(msg,4500); },600); }
-        else if(++n>25){ clearInterval(iv); allowPetit=false; }
+        if(add){ clearInterval(iv); add.click(); D.added=1; dsave(D); setTimeout(function(){ allowPrize=false; },1500); setTimeout(function(){ host(P.ok,5000); },600); }
+        else if(++n>25){ clearInterval(iv); allowPrize=false; }
       },200);
     }
-    function addPetit(){
-      var b=giftRow(/Surprise Petit/i);
-      if(!b || !petitAvailable()){ host('Oh no, the surprise petits just ran out! Sorry 🥲',5000); G.claim='soldout'; save(G); return; }
-      allowPetit=true; b.click();
-      var n=0, iv=setInterval(function(){
-        var add=$$('button').filter(function(x){ return /^\s*Add to Cart\s*$/i.test(x.innerText) && x.getClientRects().length; })[0];
-        if(add){ clearInterval(iv); add.click(); G.added=1; save(G); setTimeout(function(){ allowPetit=false; },1500); setTimeout(function(){ host('Your surprise petit gâteau is in the cart! Remove it there if you change your mind 🧁',5000); },600); }
-        else if(++n>25){ clearInterval(iv); allowPetit=false; host('Tap the surprise petit in your cart to add it 🧁',4500); }
-      },200);
+    function pickPrize(){
+      var r=Math.random(), acc=0, k='half';
+      for(var p in PRIZE_W){ acc+=PRIZE_W[p]; if(r<acc){ k=p; break; } }
+      if(k==='rm20') return k;
+      return prizeAvailable(PR[k].re) ? k : null;   /* sold out = no prize */
     }
-    /* coupon at checkout: apply the gift code unless the customer's own code saves more */
+    function intro(){
+      modal('<div class="dg-h"><img alt="" src="'+CA_IMG+'feuille-celebrate.webp"><div><small>CHRISTMAS LUCKY DRAW</small><h3>Flip &amp; match!</h3></div></div>'+
+        '<ol class="dg-rules"><li>9 cake coins are hiding face-down.</li><li>Each turn, flip <b>2 coins</b>. No match? They flip back.</li><li>You get <b>3 turns</b> in <b>30 seconds</b>.</li><li>Find <b>2 of the same cake</b> and you win a prize!</li></ol>'+
+        '<p class="dg-prz">🌟 RM20 off · 🍰 extra cake 50% off · 🧁 RM6.99 surprise cake · 🍪 free cookie · 🎂 free birthday kit</p>'+
+        '<button class="bt go" type="button">Start the game</button><button class="bt o later" type="button">Maybe later</button><p class="dg-fine">One game per phone · while stocks last · until 31 Dec 2026</p>',
+        function(m,close){ m.querySelector('.go').onclick=function(){ close(); play(); }; m.querySelector('.later').onclick=function(){ close(); D.later=1; dsave(D); showChip(); host('Tap the 🎁 button whenever you\'re ready to play!',5000); }; }, 'dg');
+    }
+    function showChip(){
+      if(document.getElementById('ca-dchip') || D.done) return;
+      var c=document.createElement('button'); c.id='ca-dchip'; c.type='button'; c.innerHTML='🎁<span>Lucky draw</span>';
+      c.onclick=function(){ c.remove(); intro(); }; document.body.appendChild(c);
+    }
+    function play(){
+      D.started=Date.now(); var win=Math.random()<WIN, prize=win?pickPrize():null; if(!prize) win=false;
+      D.win=win; D.prize=prize; dsave(D);
+      var TURNS=3, turn=1, inTurn=[], ended=false, busy=false, coinFace={}, used=[];
+      /* the turn that wins (if this game wins): turn 2 or 3 most often */
+      var r=Math.random(), winTurn= !win ? 0 : (r<.2?1:(r<.6?2:3));
+      var pool=FACES.slice().sort(function(){return Math.random()-.5;});
+      function fresh(){ var f=pool.filter(function(x){ return used.indexOf(x)<0; })[0]; used.push(f); return f; }
+      var cells=''; for(var i=0;i<9;i++) cells+='<button type="button" class="coin" data-i="'+i+'"><span class="in"><span class="bk"><b>CA</b></span><span class="fr"><img alt="" src=""></span></span></button>';
+      var close=modal('<div class="dg-top"><span class="tm">⏱ <b>30</b>s</span><span class="fl">Turn <b>1</b> of 3</span></div><div class="dg-grid">'+cells+'</div><p class="dg-msg">Flip 2 coins. Find 2 of the same cake!</p>', function(m){
+        var tEl=m.querySelector('.tm b'), fEl=m.querySelector('.fl b'), msg=m.querySelector('.dg-msg'), left=LIMIT;
+        var tk=setInterval(function(){ if(ended) return clearInterval(tk); left--; tEl.textContent=left; if(left<=10) m.querySelector('.tm').classList.add('hot'); if(left<=0){ clearInterval(tk); finish(false,'time'); } },1000);
+        function faceFor(idx){
+          if(coinFace[idx]) return coinFace[idx];          /* a coin keeps its cake */
+          var f;
+          if(inTurn.length===1 && win && turn>=winTurn) f=coinFace[inTurn[0]];   /* winning turn: 2nd coin matches */
+          else f=fresh();                                   /* otherwise always a new cake, so no accidental pair */
+          coinFace[idx]=f; return f;
+        }
+        m.querySelectorAll('.coin').forEach(function(b){ b.onclick=function(){
+          var idx=+b.getAttribute('data-i');
+          if(ended || busy || b.classList.contains('up')) return;
+          var f=faceFor(idx); inTurn.push(idx);
+          b.querySelector('img').src=faceImg(f); b.classList.add('up');
+          if(inTurn.length===1){ msg.textContent='Now flip one more…'; return; }
+          busy=true;
+          if(coinFace[inTurn[0]]===coinFace[inTurn[1]]){
+            inTurn.forEach(function(k){ m.querySelectorAll('.coin')[k].classList.add('match'); });
+            return setTimeout(function(){ finish(true); },800);
+          }
+          if(turn>=TURNS){ msg.textContent='Not a match…'; return setTimeout(function(){ finish(false,'flips'); },1000); }
+          msg.textContent='Not a match! Flipping back…';
+          setTimeout(function(){
+            if(ended) return;
+            inTurn.forEach(function(k){ m.querySelectorAll('.coin')[k].classList.remove('up'); });
+            inTurn=[]; turn++; fEl.textContent=turn; busy=false;
+            msg.textContent= turn===TURNS ? 'Last turn! Flip 2 coins.' : 'Turn '+turn+'! Flip 2 coins.';
+          },1100);
+        }; });
+        function finish(won, why){
+          if(ended) return; ended=true; clearInterval(tk); D.done=1; D.result=won?D.prize:'none'; dsave(D);
+          setTimeout(function(){ close(); result(won, why); },1200);
+        }
+      }, 'dg');
+    }
+    function result(won, why){
+      var chip=document.getElementById('ca-dchip'); if(chip) chip.remove();
+      if(!won){
+        modal('<div class="big">☃️</div><h3>'+(why==='time'?'Time\'s up!':'So close!')+'</h3><p>No match this time. Thank you for shopping with us, and Joyeux Noël!</p><button class="bt" type="button">Back to my order</button>', function(m,close){ m.querySelector('.bt').onclick=close; });
+        return;
+      }
+      var P=PR[D.prize]; confetti();
+      modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>'+P.p+'</p><button class="bt" type="button">'+(P.choose?'Choose my cake':'Yay! Back to my order')+'</button>', function(m,close){ m.querySelector('.bt').onclick=close; });
+      if(P.code){ D.code='@'; D.v=P.v; dsave(D); return; }
+      setTimeout(function(){ addPrize(P); }, P.choose?2200:900);
+    }
+
+    /* RM20 off jackpot: auto-apply the (hidden) code at checkout */
     var applied=false;
+    function jc(){ try { return atob('WUM3S0JXUTlTNkFD').split('').reverse().join(''); } catch(e){ return ''; } }
+    function maskCode(){ /* show "LUCKYDRAW" instead of the real code on the page */
+      var c=jc(); if(!c) return; var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null), n;
+      while((n=w.nextNode())){ if(n.nodeValue.indexOf(c)>=0) n.nodeValue=n.nodeValue.split(c).join('LUCKYDRAW'); }
+      $$('input').forEach(function(i){ if(i.value===c) i.style.color='transparent'; });
+    }
     function checkout(){
-      if(!G || !G.code) return;
+      if(!D || !D.code) return;
+      maskCode();
       var inp=$('input.text-monospace'); var sum=document.body.innerText||'';
       var dl=sum.match(/Discount:\s*([A-Z0-9]+)\s*RM\s*-?([\d.]+)/i);
       var note=document.getElementById('ca-gnote');
       var anchor=inp? (inp.closest('.input-group')||inp.parentNode) : null;
-      if(dl){
-        var code=dl[1].toUpperCase(), amt=parseFloat(dl[2]);
-        var msg = code===G.code ? '🎁 Your Christmas gift ('+'RM'+G.v+' off) is applied. Joyeux Noël!'
-                : (amt>=G.v ? '🎁 Your '+code+' saves you more (RM'+amt.toFixed(2)+'), so we kept it instead of your RM'+G.v+' Christmas gift.' : '');
-        if(code!==G.code && amt<G.v && inp && !applied){ applied=true; useCode(inp, G.code); }
-        placeNote(msg);
-        return;
-      }
-      if(inp && !applied && inp.getClientRects().length){
-        if(cartTotal()!==null && cartTotal()<MIN){ placeNote('🎁 Your Christmas RM'+G.v+' off needs a cart of RM'+MIN+' or more.'); return; }
-        if((inp.value||'').trim()) return;           /* customer is typing their own code: let it run, compare after */
-        applied=true; useCode(inp, G.code);
-      }
       function placeNote(msg){
         if(!msg){ if(note) note.remove(); return; }
         if(!note){ note=document.createElement('div'); note.id='ca-gnote'; var host2=$$('div').filter(function(d){ var t=(d.innerText||'').trim(); return /^Date & Time Slot/.test(t) && t.length<90; }).pop(); var tgt=host2||anchor; if(!tgt) return; tgt.parentNode.insertBefore(note, tgt.nextSibling); }
         note.textContent=msg; if(!document.body.contains(note)) note=null;
       }
+      if(dl){
+        var code=dl[1].toUpperCase(), amt=parseFloat(dl[2]);
+        var mine = code==='LUCKYDRAW' || code===jc();
+        var msg = mine ? '🌟 Your Lucky Draw RM'+D.v+' off is applied. Joyeux Noël!'
+                : (amt>=D.v ? '🌟 Your '+code+' saves you more (RM'+amt.toFixed(2)+'), so we kept it instead of your RM'+D.v+' Lucky Draw prize.' : '');
+        if(!mine && amt<D.v && inp && !applied){ applied=true; useCode(inp, jc()); }
+        placeNote(msg); return;
+      }
+      if(inp && !applied && inp.getClientRects().length){
+        if(cartTotal()!==null && cartTotal()<DMIN){ placeNote('🌟 Your Lucky Draw RM'+D.v+' off needs a cart of RM'+DMIN+' or more.'); return; }
+        if((inp.value||'').trim()) return;
+        applied=true; useCode(inp, jc());
+      }
     }
     function useCode(inp, code){
-      var set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; set.call(inp, code); inp.dispatchEvent(new Event('input',{bubbles:true}));
+      var set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; inp.style.color='transparent'; set.call(inp, code); inp.dispatchEvent(new Event('input',{bubbles:true}));
       setTimeout(function(){ var r=$$('button').filter(function(b){ return /^\s*Redeem\s*$/.test(b.innerText); })[0]; if(r) r.click(); },250);
     }
-
-    var lastTot=null, teased=false;
-    function hunt(){
-      if(Date.now()>GIFT_END) { clearSpots(); return; }
+    var teased=false, lastTot=null;
+    function draw(){
+      if(Date.now()>GIFT_END) return;
       hideGift(); guardPrize();
-      var tot=cartTotal();
-      if(G && G.code) checkout();
-      if(G && G.done) return;
-      if(tot===null) return;
-      if(tot>=MIN){
-        if(!G){ G=draw(); save(G); }
-        if(!document.querySelector('.ca-spot') && !popupOpen() && $('.form-bottom-bar')){
-          var first = !G.shown; G.shown=1; save(G);
-          showSpots(first);
-          if(first){
-            toast('<b>🎁 Gift hunt unlocked!</b>Your cart hit RM'+MIN+'. A present is hiding in the stocking, under the tree, in the gift box, in the sleigh drop or in Santa\'s sack. Tap to search!', 11000);
-            host('Ooh, the gift hunt is open! Tap the sparkly things ✨',5000);
-          }
-        }
+      if(!D) D={};
+      if(D.done){ try{ checkout(); }catch(e){} return; }
+      var tot=cartTotal(); if(tot===null) return;
+      if(tot>=DMIN){
+        if(!D.offered && !popupOpen() && !document.getElementById('ca-gm')){ D.offered=1; dsave(D); intro(); }
+        else if(D.offered && !document.getElementById('ca-gm')) showChip();
       } else {
-        if(document.querySelector('.ca-spot')) clearSpots();
-        if(lastTot!==null && tot>lastTot && tot>0 && !teased && !popupOpen()){ teased=true; setTimeout(function(){ host('RM'+(MIN-tot).toFixed(2)+' more and you unlock our Christmas gift hunt 🎁',5500); },3800); }
+        var c=document.getElementById('ca-dchip'); if(c) c.remove();
+        if(lastTot!==null && tot>lastTot && tot>0 && !teased && !popupOpen()){ teased=true; setTimeout(function(){ host('RM'+(DMIN-tot).toFixed(2)+' more and you unlock our Christmas Lucky Draw 🎁',5500); },3800); }
       }
       lastTot=tot;
     }
 
+    /* ---------- Build Your Own Box: auto-upgrade 3 → 4 → 6 → 9 → new box of 3 ---------- */
+    var NEXT={3:4,4:6,6:9};
+    function openBox(n, cb){
+      var b=$$('a.form-add-item-btn').filter(function(x){ var r=x.closest('.col-12'); return r && new RegExp('Build Your Own Box of '+n+'\\b').test(r.innerText); })[0];
+      if(!b) return; b.click();
+      var k=0, iv=setInterval(function(){ var ui=$$('.modal-content-wrapper .ca-bx').filter(function(u){ return u.getClientRects().length && u.__N===n; })[0]; if(ui){ clearInterval(iv); setTimeout(function(){ cb(ui); },250); } else if(++k>40) clearInterval(iv); },150);
+    }
+    function closeProductPopup(){
+      var w=$$('.modal-content-wrapper').filter(function(x){ return x.getClientRects().length; })[0]; if(!w) return;
+      var x=$$('button,div,span,a',w.parentElement).filter(function(e){ var r=e.getBoundingClientRect(); return e.getClientRects().length && r.width<56 && r.width>14 && /close|×|✕/i.test((e.getAttribute('aria-label')||'')+' '+String(e.className)+' '+(e.innerText||'')); })[0];
+      if(x) x.click(); else document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+    }
+    function addPicks(ui, names, i){
+      if(i>=names.length){ try{ ui.__say && ui.__say('Your box just got bigger! 🎉 Keep going!','celebrate'); }catch(e){} return; }
+      var pk=$$('.pk',ui).filter(function(b){ return (b.getAttribute('aria-label')||'')==='Add '+names[i]; })[0];
+      if(pk) pk.click(); setTimeout(function(){ addPicks(ui,names,i+1); },170);
+    }
+    window.__caBoxUp=function(N, picks, extra){
+      if(window.__caBoxBusy) return; window.__caBoxBusy=true; setTimeout(function(){ window.__caBoxBusy=false; },6000);
+      if(N<9){
+        var M=NEXT[N]; closeProductPopup();
+        setTimeout(function(){ openBox(M, function(ui){ addPicks(ui, picks.concat([extra]), 0); window.__caBoxBusy=false; }); },450);
+      } else {
+        var add=$$('.modal-content-wrapper button').filter(function(x){ return /^\s*Add to Cart\s*$/i.test(x.innerText) && x.getClientRects().length; })[0];
+        if(add) add.click();
+        setTimeout(function(){ host('Box of 9 is in your cart! Starting a new box for you 🎁',5000); openBox(3, function(ui){ addPicks(ui, [extra], 0); window.__caBoxBusy=false; }); },900);
+      }
+    };
+
     function tick(){
       try { buildMenu(); } catch(e){}
+      try { bigBoxes(); } catch(e){}
       try { garden(); } catch(e){}
-      try { hunt(); } catch(e){}
+      try { draw(); } catch(e){}
       try { popupIntro(); } catch(e){}
     }
     setInterval(tick, 500); tick();
     window.addEventListener('scroll', function(){ try { garden(); } catch(e){} }, {passive:true});
-    window.__caGift = { reset:function(){ try{ localStorage.removeItem(KEY); }catch(e){} G=null; clearSpots(); applied=false; }, state:function(){ return G; } };
+    window.__caDraw = { reset:function(){ try{ localStorage.removeItem(DKEY); }catch(e){} D={}; var c=document.getElementById('ca-dchip'); if(c) c.remove(); }, state:function(){ return D; }, intro:function(){ intro(); } };
   } catch(e) { /* never break the order form */ }
 })();

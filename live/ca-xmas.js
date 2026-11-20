@@ -61,26 +61,85 @@
       var ctx = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio||1, 2), W, H, flakes = [];
       function size(){ W = innerWidth; H = innerHeight; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
       size(); addEventListener('resize', size);
-      var N = mobile ? 35 : 60;
+      var N = mobile ? 38 : 64;
       var cols = [C.blue, C.blue, C.cream, C.blue];
-      for (var i=0;i<N;i++) flakes.push({x:Math.random()*W, y:Math.random()*H, r:1.5+Math.random()*3, s:.3+Math.random()*.9, d:Math.random()*6.28, c:cols[i%4]});
+      function mk(top){ var big=Math.random()<.3; return {x:Math.random()*W, y: top? -10 : Math.random()*H, r: big? 4.5+Math.random()*3 : 1.5+Math.random()*2.5, s: big? .1+Math.random()*.18 : .12+Math.random()*.3, d:Math.random()*6.28, c:cols[Math.floor(Math.random()*4)], star:big, a:Math.random()*6.28}; }
+      for (var i=0;i<N;i++) flakes.push(mk(false));
+      function crystal(f){ /* 6-arm snowflake */
+        ctx.save(); ctx.translate(f.x,f.y); ctx.rotate(f.a); ctx.strokeStyle=f.c; ctx.lineWidth=1.3; ctx.lineCap='round'; ctx.globalAlpha=.95;
+        for (var k=0;k<6;k++){ ctx.rotate(1.0472); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,-f.r); ctx.moveTo(0,-f.r*.55); ctx.lineTo(-f.r*.28,-f.r*.8); ctx.moveTo(0,-f.r*.55); ctx.lineTo(f.r*.28,-f.r*.8); ctx.stroke(); }
+        ctx.globalAlpha=.35; ctx.strokeStyle=C.brown; ctx.lineWidth=.5; ctx.beginPath(); ctx.arc(0,0,1.2,0,6.283); ctx.stroke();
+        ctx.restore();
+      }
+      /* snow that settles on the category roofs */
+      var stuck=[], roofs=[], rr=0;
+      function roofRects(){ roofs=[].slice.call(document.querySelectorAll('.ca-roof')).map(function(e){ return {e:e, b:e.getBoundingClientRect()}; }).filter(function(o){ return o.b.width>0 && o.b.bottom>0 && o.b.top<H; }); }
       var run = true;
       document.addEventListener('visibilitychange', function(){ run = !document.hidden; if (run) requestAnimationFrame(tick); });
       function tick(){
         if (!run) return;
         ctx.clearRect(0,0,W,H);
+        if ((rr++ % 3)===0) roofRects(); else roofs.forEach(function(o){ o.b=o.e.getBoundingClientRect(); });
         for (var i=0;i<flakes.length;i++){
-          var f = flakes[i]; f.d += .01; f.y += f.s; f.x += Math.sin(f.d)*.4;
-          if (f.y > H+5){ f.y = -5; f.x = Math.random()*W; }
+          var f = flakes[i]; f.d += .006; f.y += f.s; f.x += Math.sin(f.d)*.22; f.a += .004;
+          for (var q=0;q<roofs.length;q++){ var b=roofs[q].b, top=b.top+3;
+            if (f.x>b.left+4 && f.x<b.right-4 && f.y>=top && f.y-f.s<top+2){
+              if (Math.random()<.75){ stuck.push({e:roofs[q].e, dx:f.x-b.left, r:Math.min(f.r,3.2)*(.8+Math.random()*.5), c:f.c, born:Date.now(), life:9000+Math.random()*9000}); flakes[i]=f=mk(true); }
+              break; } }
+          if (f.y > H+8){ flakes[i] = mk(true); continue; }
+          if (f.star){ crystal(f); continue; }
           ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283);
           ctx.fillStyle = f.c; ctx.globalAlpha = .85; ctx.fill();
           ctx.globalAlpha = .25; ctx.lineWidth = .6; ctx.strokeStyle = C.brown; ctx.stroke();
+        }
+        var now=Date.now();
+        if (stuck.length>260) stuck.splice(0, stuck.length-260);
+        for (var k=stuck.length-1;k>=0;k--){ var p=stuck[k], age=now-p.born;
+          if (age>p.life || !p.e.isConnected){ stuck.splice(k,1); continue; }
+          var bb=p.e.getBoundingClientRect(); if (bb.bottom<0 || bb.top>H) continue;
+          ctx.globalAlpha = age>p.life-2000 ? Math.max(0,(p.life-age)/2000) : 1;
+          ctx.beginPath(); ctx.ellipse(bb.left+p.dx, bb.top+3, p.r*1.3, p.r*.8, 0, 0, 6.283); ctx.fillStyle='#fff'; ctx.fill();
         }
         ctx.globalAlpha = 1;
         requestAnimationFrame(tick);
       }
       requestAnimationFrame(tick);
     }
+
+
+    // Christmas roof under each category title (snow settles on it)
+    (function(){
+      var st=document.createElement('style'); st.textContent=
+        '.ca-roof{position:relative;height:30px;margin:4px 6px 10px;pointer-events:none}'+
+        '.ca-roof .cap{position:absolute;left:-4px;right:-4px;top:0;height:9px;border-radius:9px 9px 3px 3px;background:#fff;box-shadow:0 1px 0 rgba(82,51,37,.12)}'+
+        '.ca-roof .cap:after{content:"";position:absolute;left:6px;right:6px;top:7px;height:7px;background:radial-gradient(circle at 7px 0,#fff 5px,transparent 5.5px) repeat-x 0 0/23px 7px}'+
+        '.ca-roof .eave{position:absolute;left:0;right:0;top:6px;height:12px;border-radius:0 0 6px 6px;background:'+C.burg+' repeating-linear-gradient(90deg,transparent 0 18px,rgba(0,0,0,.18) 18px 19.5px)}'+
+        '.ca-roof .wire{position:absolute;left:4px;right:4px;top:15px;height:10px;border-bottom:1.2px solid '+C.brown+';border-radius:0 0 50% 50%/0 0 100% 100%;opacity:.55}'+
+        '.ca-roof .bulbs{position:absolute;left:10px;right:10px;top:18px;display:flex;justify-content:space-between}'+
+        '.ca-roof .bulbs i{width:7px;height:10px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;display:block;animation:caBulb 2.4s ease-in-out infinite}'+
+        '.ca-roof .bulbs i:nth-child(4n+1){background:'+C.blue+'}.ca-roof .bulbs i:nth-child(4n+2){background:#F4DCBC;animation-delay:.6s}.ca-roof .bulbs i:nth-child(4n+3){background:'+C.caramel+';animation-delay:1.2s}.ca-roof .bulbs i:nth-child(4n){background:'+C.burg+';animation-delay:1.8s}'+
+        '.ca-roof .holly{position:absolute;top:-3px;width:22px;height:16px}.ca-roof .holly.l{left:-2px}.ca-roof .holly.r{right:-2px;transform:scaleX(-1)}'+
+        '@keyframes caBulb{0%,100%{opacity:1;filter:brightness(1.1)}50%{opacity:.55;filter:brightness(.85)}}'+
+        (reduce?'.ca-roof .bulbs i{animation:none}':'');
+      document.head.appendChild(st);
+      var holly='<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 9 Q6 3 11 7 Q8 9 9 13 Q5 10 2 9Z" fill="'+C.brown+'"/><path d="M20 9 Q16 3 11 7 Q14 9 13 13 Q17 10 20 9Z" fill="'+C.brown+'" opacity=".8"/><circle cx="9.5" cy="8.5" r="2.4" fill="'+C.burg+'"/><circle cx="12.6" cy="8" r="2.4" fill="'+C.burg+'"/><circle cx="11" cy="5.6" r="2.4" fill="'+C.burg+'"/></svg>';
+      function build(){
+        var n=Math.max(8, Math.round(Math.min(innerWidth,720)/34)), b=''; for(var i=0;i<n;i++) b+='<i></i>';
+        return '<div class="cap"></div><div class="eave"></div><div class="wire"></div><div class="bulbs">'+b+'</div><span class="holly l">'+holly+'</span><span class="holly r">'+holly+'</span>';
+      }
+      function place(){
+        [].slice.call(document.querySelectorAll('a.nav-link[href^="#section-"]')).forEach(function(a){
+          if (/gift hunt|lucky draw/i.test(a.innerText||'')) return;
+          var sec=document.getElementById(a.getAttribute('href').slice(1)); if(!sec) return;
+          var n=sec.nextElementSibling, row=null;
+          while(n && n.tagName!=='SECTION'){ if(n.classList.contains('row')){ row=n; break; } n=n.nextElementSibling; }
+          if(!row || (row.previousElementSibling && row.previousElementSibling.classList.contains('ca-roof'))) return;
+          var r=document.createElement('div'); r.className='ca-roof'; r.setAttribute('aria-hidden','true'); r.innerHTML=build();
+          row.parentNode.insertBefore(r,row);
+        });
+      }
+      setInterval(place, 1500); setTimeout(place, 600);
+    })();
 
     // 3. Sleigh with reindeer (flies across now and then)
     function addSleigh(){

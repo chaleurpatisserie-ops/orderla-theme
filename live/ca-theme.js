@@ -115,13 +115,12 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       '.ca-bx .hint span{letter-spacing:.02em;text-transform:none;font-weight:500;font-style:italic}',
       '.ca-bx .pick{display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:76px;gap:8px 6px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 8px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}',
       '.ca-bx .pk{border:0;background:none;padding:0;text-align:center;cursor:pointer;position:relative;scroll-snap-align:start;-webkit-tap-highlight-color:transparent}',
-      '.ca-bx .pk .ci{display:block;width:68px;height:68px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 50% 60%,#fff 0,#F4DCBC 85%);position:relative;transition:transform .15s ease}',
+      '.ca-bx .pk .ci{display:block;width:84px;height:84px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 50% 60%,#fff 0,#F4DCBC 85%);position:relative;transition:transform .15s ease}',
       '.ca-bx .pk .ci img{position:absolute;left:8%;top:6%;width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(82,51,37,.25))}',
       '.ca-bx .pk:active .ci{transform:scale(.88)}',
       '.ca-bx .pk .nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:10.5px;font-weight:700;color:'+BURG+'!important;margin-top:4px;line-height:1.15}',
       '.ca-bx .pk .pr{display:block;font-size:10px;font-weight:600;color:'+BROWN+'!important;margin-top:1px}',
       '.ca-bx .pk .q{position:absolute;top:-2px;right:2px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:'+BURG+';color:'+CREAM+'!important;font-size:11px;font-weight:700;line-height:20px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}',
-      '.ca-bx.full .pk:not(.has) .ci{opacity:.4}',
       '.ca-fly{position:fixed;z-index:100000;pointer-events:none;object-fit:contain;transition:transform .5s cubic-bezier(.5,-0.3,.6,1),opacity .5s;filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))}',
       '.ca-burst{position:fixed;z-index:100001;pointer-events:none;font-size:18px;transition:transform .9s ease-out,opacity .9s}',
       '.ca-bx .redo{display:block;margin:-2px auto 8px;background:#fff;border:1.5px solid '+BURG+';color:'+BURG+'!important;border-radius:999px;padding:6px 16px;font-size:12px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent}',
@@ -165,16 +164,16 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       '.nav-scroller .nav-link{border:1.5px solid '+BURG+'!important;border-radius:999px!important;color:'+BURG+'!important;padding:8px 14px!important;margin:6px 0!important;line-height:1.2}',
       '.nav-scroller li.is_current .nav-link{background:'+BURG+'!important;color:'+CREAM+'!important}',
       '.ca-li{padding-left:2px!important;padding-right:2px!important}',
-      '.ca-li > .ca-lr{background:#FFFAF3;border-radius:18px;margin:8px 0;padding:10px 12px;box-shadow:0 6px 14px -10px rgba(82,51,37,.45)}',
+      '.ca-li > .ca-lr{background:#FFFAF3;border-radius:18px;margin:9px 0;padding:12px 14px;box-shadow:0 6px 14px -10px rgba(82,51,37,.45)}',
       '.ca-lr > div{padding:0!important}',
-      '.ca-rimg{margin-right:12px!important;flex:0 0 84px}',
-      '.ca-rimg img{width:84px!important;height:84px!important;object-fit:cover;border-radius:14px!important}',
+      '.ca-rimg{margin-right:14px!important;flex:0 0 100px}',
+      '.ca-rimg img{width:100px!important;height:100px!important;object-fit:cover;border-radius:14px!important}',
       '.ca-ri{display:grid!important;grid-template-columns:1fr auto;column-gap:10px;align-items:start}',
       '.ca-rt{grid-column:1;grid-row:1 / span 2;display:block!important}',
       '.ca-rt > div:first-child{display:block}',
       '.ca-rt br{display:none}',
-      '.ca-rt span{display:block;font-size:14px!important;font-weight:700!important;color:'+BURG+'!important;line-height:1.3!important}',
-      '.ca-rt p{font-size:12px!important;color:'+CARAMEL+'!important;margin:4px 0 0!important;line-height:1.45!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+      '.ca-rt span{display:block;line-height:1.3!important;margin-top:2px;font-size:15px!important;font-weight:700!important;color:'+BURG+'!important;line-height:1.3!important}',
+      '.ca-rt p{font-size:12.5px!important;color:'+CARAMEL+'!important;margin:6px 0 0!important;line-height:1.55!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
       '.ca-rb{display:contents!important}',
       '.ca-rb > div:first-child{grid-column:2;grid-row:1;text-align:right;white-space:nowrap}',
       '.ca-rb > div:first-child span{font-size:14px!important;font-weight:700!important;color:'+BROWN+'!important}',
@@ -305,6 +304,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
     /* Build-your-own box: turns Orderla's "Choose your N cakes" picker into a visual box. Orderla's own +/- buttons still do the ordering. */
     var BOX_IMG_BASE='/storage/img/';
     var BOX_IMGS={"Mochi Strawberry Shortcake": "cW12vmcEDRQie62TijMc9B52R3t968wchey7pNac.webp", "Noir": "6xmETKjqD5ZudEPJGpZGAZl6vvZ7s1lm3e0agNEW.webp", "Camellia": "Pwl1LAakkYqAZCSiEwrokezj5p3XS9rOm2c9tdxR.webp", "Mrs. Bunny": "6aaGzxFOyAfxX05UHiZZxLZBMPDeXI8Oe6UxpGuW.webp", "La Fleur": "Isk9G74iWlxxMFy8JbWh1Ns3RxwUHeuQNPQ3Aq0B.webp", "Apam Balik": "wlXpx37iLLhUkkotFNfHqi5LSFISpWU7ardxPlSq.webp", "Pecan Tartlet": "gCsLJ8UPFTfzKg0obtUJhi8pKbxVsfcZriZGWOG9.webp", "Rudolph": "wvxp2dhFhwSf7ew6gijIqrqwBAfKYtdIsHHG3C4c.webp", "Ornament": "MSzccZe3T2UnhfljWwlLvhwleFTNf7buLfoDZLa2.webp", "Cherry": "cwBBdWbL38rO3kEw4cLj0HDWrSjNlywnBuZyl1Xe.webp", "Acorn": "3t0sr0iJlvOIlCBMHd8o6ZvbhIuFwISrzIOWbkGM.webp", "Strawberry": "WK3BcYAr5lRpozVoIrOH6JB34P9EoFSOdRhT7LVd.webp", "Raspberry": "d9Vl7KToazeXd8dEdyHZ97KCx6IfL4ALvBGKyjQv.webp", "Mango": "3KrGgTpurNDeEv3RPJnKRwd07MTzJM2A4q0BdT4d.webp", "Pistachio": "w8OFnaAvJsleCRY0g4lxrsvFFzbGCPr1Z3Jcld1Y.webp", "Kurma": "SMa09OitGfqzvObWaWidws6VrLazzM8MHoyz3LK0.webp", "Coconut": "s4hXivNT0ELSbDT9ZtGD5M0iN77Nw2OxeM10UHMs.webp", "Passionfruit": "J4fXFf1S3QcS7tRmdKTLS9wTBiVsQdwXh13R4ESH.webp", "Pear": "g3joFZxYP2MaAnToHu36Piuid3oRUSXsQi1sJwda.webp"};
+    window.__caBxImg=function(n){ return bxImg(n); };
     function bxImg(name){
       var key=name.split(' (')[0].trim();
       if (BOX_IMGS[key]) return BOX_IMG_BASE+BOX_IMGS[key];
@@ -346,6 +346,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         var nx=head.nextElementSibling; if(!nx) continue;
         var ui=null, list=nx;
         if (nx.classList.contains('ca-bx')) { ui=nx; list=nx.nextElementSibling; if(!list) continue; }
+        if (ui && ui.__N!==N){ list.classList.remove('ca-bx-hide'); ui.remove(); ui=null; }
         if (!ui){
           ui=document.createElement('div'); ui.className='ca-bx';
           ui.innerHTML='<div class="box"><span class="lbl">Box of '+N+'</span><div class="grid"></div><div class="bar"><i></i></div></div><p class="sum"></p><button type="button" class="redo" hidden>↺ Start over</button><div class="gdn"><button type="button" class="gf" aria-label="Meet Chaleur\'s gardener">'+FEUILLE_HELLO+'</button><span class="gb" aria-live="polite"></span></div><p class="hint">Tap to add <span>swipe for more →</span></p><div class="pick"></div><button type="button" class="tog">Show as list</button>';
@@ -354,7 +355,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
           list.classList.add('ca-bx-hide');
           (function(g,u){ var tm, gb=g.querySelector('.gb'); var im=g.querySelector('.gf img'), idle; function say(txt,pose){ if(Array.isArray(txt)){ pose=txt[1]; txt=txt[0]; } if(txt) gb.textContent=txt; if(im) im.src=CA_IMG+'feuille-'+(pose||'hello')+'.webp'; g.classList.remove('on'); void g.offsetWidth; g.classList.add('on'); clearTimeout(tm); tm=setTimeout(function(){ g.classList.remove('on'); },6500); clearTimeout(idle); idle=setTimeout(function(){ if(document.body.contains(g) && g.getClientRects().length) say('Zzz… tap a cake to wake me up!','sleepy'); },30000); } u.__say=say; g.querySelector('.gf').addEventListener('click',function(){ say(GDN_INTRO[Math.floor(Math.random()*GDN_INTRO.length)]); }); setTimeout(function(){ say(GDN_INTRO[Math.floor(Math.random()*GDN_INTRO.length)]); },700); })(ui.querySelector('.gdn'),ui);
           ui.querySelector('.tog').addEventListener('click', function(ev){ var u=ev.target.closest('.ca-bx'), l=u.nextElementSibling; var hidden=l.classList.toggle('ca-bx-hide'); ev.target.textContent=hidden?'Show as list':'Hide list'; });
-          ui.querySelector('.grid').style.gridTemplateColumns='repeat('+(N===4?2:3)+',1fr)'; ui.querySelector('.box').style.maxWidth=(N===4?200:280)+'px';
+          ui.querySelector('.grid').style.gridTemplateColumns='repeat('+(N===4?2:3)+',1fr)'; ui.querySelector('.box').style.maxWidth=(N===4?250:N===3?330:340)+'px';
         }
         bxSync(ui, list);
       }
@@ -397,7 +398,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       var sl=pick.scrollLeft;
       var keep=pick.scrollLeft; pick.innerHTML=ph; pick.scrollLeft=keep;
       grid.querySelectorAll('.slot').forEach(function(s){ s.onclick=function(){ var i=+s.getAttribute('data-i'), n=ui.__picks[i]; if(!n) return; var r=bxRows(list).filter(function(x){return x.name===n})[0]; if(r && !r.minus.disabled){ ui.__picks.splice(i,1); r.minus.click(); try{ ui.__say && ui.__say('Swapping '+gdnKey(n)+'? Pick another one!','oops'); }catch(e){} setTimeout(function(){ ui.__sig=''; bxSync(ui,list); },120); } }; });
-      pick.querySelectorAll('.pk').forEach(function(b){ b.onclick=function(){ var cur=bxRows(list), r=cur[+b.getAttribute('data-idx')]; if(!r) return; var tot=cur.reduce(function(a,x){return a+x.qty},0); if(tot>=N || r.plus.disabled){ var s=ui.querySelector('.sum'); s.innerHTML='<b>Your box is full!</b> Tap a cake in the box to swap it.'; try{ ui.__say && ui.__say('No more room! Tap a cake in the box to swap it.','oops'); }catch(e){} ui.classList.remove('nope'); void ui.offsetWidth; ui.classList.add('nope'); return; } var ti=ui.__picks.length; bxFly(b.querySelector('img'), ui.querySelectorAll('.slot')[ti]); ui.__new=ti; ui.__picks.push(r.name); r.plus.click(); try{ ui.__say && ui.__say(gdnPick(ui, r.name)); }catch(e){} setTimeout(function(){ ui.__sig=''; bxSync(ui,list); },120); }; });
+      pick.querySelectorAll('.pk').forEach(function(b){ b.onclick=function(){ var cur=bxRows(list), r=cur[+b.getAttribute('data-idx')]; if(!r) return; var tot=cur.reduce(function(a,x){return a+x.qty},0); if(tot>=N && window.__caBoxUp){ window.__caBoxUp(N, ui.__picks.slice(), r.name); return; } if(tot>=N || r.plus.disabled){ var s=ui.querySelector('.sum'); s.innerHTML='<b>Your box is full!</b> Tap a cake in the box to swap it.'; try{ ui.__say && ui.__say('No more room! Tap a cake in the box to swap it.','oops'); }catch(e){} ui.classList.remove('nope'); void ui.offsetWidth; ui.classList.add('nope'); return; } var ti=ui.__picks.length; bxFly(b.querySelector('img'), ui.querySelectorAll('.slot')[ti]); ui.__new=ti; ui.__picks.push(r.name); r.plus.click(); try{ ui.__say && ui.__say(gdnPick(ui, r.name)); }catch(e){} setTimeout(function(){ ui.__sig=''; bxSync(ui,list); },120); }; });
     }
 
     var pending=false, queue=[];
