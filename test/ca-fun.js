@@ -492,8 +492,8 @@
       if(!D.expired){ D.expired=1; dsave(D); }
       if(!expTold){ expTold=true; host('Your Lucky Draw prize has expired ⏱ (10 minutes are up).',6000); }
       /* take prize items out of the cart when the cart is open */
-      $$('tr').filter(function(r){ return /Christmas Lucky Draw - /.test(r.innerText||'') && r.querySelector('.btn-minus-selection'); }).forEach(function(r){
-        var minus=r.querySelector('.btn-minus-selection');
+      $$('tr').filter(function(r){ return /Christmas Lucky Draw - /.test(r.innerText||'') && r.querySelector('[class*="btn-minus-selection"]'); }).forEach(function(r){
+        var minus=r.querySelector('[class*="btn-minus-selection"]');
         if(minus && !minus.__caX){ minus.__caX=1; minus.click(); setTimeout(function(){ minus.__caX=0; },800); }
       });
     }
