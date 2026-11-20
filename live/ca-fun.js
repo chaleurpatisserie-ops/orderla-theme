@@ -321,7 +321,7 @@
     /* prize split among winners (must add up to 1) */
     var PRIZE_W={ rm20:.005, half:.495, petit:.20, cookie:.15, kit:.15 };
     var PR={
-      rm20:{code:'@', v:20, big:'🌟', h:'Jackpot! RM20 off!', p:'Lucky you! We\'ll apply it for you at checkout. Joyeux Noël!'},
+      rm20:{code:'@', v:20, big:'🌟', h:'Wow, RM20 off your order!', p:'Lucky you! We\'ll apply it for you at checkout. Joyeux Noël!'},
       half:{re:/Lucky Draw - Extra Petit/i, big:'🍰', h:'An extra cake at 50% off!', p:'Pick any petit gâteau at half price. We\'ve opened it for you: choose your cake and tap Add to Cart.', choose:true},
       petit:{re:/Lucky Draw - Surprise Petit/i, big:'🧁', h:'A surprise petit gâteau for RM6.99!', p:'Chef\'s surprise flavour. We\'ve added it to your cart. Don\'t want it? Just remove it in your cart.', ok:'Your surprise petit gâteau is in the cart! 🧁'},
       cookie:{re:/Lucky Draw - Free Chocolate/i, big:'🍪', h:'A free cookie!', p:'One Chocolate Chips Walnut Cookie, on us. It\'s in your cart now (remove it anytime).', ok:'Your free cookie is in the cart! 🍪'},
@@ -433,7 +433,7 @@
       setTimeout(function(){ addPrize(P); }, P.choose?2200:900);
     }
 
-    /* RM20 off jackpot: auto-apply the (hidden) code at checkout */
+    /* RM20 off prize: auto-apply the (hidden) code at checkout */
     var applied=false;
     function jc(){ try { return atob('WUM3S0JXUTlTNkFD').split('').reverse().join(''); } catch(e){ return ''; } }
     function maskCode(){ /* show "LUCKYDRAW" instead of the real code on the page */
