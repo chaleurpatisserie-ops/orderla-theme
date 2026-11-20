@@ -692,6 +692,14 @@
         if(!g) return; var la=Math.round(parseFloat(g.latitude)*10)/10, lo=Math.round(parseFloat(g.longitude)*10)/10;
         ev('geo', [g.city||'', g.region||'', g.country_code||'', isNaN(la)?'':la, isNaN(lo)?'':lo].join('|')); evFlush();
       }).catch(function(){}); })();
+    /* delivery postcode typed at checkout (only the 5 digits are kept, never the address) */
+    var evPc='';
+    document.addEventListener('change', function(e){
+      var t=e.target; if(!t || !/^(INPUT|TEXTAREA)$/.test(t.tagName) || t.type==='tel') return;
+      var hint=((t.name||'')+' '+(t.placeholder||'')+' '+(t.id||'')+' '+((t.closest('.form-group,div')||{}).innerText||'').slice(0,80)).toLowerCase();
+      if(!/address|postcode|post code|poskod|alamat|zip/.test(hint)) return;
+      var m=(t.value||'').match(/(^|\D)([0-9]{5})(?!\d)/); if(m && m[2]!==evPc){ evPc=m[2]; ev('postcode', m[2]); evFlush(); }
+    }, true);
     /* every tap on something clickable */
     document.addEventListener('click', function(e){
       var t=e.target; if(!t.closest) return;
