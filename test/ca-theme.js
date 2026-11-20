@@ -115,6 +115,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       '.ca-bx .hint span{letter-spacing:.02em;text-transform:none;font-weight:500;font-style:italic}',
       '.ca-bx .pick{display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:76px;gap:8px 6px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 8px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}',
       '.ca-bx .pk{border:0;background:none;padding:0;text-align:center;cursor:pointer;position:relative;scroll-snap-align:start;-webkit-tap-highlight-color:transparent}',
+      '.ca-bx.full .pick .pk .ci{animation:caFullPulse 1.6s ease-in-out infinite}','.ca-bx.full .pick .pk:nth-child(2n) .ci{animation-delay:.4s}','@keyframes caFullPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(120,12,20,0)}50%{transform:scale(1.07);box-shadow:0 0 0 4px rgba(120,12,20,.18)}}',
       '.ca-bx .pk .ci{display:block;width:84px;height:84px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 50% 60%,#fff 0,#F4DCBC 85%);position:relative;transition:transform .15s ease}',
       '.ca-bx .pk .ci img{position:absolute;left:8%;top:6%;width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(82,51,37,.25))}',
       '.ca-bx .pk:active .ci{transform:scale(.88)}',
@@ -330,7 +331,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       var choc=picks.filter(function(x){return GDN_CHOC.indexOf(x)>=0}).length, fruit=picks.filter(function(x){return GDN_FRUIT.indexOf(x)>=0}).length;
       var uniq=picks.filter(function(x,i,a){return a.indexOf(x)===i}).length;
       ui.__tips=ui.__tips||{};
-      if(!left) return [N===9 ? 'Your box is full, what a harvest! 🌱 And Box of 9 gets 10% off every cake. Smart choice!' : 'Your box is full, what a harvest! 🌱 Tap Add to Cart when you\'re ready.','celebrate'];
+      if(!left) return [N===9 ? 'Box of 9 full, 10% off every cake! 🌱 Still hungry? Tap one more and I\'ll start a fresh box for you.' : 'Box full! 🌱 Psst… tap one more cake and I\'ll upgrade you to a Box of '+({3:4,4:6,6:9})[N]+'!','celebrate'];
       if(left===1) return ['One spot left. Make it count!','gateau'];
       if(same===2) return ['Two '+k+'s? You know what you like, hehe.','love'];
       if(choc>=3 && !fruit && !ui.__tips.c){ ui.__tips.c=1; return ['Lots of chocolate! A fruity one like Pear or Mango keeps the box fresh.','love']; }
@@ -387,7 +388,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       ui.__new=-1;
       grid.innerHTML=gh;
       var left=N-picks.length;
-      ui.querySelector('.sum').innerHTML= left ? (picks.length? '<b>'+picks.length+'</b> of '+N+' chosen · '+left+' to go' : 'Fill your box! Pick any <b>'+N+'</b> cakes') : '<b>Yay, your box is full!</b> 🎉 Tap Add to Cart below.';
+      ui.querySelector('.sum').innerHTML= left ? (picks.length? '<b>'+picks.length+'</b> of '+N+' chosen · '+left+' to go' : 'Fill your box! Pick any <b>'+N+'</b> cakes') : (N<9 ? '<b>Your box is full!</b> 🎉 Want more? <b>Tap one more cake</b> to upgrade to a <b>Box of '+({3:4,4:6,6:9})[N]+'</b>, or tap Add to Cart.' : '<b>Your Box of 9 is full!</b> 🎉 <b>Tap one more cake</b> to start a new box, or tap Add to Cart.');
       ui.querySelector('.bar i').style.width=(picks.length/N*100)+'%';
       var rd=ui.querySelector('.redo'); rd.hidden=!picks.length;
       rd.onclick=function(){ if(rd.__busy) return; rd.__busy=true; ui.__picks=[]; ui.__tips={}; try{ ui.__say && ui.__say('Fresh start! Let\'s plant a new box. 🌱','hello'); }catch(e){} var clicks=[]; bxRows(list).forEach(function(r){ for(var q=0;q<r.qty;q++) clicks.push(r.name); });
