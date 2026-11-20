@@ -404,7 +404,7 @@
       c.onclick=function(){ c.remove(); intro(); }; document.body.appendChild(c);
     }
     function play(){
-      D.started=Date.now(); var win=Math.random()<WIN, prize=win?pickPrize():null; if(!prize) win=false;
+      ev('draw_play'); D.started=Date.now(); var win=Math.random()<WIN, prize=win?pickPrize():null; if(!prize) win=false;
       D.win=win; D.prize=prize; dsave(D);
       var TURNS=3, turn=1, inTurn=[], ended=false, busy=false, coinFace={}, used=[];
       /* the turn that wins (if this game wins): turn 2 or 3 most often */
@@ -451,7 +451,7 @@
     function result(won, why){
       var chip=document.getElementById('ca-dchip'); if(chip) chip.remove();
       if(!D.prize){ D.prize='rm2'; }
-      D.wonAt=Date.now(); dsave(D);
+      D.wonAt=Date.now(); dsave(D); ev('draw_prize', D.prize);
       if(L && L.phone) api('draw_win',{phone:L.phone, prize:D.prize, store:location.pathname.replace(/^\//,'')}, function(j){ if(j && j.ok){ D.token=j.token; if(j.already && j.prize!==D.prize){ /* number had already played */ } dsave(D); } });
       var lead= won ? '' : '<p style="margin:0 0 6px!important"><b>'+(why==='time'?'Time\'s up!':'No pair this time…')+'</b> But at Christmas everyone wins! 🎄</p>';
       var P=PR[D.prize]; confetti();
@@ -515,9 +515,9 @@
       var tot=cartSub(); if(tot===null) return;
       var base=tot-(D.added && !D.paused ? (PV[D.prize]||0) : 0);
       if(base<DMIN && D.added && !D.paused){
-        if(prizeRows().length){ dropRows(); D.paused=1; dsave(D); host('Your Lucky Draw gift is on hold 🎁 Add back to RM'+DMIN+' and it comes right back!',6000); }
+        if(prizeRows().length){ dropRows(); D.paused=1; dsave(D); ev('gift_hold', D.prize); host('Your Lucky Draw gift is on hold 🎁 Add back to RM'+DMIN+' and it comes right back!',6000); }
       } else if(base>=DMIN && D.paused && !visModal() && Date.now()-follow>8000){
-        follow=Date.now(); D.paused=0; dsave(D); host('Welcome back! Your Lucky Draw gift is back in the cart 🎁',5000); setTimeout(function(){ addPrize(P); },600);
+        follow=Date.now(); D.paused=0; dsave(D); ev('gift_back', D.prize); host('Welcome back! Your Lucky Draw gift is back in the cart 🎁',5000); setTimeout(function(){ addPrize(P); },600);
       }
     }
     function hold(){
@@ -532,7 +532,7 @@
         return;
       }
       if(chip) chip.remove();
-      if(!D.expired){ D.expired=1; dsave(D); }
+      if(!D.expired){ D.expired=1; dsave(D); ev('gift_expired', D.prize); }
       if(!expTold){ expTold=true; host('Your Lucky Draw prize has expired ⏱ (10 minutes are up).',6000); }
       /* take prize items out of the cart when the cart is open */
       $$('tr').filter(function(r){ return /Christmas Lucky Draw - /.test(r.innerText||'') && r.querySelector('[class*="btn-minus-selection"]'); }).forEach(function(r){
@@ -575,7 +575,7 @@
       if(L && L.phone){ tel.value=L.phone.slice(2); nm.value=L.name||''; }
       setTimeout(function(){ (nm.value?tel:nm).focus(); },200);
       function go(){ var p=normPhone(tel.value); if(!p){ err.hidden=false; tel.focus(); return; }
-        L={phone:p, name:(nm.value||'').trim().slice(0,60), at:Date.now()}; lsave(L); m.remove(); sendLead('start'); checkPlayed(); if(then) setTimeout(then,60); }
+        L={phone:p, name:(nm.value||'').trim().slice(0,60), at:Date.now()}; lsave(L); ev('lead'); m.remove(); sendLead('start'); checkPlayed(); if(then) setTimeout(then,60); }
       m.querySelector('.go').onclick=go; tel.onkeydown=function(e){ if(e.key==='Enter') go(); };
     }
 
@@ -653,6 +653,46 @@
       up.__caKey=key;
       up.innerHTML='<div class="ca-up"><div class="hd">Usually goes with</div><div class="ca-uprow">'+cards+'</div><div class="sw">Swipe to see more →</div></div>';
     }
+
+    /* ---------- visit analytics → ledger (Events tab) ---------- */
+    var EVQ=[], EVK='caVid26';
+    var VID=(function(){ try { var v=localStorage.getItem(EVK); if(v) return {id:v, isNew:false}; v=Math.random().toString(36).slice(2,12); localStorage.setItem(EVK,v); return {id:v, isNew:true}; } catch(e){ return {id:'x', isNew:false}; } })();
+    var SID=(function(){ try { var o=JSON.parse(sessionStorage.getItem('caSid26')||'null'); if(o && Date.now()-o.t<30*60000){ o.t=Date.now(); sessionStorage.setItem('caSid26',JSON.stringify(o)); return o.id; } var id=Math.random().toString(36).slice(2,12); sessionStorage.setItem('caSid26',JSON.stringify({id:id,t:Date.now()})); return id; } catch(e){ return 'x'; } })();
+    function evSource(){
+      var ua=navigator.userAgent||'', r=document.referrer||'', q=location.search;
+      var u=(q.match(/[?&]utm_source=([^&]+)/)||[])[1]; if(u) return decodeURIComponent(u).toLowerCase().slice(0,20);
+      if(/[?&]ld=/.test(q)) return 'whatsapp-reminder';
+      if(/Instagram/i.test(ua)) return 'instagram'; if(/FBAN|FBAV|FB_IAB/i.test(ua)) return 'facebook'; if(/WhatsApp/i.test(ua)) return 'whatsapp'; if(/TikTok|musical_ly|BytedanceWebview/i.test(ua)) return 'tiktok';
+      if(/google\./i.test(r)) return 'google'; if(/instagram\./i.test(r)) return 'instagram'; if(/facebook\.|fb\.me/i.test(r)) return 'facebook'; if(/wa\.me|whatsapp/i.test(r)) return 'whatsapp'; if(/chaleurpatisserie\.com/i.test(r)) return 'website';
+      if(r && !/orderla\.my/i.test(r)) return 'other'; return 'direct';
+    }
+    var EVSRC=(function(){ try { var s0=sessionStorage.getItem('caSrc26'); if(s0) return s0; var s1=evSource(); sessionStorage.setItem('caSrc26',s1); return s1; } catch(e){ return evSource(); } })();
+    var EVDEV=/Mobi|Android|iPhone/i.test(navigator.userAgent)?'mobile':(/iPad|Tablet/i.test(navigator.userAgent)?'tablet':'desktop');
+    function ev(k,i,v){ EVQ.push({t:Date.now(),k:k,i:(i||'').toString().slice(0,90),v:v||''}); if(EVQ.length>=25) evFlush(); }
+    function evFlush(){
+      if(!EVQ.length || !LD_URL) return; var b=JSON.stringify({action:'ev', vid:VID.id, sid:SID, store:location.pathname.replace(/^\//,'').slice(0,60), dev:EVDEV, src:EVSRC, isNew:VID.isNew, events:EVQ.splice(0,60)});
+      try { if(!(navigator.sendBeacon && navigator.sendBeacon(LD_URL, new Blob([b],{type:'text/plain'})))) fetch(LD_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:b,keepalive:true}); } catch(e){}
+    }
+    setInterval(evFlush, 15000);
+    document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden') evFlush(); });
+    window.addEventListener('pagehide', evFlush);
+    ev('view', document.title||'');
+    /* what customers tap */
+    document.addEventListener('click', function(e){
+      var t=e.target; if(!t.closest) return;
+      var a=t.closest('a.form-add-item-btn'); if(a){ var row=a.closest('.col-12'); var nm=row && ((row.querySelector('.ca-rt span')||{}).textContent || (row.innerText||'').split('\n')[0]); if(!/Lucky Draw -/.test(nm||'')) ev('open', (nm||'').trim()); return; }
+      var b=t.closest('button'); if(!b) return;
+      var up=b.closest('[data-orderla-upsell]'); if(up){ ev('upsell', up.getAttribute('data-orderla-upsell')); return; }
+      var txt=(b.innerText||'').trim();
+      if(/^Add to Cart$/i.test(txt)){ var w=b.closest('.modal-content-wrapper'); var h=w && w.querySelector('h1,h2,h3,h4,h5,.product-name,strong'); var nm2=w ? ((w.innerText||'').split('\n').filter(function(x){ return x.trim() && !/^(BUILD YOUR OWN|CHALEUR|RM|LIMIT)/i.test(x.trim()); })[0]||'') : ''; var pr=((w&&w.querySelector('.cart-product-modal-footer'))||{}).innerText||''; var amt=(pr.match(/RM\s*([\d,.]+)/)||[])[1]; ev('add', nm2.trim(), amt?parseFloat(amt.replace(/,/g,'')):''); return; }
+      if(/Order via WhatsApp|Place Order|Pay Now|Proceed to Pay|Confirm Order/i.test(txt)){ ev('order', '', cartTotal()||''); evFlush(); }
+    }, true);
+    var evStage='';
+    function evTick(){
+      var bt=document.body.innerText||'', st='';
+      if($('input.text-monospace') && /Order Summary/.test(bt)) st='summary'; else if($('input[type="tel"]') && /Customer Details/.test(bt)) st='details'; else if($$('tr').some(function(r){ return r.querySelector('[class*="btn-minus-selection"]') && r.getClientRects().length; })) st='cart';
+      if(st && st!==evStage){ evStage=st; ev(st,'',cartTotal()||''); } else if(!st) evStage='';
+    }
     var teased=false, lastTot=null, checking=false;
     function draw(){
       if(Date.now()>GIFT_END) return;
@@ -689,6 +729,7 @@
       if(pk) pk.click(); setTimeout(function(){ addPicks(ui,names,i+1); },170);
     }
     window.__caBoxUp=function(N, picks, extra){
+      try{ ev('box_up', N+'>'+(N<9?NEXT[N]:'new3')); }catch(e){}
       if(window.__caBoxBusy) return; window.__caBoxBusy=true; setTimeout(function(){ window.__caBoxBusy=false; },6000);
       if(N<9){
         var M=NEXT[N]; closeProductPopup();
@@ -704,7 +745,7 @@
       try { buildMenu(); } catch(e){}
       try { bigBoxes(); } catch(e){}
       try { garden(); } catch(e){}
-      try { draw(); } catch(e){} try { leadTick(); } catch(e){} try { upsellRow(); } catch(e){}
+      try { draw(); } catch(e){} try { leadTick(); } catch(e){} try { upsellRow(); } catch(e){} try { evTick(); } catch(e){}
       try { popupIntro(); } catch(e){}
     }
     setInterval(tick, 500); tick();

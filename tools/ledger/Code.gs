@@ -7,6 +7,7 @@
  */
 var LEAD_HDR = ['phone','name','store','total','items','stage','ordered','first_seen','last_update','reminded_at','token','note'];
 var DRAW_HDR = ['phone','played_at','prize','prize_label','hold_until','token','status','store','order_ref','note'];
+var EV_HDR = ['ts','day','vid','sid','store','type','item','value','device','source','new'];
 var LABEL = {rm20:'RM20 off', rm2:'RM2 off', half:'Next cake 50% off', petit:'RM6.99 surprise cake', cookie:'Free cookie', kit:'Free birthday kit'};
 
 function doGet(e) {
@@ -21,11 +22,48 @@ function doGet(e) {
         case 'draw_win':     out = drawWin(p); break;
         case 'lead_get':     out = leadGet(p); break;
         case 'ping':         out = {ok:true}; break;
+        case 'stats':        out = stats_(p); break;
         default:             out = {ok:false, error:'unknown action'};
       }
     } finally { lock.releaseLock(); }
   } catch (err) { out = {ok:false, error:String(err)}; }
   return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
+}
+
+
+/* store event batches (navigator.sendBeacon, text/plain JSON) */
+function doPost(e) {
+  try {
+    var body = JSON.parse((e && e.postData && e.postData.contents) || '{}');
+    if (body.action === 'ev' && body.events && body.events.length) {
+      var lock = LockService.getScriptLock(); lock.waitLock(10000);
+      try { saveEvents_(body); } finally { lock.releaseLock(); }
+    }
+  } catch (err) {}
+  return ContentService.createTextOutput('{"ok":true}').setMimeType(ContentService.MimeType.JSON);
+}
+function saveEvents_(b) {
+  var sh = sheet_('Events', EV_HDR), rows = [], tz = 'Asia/Kuala_Lumpur';
+  var evs = b.events.slice(0, 60);
+  for (var i = 0; i < evs.length; i++) {
+    var ev = evs[i], ts = new Date(Number(ev.t) || Date.now());
+    rows.push([ts, Utilities.formatDate(ts, tz, 'yyyy-MM-dd'), clip_(b.vid,20), clip_(b.sid,20), clip_(b.store,60), clip_(ev.k,24), clip_(ev.i,90), Number(ev.v)||'', clip_(b.dev,10), clip_(b.src,24), b.isNew ? 1 : '']);
+  }
+  if (rows.length) sh.getRange(sh.getLastRow()+1, 1, rows.length, EV_HDR.length).setValues(rows);
+}
+
+/* summary for the Orderla Analytics page: ?action=stats&days=7&key=... */
+function stats_(p) {
+  var key = PropertiesService.getScriptProperties().getProperty('STATS_KEY');
+  if (!key || p.key !== key) return {ok:false, error:'no access'};
+  var days = Math.min(Math.max(Number(p.days)||7, 1), 120), since = Date.now() - days*864e5;
+  var ev = sheet_('Events', EV_HDR), n = ev.getLastRow(), data = n > 1 ? ev.getRange(2,1,n-1,EV_HDR.length).getValues() : [];
+  var out = {ok:true, days:days, generated:Date.now(), events:[]};
+  for (var i = 0; i < data.length; i++) { var r = data[i]; var t = new Date(r[0]).getTime(); if (t < since) continue;
+    out.events.push([t, r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10]]); }
+  var dr = sheet_('Draw', DRAW_HDR), dn = dr.getLastRow(); out.draw = dn > 1 ? dr.getRange(2,1,dn-1,8).getValues().filter(function(r){ return r[0] && new Date(r[1]).getTime() >= since; }).map(function(r){ return [new Date(r[1]).getTime(), r[2], r[6], r[7]]; }) : [];
+  var ld = sheet_('Leads', LEAD_HDR), ln = ld.getLastRow(); out.leads = ln > 1 ? ld.getRange(2,1,ln-1,LEAD_HDR.length).getValues().filter(function(r){ return r[0] && new Date(r[8]).getTime() >= since; }).map(function(r){ return [new Date(r[7]).getTime(), new Date(r[8]).getTime(), r[2], Number(r[3])||0, r[5], r[6]===true, r[9] ? 1 : 0]; }) : [];
+  return out;
 }
 
 function sheet_(name, hdr) {
@@ -97,4 +135,4 @@ function markReminded(phone) {
   if (r && sh.getRange(r,7).getValue()==='won') sh.getRange(r,5).setValue(new Date(Date.now() + 10*60*60*1000));
 }
 
-function setup() { sheet_('Leads', LEAD_HDR); sheet_('Draw', DRAW_HDR); var s = SpreadsheetApp.getActive().getSheetByName('Sheet1'); if (s && s.getLastRow()===0) SpreadsheetApp.getActive().deleteSheet(s); }
+function setup() { sheet_('Leads', LEAD_HDR); sheet_('Draw', DRAW_HDR); sheet_('Events', EV_HDR); var s = SpreadsheetApp.getActive().getSheetByName('Sheet1'); if (s && s.getLastRow()===0) SpreadsheetApp.getActive().deleteSheet(s); }
