@@ -50,6 +50,15 @@
       '@keyframes caHop{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}',
       '#ca-menu .ft{padding:10px 16px 16px;font-size:11px;color:'+CARAMEL+';text-align:center}',
       'body.ca-popup #ca-mbtn{display:none}',
+      /* Build Your Own Box: big picture cards in a swipe row */
+      '.ca-big{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:2px 2px 14px;margin:0 -2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}',
+      '.ca-big::-webkit-scrollbar{display:none}',
+      '.ca-big > .col-12{flex:0 0 68%!important;max-width:68%!important;scroll-snap-align:start}',
+      '.ca-big .ca-lr{height:100%;margin:4px 0!important;padding:10px!important}',
+      '.ca-big .ca-lr > div > div{flex-direction:column!important}',
+      '.ca-big .ca-rimg{flex:none!important;margin:0 0 10px!important;width:100%}',
+      '.ca-big .ca-rimg img{width:100%!important;height:auto!important;aspect-ratio:1/1;border-radius:14px!important}',
+      '.ca-big .ca-rt p{-webkit-line-clamp:3!important}',
       /* ---------- fruits & nuts garden ---------- */
       '.ca-gpar{position:relative!important}','.ca-gpar > :not(#ca-garden){position:relative;z-index:1}',
       '#ca-garden{position:absolute;left:0;right:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,#EEF5E4 0%,#DDEBCB 55%,#CFE2B6 100%);opacity:0;transition:opacity .6s}',
@@ -194,6 +203,9 @@
       return cur;
     }
 
+    function bigBoxes(){
+      sections().forEach(function(x){ if(!/build your own box/i.test(x.name)) return; secEls(x.el).forEach(function(e){ if(e.classList.contains('row')) e.classList.add('ca-big'); }); });
+    }
     /* ---------- Fruits & Nuts garden ---------- */
     var GARD_IN=[
       'Psst! You\'re in the freshest corner of Chaleur: my garden! 🌱',
@@ -464,6 +476,7 @@
 
     function tick(){
       try { buildMenu(); } catch(e){}
+      try { bigBoxes(); } catch(e){}
       try { garden(); } catch(e){}
       try { hunt(); } catch(e){}
       try { popupIntro(); } catch(e){}
