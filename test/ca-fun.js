@@ -686,6 +686,12 @@
     setInterval(evStay, 60000);
     document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden'){ evStay(); evFlush(); } });
     window.addEventListener('pagehide', function(){ evStay(); evFlush(); });
+    /* rough area from the connection (city level), once per visit; no GPS prompt, IP not kept */
+    (function(){ try { if(sessionStorage.getItem('caGeo26')) return; sessionStorage.setItem('caGeo26','1'); } catch(e){ return; }
+      fetch('https://get.geojs.io/v1/ip/geo.json').then(function(r){ return r.json(); }).then(function(g){
+        if(!g) return; var la=Math.round(parseFloat(g.latitude)*10)/10, lo=Math.round(parseFloat(g.longitude)*10)/10;
+        ev('geo', [g.city||'', g.region||'', g.country_code||'', isNaN(la)?'':la, isNaN(lo)?'':lo].join('|')); evFlush();
+      }).catch(function(){}); })();
     /* every tap on something clickable */
     document.addEventListener('click', function(e){
       var t=e.target; if(!t.closest) return;
