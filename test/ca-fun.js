@@ -321,7 +321,7 @@
     /* prize split among winners (must add up to 1) */
     var PRIZE_W={ rm20:.005, half:.495, petit:.20, cookie:.15, kit:.15 };
     var PR={
-      rm20:{code:'XMASGIFT20', v:20, big:'🌟', h:'Jackpot! RM20 off!', p:'Lucky you! We\'ll apply it for you at checkout. Joyeux Noël!'},
+      rm20:{code:'@', v:20, big:'🌟', h:'Jackpot! RM20 off!', p:'Lucky you! We\'ll apply it for you at checkout. Joyeux Noël!'},
       half:{re:/Lucky Draw - Extra Petit/i, big:'🍰', h:'An extra cake at 50% off!', p:'Pick any petit gâteau at half price. We\'ve opened it for you: choose your cake and tap Add to Cart.', choose:true},
       petit:{re:/Lucky Draw - Surprise Petit/i, big:'🧁', h:'A surprise petit gâteau for RM6.99!', p:'Chef\'s surprise flavour. We\'ve added it to your cart. Don\'t want it? Just remove it in your cart.', ok:'Your surprise petit gâteau is in the cart! 🧁'},
       cookie:{re:/Lucky Draw - Free Chocolate/i, big:'🍪', h:'A free cookie!', p:'One Chocolate Chips Walnut Cookie, on us. It\'s in your cart now (remove it anytime).', ok:'Your free cookie is in the cart! 🍪'},
@@ -429,14 +429,21 @@
       }
       var P=PR[D.prize]; confetti();
       modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>'+P.p+'</p><button class="bt" type="button">'+(P.choose?'Choose my cake':'Yay! Back to my order')+'</button>', function(m,close){ m.querySelector('.bt').onclick=close; });
-      if(P.code){ D.code=P.code; D.v=P.v; dsave(D); return; }
+      if(P.code){ D.code='@'; D.v=P.v; dsave(D); return; }
       setTimeout(function(){ addPrize(P); }, P.choose?2200:900);
     }
 
-    /* RM20 off jackpot: auto-apply the code at checkout */
+    /* RM20 off jackpot: auto-apply the (hidden) code at checkout */
     var applied=false;
+    function jc(){ try { return atob('WUM3S0JXUTlTNkFD').split('').reverse().join(''); } catch(e){ return ''; } }
+    function maskCode(){ /* show "LUCKYDRAW" instead of the real code on the page */
+      var c=jc(); if(!c) return; var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null), n;
+      while((n=w.nextNode())){ if(n.nodeValue.indexOf(c)>=0) n.nodeValue=n.nodeValue.split(c).join('LUCKYDRAW'); }
+      $$('input').forEach(function(i){ if(i.value===c) i.style.color='transparent'; });
+    }
     function checkout(){
       if(!D || !D.code) return;
+      maskCode();
       var inp=$('input.text-monospace'); var sum=document.body.innerText||'';
       var dl=sum.match(/Discount:\s*([A-Z0-9]+)\s*RM\s*-?([\d.]+)/i);
       var note=document.getElementById('ca-gnote');
@@ -448,19 +455,20 @@
       }
       if(dl){
         var code=dl[1].toUpperCase(), amt=parseFloat(dl[2]);
-        var msg = code===D.code ? '🌟 Your Lucky Draw RM'+D.v+' off is applied. Joyeux Noël!'
+        var mine = code==='LUCKYDRAW' || code===jc();
+        var msg = mine ? '🌟 Your Lucky Draw RM'+D.v+' off is applied. Joyeux Noël!'
                 : (amt>=D.v ? '🌟 Your '+code+' saves you more (RM'+amt.toFixed(2)+'), so we kept it instead of your RM'+D.v+' Lucky Draw prize.' : '');
-        if(code!==D.code && amt<D.v && inp && !applied){ applied=true; useCode(inp, D.code); }
+        if(!mine && amt<D.v && inp && !applied){ applied=true; useCode(inp, jc()); }
         placeNote(msg); return;
       }
       if(inp && !applied && inp.getClientRects().length){
         if(cartTotal()!==null && cartTotal()<DMIN){ placeNote('🌟 Your Lucky Draw RM'+D.v+' off needs a cart of RM'+DMIN+' or more.'); return; }
         if((inp.value||'').trim()) return;
-        applied=true; useCode(inp, D.code);
+        applied=true; useCode(inp, jc());
       }
     }
     function useCode(inp, code){
-      var set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; set.call(inp, code); inp.dispatchEvent(new Event('input',{bubbles:true}));
+      var set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; inp.style.color='transparent'; set.call(inp, code); inp.dispatchEvent(new Event('input',{bubbles:true}));
       setTimeout(function(){ var r=$$('button').filter(function(b){ return /^\s*Redeem\s*$/.test(b.innerText); })[0]; if(r) r.click(); },250);
     }
     var teased=false, lastTot=null;
