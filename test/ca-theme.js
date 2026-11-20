@@ -347,6 +347,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         var nx=head.nextElementSibling; if(!nx) continue;
         var ui=null, list=nx;
         if (nx.classList.contains('ca-bx')) { ui=nx; list=nx.nextElementSibling; if(!list) continue; }
+        if (ui && ui.__N!==N){ list.classList.remove('ca-bx-hide'); ui.remove(); ui=null; }
         if (!ui){
           ui=document.createElement('div'); ui.className='ca-bx';
           ui.innerHTML='<div class="box"><span class="lbl">Box of '+N+'</span><div class="grid"></div><div class="bar"><i></i></div></div><p class="sum"></p><button type="button" class="redo" hidden>↺ Start over</button><div class="gdn"><button type="button" class="gf" aria-label="Meet Chaleur\'s gardener">'+FEUILLE_HELLO+'</button><span class="gb" aria-live="polite"></span></div><p class="hint">Tap to add <span>swipe for more →</span></p><div class="pick"></div><button type="button" class="tog">Show as list</button>';
