@@ -71,7 +71,7 @@ function sheet_(name, hdr) {
   if (!sh) { sh = ss.insertSheet(name); sh.appendRow(hdr); sh.setFrozenRows(1); }
   return sh;
 }
-function phone_(v) { var d = String(v||'').replace(/\D/g,''); if (d.indexOf('60')===0) d=d.slice(2); if (d.indexOf('0')===0) d=d.slice(1); return /^1\d{8,9}$/.test(d) ? '60'+d : ''; }
+function phone_(v) { var d = String(v||'').replace(/\D/g,''); if (/^65[3689]\d{7}$/.test(d)) return d; if (d.indexOf('60')===0) d=d.slice(2); if (d.indexOf('0')===0) d=d.slice(1); return /^1\d{8,9}$/.test(d) ? '60'+d : ''; }
 function find_(sh, col, val) { var n = sh.getLastRow(); if (n<2) return 0; var v = sh.getRange(2,col,n-1,1).getValues(); for (var i=0;i<v.length;i++) if (String(v[i][0])===String(val)) return i+2; return 0; }
 function now_() { return new Date(); }
 function clip_(s, n) { return String(s||'').slice(0, n); }

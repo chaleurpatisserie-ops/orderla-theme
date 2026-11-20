@@ -195,7 +195,7 @@ dash.calc('sessions', {inputs: ['events'], fn: function (events) {
       var w = whoV[s.vid] ? parseWho(whoV[s.vid].who) : {name: '', phone: ''};
       s.visitNo = i + 1; s.visitsTotal = list.length; s.deviceId = 'Device ' + String(s.vid).slice(0, 4).toUpperCase();
       s.name = w.name; s.phone = w.phone; s.who = w.name; s.devices = key.indexOf('dev:') === 0 ? 1 : (vidsOf[key] || [1]).length;
-      s.person = w.name ? w.name + (w.phone ? ' · 0' + w.phone.replace(/^60/, '') : '') + (s.devices > 1 ? ' (' + s.devices + ' devices)' : '') : s.deviceId;
+      s.person = w.name ? w.name + (w.phone ? (w.phone.indexOf('65') === 0 ? ' · +65 ' + w.phone.slice(2) : ' · 0' + w.phone.replace(/^60/, '')) : '') + (s.devices > 1 ? ' (' + s.devices + ' devices)' : '') : s.deviceId;
       s.dev = s.dev || '';
     });
   });

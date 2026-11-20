@@ -132,7 +132,7 @@
       if (e.type === 'geo') { var p = String(e.item || '').split('|'); what = [p[0], p[2]].filter(Boolean).join(', '); }
       if (e.type === 'stay') val = e.value + 's active'; else if (e.type === 'scroll') val = e.value + '% down the page'; else if (e.value) val = 'RM' + rm(e.value);
       if (e.type === 'draw_prize') what = OA.name(e.item);
-      if ((e.type === 'who' || e.type === 'lead') && what.indexOf('|') > 0) what = what.replace('|', ' · ').replace(/· 60/, '· 0');
+      if ((e.type === 'who' || e.type === 'lead') && what.indexOf('|') > 0) what = what.replace('|', ' · ').replace(/· 60/, '· 0').replace(/· 65/, '· +65 ');
       cell(tr, t(e.ts)); cell(tr, ACT[e.type] || e.type); cell(tr, what); cell(tr, val); body.appendChild(tr);
     });
   }
