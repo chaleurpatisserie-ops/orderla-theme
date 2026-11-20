@@ -76,7 +76,7 @@
       '#ca-gard.in{transform:none}',
       '#ca-gard img{width:100%;display:block;filter:drop-shadow(0 3px 4px rgba(82,51,37,.25))}',
       '#ca-gard .gb{position:absolute;left:calc(100% + 6px);bottom:28px;width:'+(mobile?190:230)+'px;background:#fff;border:2px solid #7E9E58;border-radius:14px 14px 14px 4px;padding:8px 10px;font:600 12.5px/1.35 Montserrat,sans-serif;color:'+BROWN+';text-align:left;opacity:0;transform:scale(.6);transform-origin:left bottom;transition:all .3s}',
-      '#ca-gard.talk .gb{opacity:1;transform:none}',
+      '#ca-gard.in.talk .gb{opacity:1;transform:none}',
       'body.ca-popup #ca-gard,body.ca-mopen #ca-gard{display:none}',
       '.ca-pm{box-sizing:border-box;max-width:100%;padding-right:2px;display:flex;align-items:flex-end;gap:10px;margin:14px 0 6px;animation:caPop .45s cubic-bezier(.2,.9,.3,1.4) both}',
       '.ca-pm img{width:74px;flex:none;cursor:pointer;filter:drop-shadow(0 3px 4px rgba(82,51,37,.25))}',

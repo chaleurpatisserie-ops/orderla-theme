@@ -142,7 +142,8 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       '.ca-bx .gdn:not(.on) .gb{max-height:0;padding:0;border-width:0;margin:0;overflow:hidden}',
       '#ca-noel{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:10px!important;font-weight:600!important;letter-spacing:.34em;text-transform:uppercase;color:'+CREAM+'!important;pointer-events:none}',
       'nav.navbar.ca-w1,.ca-bar.ca-w1{padding-bottom:16px!important;overflow:visible!important}',
-      'nav.navbar .fl{position:absolute;pointer-events:none}',
+      'nav.navbar .fl,.ca-bar .fl{position:absolute;pointer-events:none}','.ca-bar{position:relative}',
+      '#ca-head img{display:block;height:'+(innerWidth<480?30:38)+'px;width:auto;max-width:72vw}',
       '#ca-wave{position:relative;height:28px;margin-top:-1px;margin-bottom:44px;pointer-events:none;z-index:2}',
       '#ca-wave .orn{position:absolute;top:16px;display:flex;flex-direction:column;align-items:center;transform-origin:top center;animation:caSwing 3.2s ease-in-out infinite}',
       '#ca-wave .orn:nth-child(odd){animation-delay:-1.6s}',
@@ -264,7 +265,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       document.body.insertBefore(strip, document.body.firstChild);
       var nav=document.querySelector('nav.navbar');
       var wm=document.createElement('span'); wm.id='ca-head'; wm.className='wm';
-      wm.innerHTML='CHALEUR ATELIER<small>P\u00c2TISSERIE</small>';
+      wm.innerHTML='<img alt="Chaleur Atelier P\u00e2tisserie" src="https://chaleurpatisserie-ops.github.io/orderla-theme/img/logo-wordmark-cream.png">';
       if (nav){ nav.style.position = getComputedStyle(nav).position==='static' ? 'relative' : nav.style.position; wm.classList.add('in-nav'); nav.appendChild(wm); }
       else { var bar=document.createElement('div'); bar.className='ca-bar'; bar.appendChild(wm); strip.parentNode.insertBefore(bar, strip.nextSibling); }
     }
