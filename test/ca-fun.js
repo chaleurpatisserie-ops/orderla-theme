@@ -53,7 +53,7 @@
       /* ---------- fruits & nuts garden ---------- */
       '.ca-gpar{position:relative!important}','.ca-gpar > :not(#ca-garden){position:relative;z-index:1}',
       '#ca-garden{position:absolute;left:0;right:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,#EEF5E4 0%,#DDEBCB 55%,#CFE2B6 100%);opacity:0;transition:opacity .6s}',
-      '#ca-garden.on{opacity:1}',
+      '#ca-garden.on{opacity:1}','.ca-aftergdn{padding-top:34px!important}',
       '#ca-garden .lv{position:absolute;inset:0;opacity:.38;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%27120%27%3E%3Cg fill=%27%23A9C68A%27%3E%3Cpath d=%27M18 22c10-10 24-8 26 0-8 8-20 10-26 0z%27/%3E%3Cpath d=%27M84 70c8-12 22-12 26-4-6 10-18 14-26 4z%27/%3E%3Cpath d=%27M40 96c6-9 17-9 20-3-5 7-14 10-20 3z%27/%3E%3C/g%3E%3Cg fill=%27%23E8B4A0%27%3E%3Ccircle cx=%2796%27 cy=%2720%27 r=%273%27/%3E%3Ccircle cx=%2716%27 cy=%2770%27 r=%272.5%27/%3E%3C/g%3E%3C/svg%3E");background-size:120px 120px}',
       '#ca-garden .hedge{position:absolute;left:0;right:0;top:-22px;height:24px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 60 24%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M0 24V14C4 4 12 4 15 12 18 2 28 2 30 11 33 3 42 3 45 12 48 4 56 4 60 14V24Z%27 fill=%27%23EEF5E4%27/%3E%3C/svg%3E");background-size:60px 24px;background-repeat:repeat-x}',
       '#ca-garden .grass{position:absolute;left:0;right:0;bottom:-2px;height:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 80 34%27%3E%3Cg fill=%27%237E9E58%27%3E%3Cpath d=%27M0 34 6 10 9 34Z%27/%3E%3Cpath d=%27M10 34 18 4 20 34Z%27/%3E%3Cpath d=%27M24 34 28 14 32 34Z%27/%3E%3Cpath d=%27M36 34 44 6 46 34Z%27/%3E%3Cpath d=%27M50 34 55 16 58 34Z%27/%3E%3Cpath d=%27M60 34 68 2 70 34Z%27/%3E%3Cpath d=%27M72 34 76 12 80 34Z%27/%3E%3C/g%3E%3Ccircle cx=%2730%27 cy=%2713%27 r=%273%27 fill=%27%23780C14%27/%3E%3Ccircle cx=%2757%27 cy=%2715%27 r=%272.5%27 fill=%27%23FFF0DC%27/%3E%3C/svg%3E");background-size:80px 34px;background-repeat:repeat-x}',
@@ -221,6 +221,7 @@
         band.appendChild(layer);
       }
       var els=secEls(s.el), last=els[els.length-1]||s.el;
+      var na=last.nextElementSibling; while(na&&na.tagName!=='SECTION') na=na.nextElementSibling; if(na&&na.nextElementSibling) na.nextElementSibling.classList.add('ca-aftergdn');
       var br=band.getBoundingClientRect(), t=s.el.getBoundingClientRect().top-br.top, b=last.getBoundingClientRect().bottom-br.top;
       layer.classList.remove('ca-hide'); layer.style.top=(t+2)+'px'; layer.style.height=Math.max(60,b-t+10)+'px'; layer.classList.add('on');
       // gardener
