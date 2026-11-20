@@ -497,7 +497,7 @@
     function dropRows(){ prizeRows().forEach(function(r){ var minus=r.querySelector('[class*="btn-minus-selection"]');
       if(minus && !minus.__caX){ minus.__caX=1; minus.click(); setTimeout(function(){ var ok=$$('.alerty-action .btn-ok').filter(function(b){ return b.getClientRects().length && /Remove/i.test(b.textContent); })[0]; if(ok) ok.click(); },350); setTimeout(function(){ minus.__caX=0; },1500); } }); }
     var follow=0;
-    function visModal(){ return $$('.modal-content-wrapper,.ReactModal__Content,#ca-gm,#ca-lead').some(function(x){ return x.getClientRects().length && x.offsetHeight>0; }); }
+    function visModal(){ return $$('.modal-content-wrapper,.ReactModal__Content,#ca-gm,#ca-lead').some(function(x){ return x.getClientRects().length && x.offsetHeight>0 && !x.querySelector('[class*="btn-minus-selection"]'); }); }   /* the cart itself doesn't count */
     function followCart(){
       var P=PR[D.prize]; if(!P || P.code || D.expired) return;
       var tot=cartSub(); if(tot===null) return;
