@@ -319,8 +319,9 @@
     /* ---------- Christmas Lucky Draw (flip game) ---------- */
     var DMIN=150, DKEY='caDraw26', WIN=0.70, LIMIT=30, FLIPS=3;
     /* prize split among winners (must add up to 1) */
-    var PRIZE_W={ half:.50, petit:.20, cookie:.15, kit:.15 };
+    var PRIZE_W={ rm20:.005, half:.495, petit:.20, cookie:.15, kit:.15 };
     var PR={
+      rm20:{code:'XMASGIFT20', v:20, big:'🌟', h:'Jackpot! RM20 off!', p:'Lucky you! We\'ll apply it for you at checkout. Joyeux Noël!'},
       half:{re:/Lucky Draw - Extra Petit/i, big:'🍰', h:'An extra cake at 50% off!', p:'Pick any petit gâteau at half price. We\'ve opened it for you: choose your cake and tap Add to Cart.', choose:true},
       petit:{re:/Lucky Draw - Surprise Petit/i, big:'🧁', h:'A surprise petit gâteau for RM6.99!', p:'Chef\'s surprise flavour. We\'ve added it to your cart. Don\'t want it? Just remove it in your cart.', ok:'Your surprise petit gâteau is in the cart! 🧁'},
       cookie:{re:/Lucky Draw - Free Chocolate/i, big:'🍪', h:'A free cookie!', p:'One Chocolate Chips Walnut Cookie, on us. It\'s in your cart now (remove it anytime).', ok:'Your free cookie is in the cart! 🍪'},
@@ -360,12 +361,13 @@
     function pickPrize(){
       var r=Math.random(), acc=0, k='half';
       for(var p in PRIZE_W){ acc+=PRIZE_W[p]; if(r<acc){ k=p; break; } }
+      if(k==='rm20') return k;
       return prizeAvailable(PR[k].re) ? k : null;   /* sold out = no prize */
     }
     function intro(){
       modal('<div class="dg-h"><img alt="" src="'+CA_IMG+'feuille-celebrate.webp"><div><small>CHRISTMAS LUCKY DRAW</small><h3>Flip &amp; match!</h3></div></div>'+
         '<ol class="dg-rules"><li>9 cake coins are hiding face-down.</li><li>Each turn, flip <b>2 coins</b>. No match? They flip back.</li><li>You get <b>3 turns</b> in <b>30 seconds</b>.</li><li>Find <b>2 of the same cake</b> and you win a prize!</li></ol>'+
-        '<p class="dg-prz">🍰 Extra cake 50% off · 🧁 RM6.99 surprise cake · 🍪 free cookie · 🎂 free birthday kit</p>'+
+        '<p class="dg-prz">🌟 RM20 off · 🍰 extra cake 50% off · 🧁 RM6.99 surprise cake · 🍪 free cookie · 🎂 free birthday kit</p>'+
         '<button class="bt go" type="button">Start the game</button><button class="bt o later" type="button">Maybe later</button><p class="dg-fine">One game per phone · while stocks last · until 31 Dec 2026</p>',
         function(m,close){ m.querySelector('.go').onclick=function(){ close(); play(); }; m.querySelector('.later').onclick=function(){ close(); D.later=1; dsave(D); showChip(); host('Tap the 🎁 button whenever you\'re ready to play!',5000); }; }, 'dg');
     }
@@ -427,15 +429,47 @@
       }
       var P=PR[D.prize]; confetti();
       modal('<div class="big">'+P.big+'</div><h3>'+P.h+'</h3><p>'+P.p+'</p><button class="bt" type="button">'+(P.choose?'Choose my cake':'Yay! Back to my order')+'</button>', function(m,close){ m.querySelector('.bt').onclick=close; });
+      if(P.code){ D.code=P.code; D.v=P.v; dsave(D); return; }
       setTimeout(function(){ addPrize(P); }, P.choose?2200:900);
+    }
+
+    /* RM20 off jackpot: auto-apply the code at checkout */
+    var applied=false;
+    function checkout(){
+      if(!D || !D.code) return;
+      var inp=$('input.text-monospace'); var sum=document.body.innerText||'';
+      var dl=sum.match(/Discount:\s*([A-Z0-9]+)\s*RM\s*-?([\d.]+)/i);
+      var note=document.getElementById('ca-gnote');
+      var anchor=inp? (inp.closest('.input-group')||inp.parentNode) : null;
+      function placeNote(msg){
+        if(!msg){ if(note) note.remove(); return; }
+        if(!note){ note=document.createElement('div'); note.id='ca-gnote'; var host2=$$('div').filter(function(d){ var t=(d.innerText||'').trim(); return /^Date & Time Slot/.test(t) && t.length<90; }).pop(); var tgt=host2||anchor; if(!tgt) return; tgt.parentNode.insertBefore(note, tgt.nextSibling); }
+        note.textContent=msg; if(!document.body.contains(note)) note=null;
+      }
+      if(dl){
+        var code=dl[1].toUpperCase(), amt=parseFloat(dl[2]);
+        var msg = code===D.code ? '🌟 Your Lucky Draw RM'+D.v+' off is applied. Joyeux Noël!'
+                : (amt>=D.v ? '🌟 Your '+code+' saves you more (RM'+amt.toFixed(2)+'), so we kept it instead of your RM'+D.v+' Lucky Draw prize.' : '');
+        if(code!==D.code && amt<D.v && inp && !applied){ applied=true; useCode(inp, D.code); }
+        placeNote(msg); return;
+      }
+      if(inp && !applied && inp.getClientRects().length){
+        if(cartTotal()!==null && cartTotal()<DMIN){ placeNote('🌟 Your Lucky Draw RM'+D.v+' off needs a cart of RM'+DMIN+' or more.'); return; }
+        if((inp.value||'').trim()) return;
+        applied=true; useCode(inp, D.code);
+      }
+    }
+    function useCode(inp, code){
+      var set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; set.call(inp, code); inp.dispatchEvent(new Event('input',{bubbles:true}));
+      setTimeout(function(){ var r=$$('button').filter(function(b){ return /^\s*Redeem\s*$/.test(b.innerText); })[0]; if(r) r.click(); },250);
     }
     var teased=false, lastTot=null;
     function draw(){
       if(Date.now()>GIFT_END) return;
       hideGift(); guardPrize();
-      var tot=cartTotal(); if(tot===null) return;
       if(!D) D={};
-      if(D.done){ return; }
+      if(D.done){ try{ checkout(); }catch(e){} return; }
+      var tot=cartTotal(); if(tot===null) return;
       if(tot>=DMIN){
         if(!D.offered && !popupOpen() && !document.getElementById('ca-gm')){ D.offered=1; dsave(D); intro(); }
         else if(D.offered && !document.getElementById('ca-gm')) showChip();
