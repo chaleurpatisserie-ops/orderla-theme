@@ -115,7 +115,7 @@
       '#ca-lead p{margin:0 0 10px!important;font-size:13px!important}',
       '#ca-lead label{display:block;text-align:left;font:700 12px Montserrat,sans-serif;margin:8px 0 0}',
       '#ca-lead input{width:100%;box-sizing:border-box;border:2px solid '+BEIGE+';border-radius:12px;padding:10px 12px;font:600 15px Montserrat,sans-serif;color:'+BROWN+';background:#fff;margin-top:4px}',
-      '#ca-lead .ph{display:flex;gap:6px;align-items:center}','#ca-lead .ph b{margin-top:4px;color:'+BURG+'}',
+      '#ca-lead .ph{display:flex;gap:6px;align-items:center}','#ca-lead .ph b{margin-top:4px;color:'+BURG+'}','#ca-lead .ph select.cc{margin-top:4px;font:inherit;font-weight:700;color:'+BURG+';background:#fff;border:1px solid rgba(82,51,37,.25);border-radius:10px;padding:9px 6px;flex:0 0 auto}',
       '#ca-lead .err{color:'+BURG+'!important;font-weight:700;margin:6px 0 0!important}',
       '#ca-lead .bt{width:100%;margin-top:12px;border:none;border-radius:999px;background:'+BURG+';color:'+CREAM+';font:800 15px Montserrat,sans-serif;padding:12px}',
       '#ca-lead .fine{font-size:11px!important;color:'+CARAMEL+';margin:10px 0 0!important}',
@@ -552,7 +552,11 @@
     function lload(){ try { return JSON.parse(localStorage.getItem(LKEY)||'null'); } catch(e){ return null; } }
     function lsave(v){ try { localStorage.setItem(LKEY, JSON.stringify(v)); } catch(e){} }
     var L=lload();
-    function normPhone(v){ var d=(v||'').replace(/\D/g,''); if(d.indexOf('60')===0) d=d.slice(2); if(d.indexOf('0')===0) d=d.slice(1); return /^1\d{8,9}$/.test(d) ? '60'+d : ''; }
+    /* Malaysia (+60, 01x…) or Singapore (+65, 8 digits starting 3/6/8/9) → 60XXXXXXXXX / 65XXXXXXXX */
+    function normPhone(v, cc){ var d=(v||'').replace(/\D/g,'');
+      if(cc==='65' || (!cc && /^65[3689]\d{7}$/.test(d))){ if(d.indexOf('65')===0 && d.length===10) d=d.slice(2); return /^[3689]\d{7}$/.test(d) ? '65'+d : ''; }
+      if(d.indexOf('60')===0) d=d.slice(2); if(d.indexOf('0')===0) d=d.slice(1); return /^1\d{8,9}$/.test(d) ? '60'+d : ''; }
+    function isSG(p){ return String(p||'').indexOf('65')===0; }
     function cartItems(){ /* names in the cart bar's cart view when open, else last known */ var rows=$$('tr').filter(function(r){ return r.querySelector('[class*="btn-minus-selection"]'); }); return rows.map(function(r){ var n=r.querySelector('strong'); var q=(r.innerText.match(/^\s*-\s*\n?\s*(\d+)/)||[])[1]; return (q?q+' x ':'')+(n?n.textContent.trim():''); }).filter(Boolean); }
     var lastSent='';
     function sendLead(stage){
@@ -566,16 +570,17 @@
       var m=document.createElement('div'); m.id='ca-lead';
       m.innerHTML='<div class="cd" role="dialog" aria-modal="true"><img alt="" src="'+CA_IMG+'feuille-hello.webp"><h3>Your WhatsApp number</h3><p>Please fill in your WhatsApp number. <b>We\'ll use this number to confirm your order.</b></p>'+
         '<label>Name <input class="nm" type="text" autocomplete="name" placeholder="Your name"></label>'+
-        '<label>WhatsApp number <span class="ph"><b>+60</b><input class="tel" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="12 345 6789"></span></label>'+
-        '<p class="err" hidden>Please enter a Malaysian mobile number, e.g. 012 345 6789.</p>'+
+        '<label>WhatsApp number <span class="ph"><select class="cc" aria-label="Country code"><option value="60">🇲🇾 +60</option><option value="65">🇸🇬 +65</option></select><input class="tel" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="12 345 6789"></span></label>'+
+        '<p class="err" hidden>Please enter a mobile number: Malaysia e.g. 012 345 6789, Singapore e.g. 8123 4567.</p>'+
         '<button class="bt go" type="button">Continue</button>'+
         '<p class="fine">We only WhatsApp you about your order (and once if you leave cakes in your cart). Reply STOP anytime.</p></div>';
       document.body.appendChild(m);
-      var tel=m.querySelector('.tel'), nm=m.querySelector('.nm'), err=m.querySelector('.err');
-      if(L && L.phone){ tel.value=L.phone.slice(2); nm.value=L.name||''; }
+      var tel=m.querySelector('.tel'), nm=m.querySelector('.nm'), err=m.querySelector('.err'), cc=m.querySelector('.cc');
+      cc.onchange=function(){ tel.placeholder = cc.value==='65' ? '8123 4567' : '12 345 6789'; err.hidden=true; };
+      if(L && L.phone){ if(isSG(L.phone)) cc.value='65'; cc.onchange(); tel.value=L.phone.slice(2); nm.value=L.name||''; }
       setTimeout(function(){ (nm.value?tel:nm).focus(); },200);
-      function go(){ var p=normPhone(tel.value); if(!p){ err.hidden=false; tel.focus(); return; }
-        L={phone:p, name:(nm.value||'').trim().slice(0,60), at:Date.now()}; lsave(L); ev('lead'); m.remove(); sendLead('start'); checkPlayed(); if(then) setTimeout(then,60); }
+      function go(){ var p=normPhone(tel.value, cc.value); if(!p){ err.hidden=false; tel.focus(); return; }
+        L={phone:p, name:(nm.value||'').trim().slice(0,60), at:Date.now()}; lsave(L); ev('lead', whoTag()); m.remove(); sendLead('start'); checkPlayed(); if(then) setTimeout(then,60); }
       m.querySelector('.go').onclick=go; tel.onkeydown=function(e){ if(e.key==='Enter') go(); };
     }
 
@@ -623,8 +628,11 @@
       if(!L || !L.phone) return;
       var ph=$$('input[type="tel"]').filter(function(i){ return i.getClientRects().length && !i.closest('#ca-lead'); })[0];
       var setv=function(el,v){ var set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; set.call(el,v); el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); };
-      if(ph && !ph.__caF){ ph.__caF=1; var want='0'+L.phone.slice(2); if(ph.value.replace(/\D/g,'')!==want) setv(ph,want);
-        ph.addEventListener('change',function(){ var n=normPhone(ph.value); if(n && n!==L.phone){ L.phone=n; lsave(L); lastSent=''; sendLead('details'); } }); }
+      if(ph && !ph.__caF){ ph.__caF=1; var sg=isSG(L.phone), want=sg ? L.phone.slice(2) : '0'+L.phone.slice(2);
+        if(sg){ var cs=$$('select',(ph.closest('.input-group,.form-group,div')||document)).concat($$('select',(ph.closest('form')||document)))[0];
+          if(cs){ var op=[].filter.call(cs.options,function(o){ return /(^|\D)65(\D|$)|singapore/i.test(o.value+' '+o.text); })[0]; if(op && cs.value!==op.value){ var sset=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set; sset.call(cs,op.value); cs.dispatchEvent(new Event('change',{bubbles:true})); } } }
+        if(ph.value.replace(/\D/g,'')!==want) setv(ph,want);
+        ph.addEventListener('change',function(){ var n=normPhone(ph.value, sg ? '65' : ''); if(n && n!==L.phone){ L.phone=n; lsave(L); lastSent=''; sendLead('details'); } }); }
       if(ph && L.name){ var box=ph.closest('form')||document; var nm=$$('input[type="text"]',box).filter(function(i){ return i.getClientRects().length && !i.closest('#ca-lead') && /name/i.test(((i.closest('div')||{}).parentElement||{}).innerText||''); })[0];
         if(nm && !nm.__caF){ nm.__caF=1; if((nm.value||'').trim().toLowerCase()!==L.name.toLowerCase()) setv(nm,L.name);
           nm.addEventListener('change',function(){ var v=(nm.value||'').trim(); if(v && v!==L.name){ L.name=v.slice(0,60); lsave(L); lastSent=''; sendLead('details'); } }); } }
@@ -692,6 +700,14 @@
         if(!g) return; var la=Math.round(parseFloat(g.latitude)*10)/10, lo=Math.round(parseFloat(g.longitude)*10)/10;
         ev('geo', [g.city||'', g.region||'', g.country_code||'', isNaN(la)?'':la, isNaN(lo)?'':lo].join('|')); evFlush();
       }).catch(function(){}); })();
+    /* which phone/app, and who (name + WhatsApp number, only after they fill in the popup) so return visits are recognised */
+    function whoTag(){ return L && L.phone ? (((L.name||'').trim()||'Customer').slice(0,40)+'|'+String(L.phone).replace(/\D/g,'')) : ''; }
+    (function(){ try { if(sessionStorage.getItem('caDev26')) return; sessionStorage.setItem('caDev26','1'); } catch(e){ return; }
+      var u=navigator.userAgent||'';
+      var os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?(((u.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build|[;)])/)||[])[1]||'').replace(/^K$/,'')||'Android'):/Windows/.test(u)?'Windows PC':/Macintosh|Mac OS X/.test(u)?'Mac':'Other';
+      if(/Android/.test(u) && os!=='Android') os='Android '+os;
+      var br=/Instagram/.test(u)?'Instagram app':/FBAN|FBAV|FB_IAB/.test(u)?'Facebook app':/TikTok|musical_ly|Bytedance/i.test(u)?'TikTok app':/WhatsApp/.test(u)?'WhatsApp':/Edg\//.test(u)?'Edge':/SamsungBrowser/.test(u)?'Samsung browser':/CriOS|Chrome/.test(u)?'Chrome':/Safari/.test(u)?'Safari':/Firefox|FxiOS/.test(u)?'Firefox':'Browser';
+      ev('device', os+' · '+br); var w=whoTag(); if(w) ev('who', w); })();
     /* delivery postcode typed at checkout (only the 5 digits are kept, never the address) */
     var evPc='';
     document.addEventListener('change', function(e){
