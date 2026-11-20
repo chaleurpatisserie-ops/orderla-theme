@@ -108,6 +108,17 @@
       '.coin.dim{opacity:.55}',
       '.coin:not(.up):active .in{transform:scale(.94)}',
       '.dg-msg{margin:12px 0 0!important;font-weight:700}',
+      '#ca-lead{position:fixed;inset:0;z-index:2147483006;background:rgba(82,51,37,.45);display:flex;align-items:center;justify-content:center;padding:16px}',
+      '#ca-lead .cd{background:'+CREAM+';border-radius:22px;padding:18px 18px 14px;width:min(92vw,360px);text-align:center;font-family:Montserrat,sans-serif;color:'+BROWN+';box-shadow:0 12px 30px rgba(0,0,0,.25)}',
+      '#ca-lead img{width:70px;margin:-50px auto 4px;display:block}',
+      '#ca-lead h3{margin:0 0 4px!important;font:800 18px Montserrat,sans-serif!important;color:'+BURG+'!important}',
+      '#ca-lead p{margin:0 0 10px!important;font-size:13px!important}',
+      '#ca-lead label{display:block;text-align:left;font:700 12px Montserrat,sans-serif;margin:8px 0 0}',
+      '#ca-lead input{width:100%;box-sizing:border-box;border:2px solid '+BEIGE+';border-radius:12px;padding:10px 12px;font:600 15px Montserrat,sans-serif;color:'+BROWN+';background:#fff;margin-top:4px}',
+      '#ca-lead .ph{display:flex;gap:6px;align-items:center}','#ca-lead .ph b{margin-top:4px;color:'+BURG+'}',
+      '#ca-lead .err{color:'+BURG+'!important;font-weight:700;margin:6px 0 0!important}',
+      '#ca-lead .bt{width:100%;margin-top:12px;border:none;border-radius:999px;background:'+BURG+';color:'+CREAM+';font:800 15px Montserrat,sans-serif;padding:12px}',
+      '#ca-lead .fine{font-size:11px!important;color:'+CARAMEL+';margin:10px 0 0!important}',
       '#ca-hold{position:fixed;left:50%;transform:translateX(-50%);top:62px;z-index:2147483003;background:'+BURG+';color:'+CREAM+';font:700 12.5px Montserrat,sans-serif;padding:8px 14px;border-radius:999px;box-shadow:0 6px 16px rgba(82,51,37,.35);white-space:nowrap;pointer-events:none}',
       '#ca-hold b{color:'+CREAM+'!important;font-weight:800}',
       '#ca-hold.hot{background:#9A1822;animation:caHop .6s ease-in-out infinite}',
@@ -355,7 +366,7 @@
     function addPrize(P){
       var b=giftRow(P.re); if(!b){ host('Hmm, the prize is hiding. Please tell our staff 🙏',5000); return; }
       allowPrize=true; b.click();
-      if(P.choose){ setTimeout(function(){ host('Pick your cake, it\'s half price! 🍰',6000); },900); setTimeout(function(){ allowPrize=false; },120000); return; }
+      if(P.choose){ D.added=1; dsave(D); setTimeout(function(){ host('Pick your cake, it\'s half price! 🍰',6000); },900); setTimeout(function(){ allowPrize=false; },120000); return; }
       var n=0, iv=setInterval(function(){
         var add=$$('button').filter(function(x){ return /^\s*Add to Cart\s*$/i.test(x.innerText) && x.getClientRects().length; })[0];
         if(add){ clearInterval(iv); add.click(); D.added=1; dsave(D); setTimeout(function(){ allowPrize=false; },1500); setTimeout(function(){ host(P.ok,5000); },600); }
@@ -478,8 +489,26 @@
 
     /* 10-minute hold: countdown chip; after that the prize is dropped */
     var expTold=false;
+    /* prize follows the cart: below RM150 (without the prize) it is taken out, back at RM150 it returns */
+    var PV={half:14.45, petit:6.99, cookie:0, kit:0};
+    function cartSub(){ var m=(document.body.innerText||'').match(/Subtotal\s*RM\s*([\d,]+\.\d{2})/); if(m && $$('tr').some(function(r){ return r.querySelector('[class*="btn-minus-selection"]') && r.getClientRects().length; })) return parseFloat(m[1].replace(/,/g,'')); return cartTotal(); }
+    function prizeRows(){ return $$('tr').filter(function(r){ return /Christmas Lucky Draw - /.test(r.innerText||'') && r.querySelector('[class*="btn-minus-selection"]') && r.getClientRects().length; }); }
+    function dropRows(){ prizeRows().forEach(function(r){ var minus=r.querySelector('[class*="btn-minus-selection"]');
+      if(minus && !minus.__caX){ minus.__caX=1; minus.click(); setTimeout(function(){ var ok=$$('.alerty-action .btn-ok').filter(function(b){ return b.getClientRects().length && /Remove/i.test(b.textContent); })[0]; if(ok) ok.click(); },350); setTimeout(function(){ minus.__caX=0; },1500); } }); }
+    var follow=0;
+    function followCart(){
+      var P=PR[D.prize]; if(!P || P.code || D.expired) return;
+      var tot=cartSub(); if(tot===null) return;
+      var base=tot-(D.added && !D.paused ? (PV[D.prize]||0) : 0);
+      if(base<DMIN && D.added && !D.paused){
+        if(prizeRows().length){ dropRows(); D.paused=1; dsave(D); host('Your Lucky Draw gift is on hold 🎁 Add back to RM'+DMIN+' and it comes right back!',6000); }
+      } else if(base>=DMIN && D.paused && !popupOpen() && Date.now()-follow>8000){
+        follow=Date.now(); D.paused=0; dsave(D); host('Welcome back! Your Lucky Draw gift is back in the cart 🎁',5000); setTimeout(function(){ addPrize(P); },600);
+      }
+    }
     function hold(){
       if(!D.wonAt || D.ordered) return;
+      try{ followCart(); }catch(e){}
       var left=D.wonAt+HOLD-Date.now(), chip=document.getElementById('ca-hold');
       if(left>0 && !D.expired){
         if(!chip){ chip=document.createElement('div'); chip.id='ca-hold'; document.body.appendChild(chip); }
@@ -499,6 +528,59 @@
           setTimeout(function(){ minus.__caX=0; },1500); }
       });
     }
+    /* ---------- Cart leads: ask for WhatsApp number at first Add to Cart ---------- */
+    var LKEY='caLead26', LEAD_URL='';   /* LEAD_URL: endpoint from the Wasapbot chat (empty = keep on the phone only) */
+    function lload(){ try { return JSON.parse(localStorage.getItem(LKEY)||'null'); } catch(e){ return null; } }
+    function lsave(v){ try { localStorage.setItem(LKEY, JSON.stringify(v)); } catch(e){} }
+    var L=lload();
+    function normPhone(v){ var d=(v||'').replace(/\D/g,''); if(d.indexOf('60')===0) d=d.slice(2); if(d.indexOf('0')===0) d=d.slice(1); return /^1\d{8,9}$/.test(d) ? '60'+d : ''; }
+    function cartItems(){ /* names in the cart bar's cart view when open, else last known */ var rows=$$('tr').filter(function(r){ return r.querySelector('[class*="btn-minus-selection"]'); }); return rows.map(function(r){ var n=r.querySelector('strong'); var q=(r.innerText.match(/^\s*-\s*\n?\s*(\d+)/)||[])[1]; return (q?q+' x ':'')+(n?n.textContent.trim():''); }).filter(Boolean); }
+    var lastSent='';
+    function sendLead(stage){
+      if(!L || !L.phone) return;
+      var tot=cartTotal(), items=cartItems(); if(items.length) L.items=items; if(tot!==null) L.total=tot; L.stage=stage||L.stage||'cart'; L.ts=Date.now(); L.store=location.pathname.replace(/^\//,''); lsave(L);
+      if(!LEAD_URL) return;
+      var body=JSON.stringify({action:'cart_lead_v1', phone:L.phone, name:L.name||'', store:L.store, total:L.total||0, items:(L.items||[]).slice(0,30), stage:L.stage, ordered:!!L.ordered, ts:L.ts});
+      if(body===lastSent) return; lastSent=body;
+      try { fetch(LEAD_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:body,keepalive:true}); } catch(e){}
+    }
+    function askLead(then){
+      if(document.getElementById('ca-lead')) return;
+      var m=document.createElement('div'); m.id='ca-lead';
+      m.innerHTML='<div class="cd" role="dialog" aria-modal="true"><img alt="" src="'+CA_IMG+'feuille-hello.webp"><h3>Before we box your cakes…</h3><p>Leave your WhatsApp number so we can help with your order.</p>'+
+        '<label>Name <input class="nm" type="text" autocomplete="name" placeholder="Your name"></label>'+
+        '<label>WhatsApp number <span class="ph"><b>+60</b><input class="tel" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="12 345 6789"></span></label>'+
+        '<p class="err" hidden>Please enter a Malaysian mobile number, e.g. 012 345 6789.</p>'+
+        '<button class="bt go" type="button">Continue</button>'+
+        '<p class="fine">We\'ll only WhatsApp you about this order, and once if you leave cakes in your cart. Reply STOP anytime.</p></div>';
+      document.body.appendChild(m);
+      var tel=m.querySelector('.tel'), nm=m.querySelector('.nm'), err=m.querySelector('.err');
+      if(L && L.phone){ tel.value=L.phone.slice(2); nm.value=L.name||''; }
+      setTimeout(function(){ (nm.value?tel:nm).focus(); },200);
+      function go(){ var p=normPhone(tel.value); if(!p){ err.hidden=false; tel.focus(); return; }
+        L={phone:p, name:(nm.value||'').trim().slice(0,60), at:Date.now()}; lsave(L); m.remove(); sendLead('start'); if(then) setTimeout(then,60); }
+      m.querySelector('.go').onclick=go; tel.onkeydown=function(e){ if(e.key==='Enter') go(); };
+    }
+    var leadBypass=false;
+    document.addEventListener('click', function(e){
+      var b=e.target.closest && e.target.closest('a.form-add-item-btn'); if(!b || leadBypass) return;
+      if(L && L.phone) return;
+      if(/Lucky Draw -/.test((b.closest('.col-12')||{}).innerText||'')) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      askLead(function(){ leadBypass=true; b.click(); setTimeout(function(){ leadBypass=false; },300); });
+    }, true);
+    /* fill the number into Orderla's Customer Details, follow the cart, mark ordered */
+    function leadTick(){
+      if(!L || !L.phone) return;
+      var ph=$$('input').filter(function(i){ return i.getClientRects().length && /phone|tel/i.test((i.name||'')+' '+(i.type||'')+' '+(i.placeholder||'')+' '+(i.id||'')) && !i.closest('#ca-lead'); })[0];
+      if(ph && !ph.value){ var set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set; set.call(ph, L.phone.slice(2)); ph.dispatchEvent(new Event('input',{bubbles:true})); }
+      var stage = /Order Summary/.test(document.body.innerText||'') && $('input.text-monospace') ? 'summary' : (/Customer Details/.test(document.body.innerText||'') && ph ? 'details' : 'cart');
+      sendLead(stage);
+    }
+    document.addEventListener('click', function(e){
+      var b=e.target.closest && e.target.closest('button,a'); if(!b || !L || !L.phone) return;
+      if(/Order via WhatsApp|Place Order|Pay Now|Proceed to Pay|Confirm Order/i.test(b.innerText||'')){ L.ordered=1; L.orderedAt=Date.now(); lsave(L); sendLead('ordered'); }
+    }, true);
     var teased=false, lastTot=null;
     function draw(){
       if(Date.now()>GIFT_END) return;
@@ -549,7 +631,7 @@
       try { buildMenu(); } catch(e){}
       try { bigBoxes(); } catch(e){}
       try { garden(); } catch(e){}
-      try { draw(); } catch(e){}
+      try { draw(); } catch(e){} try { leadTick(); } catch(e){}
       try { popupIntro(); } catch(e){}
     }
     setInterval(tick, 500); tick();
