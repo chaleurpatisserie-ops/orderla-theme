@@ -121,8 +121,8 @@
       '#ca-lead .fine{font-size:11px!important;color:'+CARAMEL+';margin:10px 0 0!important}',
       '#orderla-cart-upsell .ca-up{margin:6px 0 4px}',
       '#orderla-cart-upsell .ca-up .hd{font:800 15px Montserrat,sans-serif;color:'+BURG+';margin:0 0 8px}',
-      '#orderla-cart-upsell .ca-up .row{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:2px 2px 8px;margin:0!important}',
-      '#orderla-cart-upsell .ca-up .row::-webkit-scrollbar{display:none}',
+      '#orderla-cart-upsell .ca-up .ca-uprow{display:flex;flex-wrap:nowrap!important;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:2px 2px 8px;margin:0!important}',
+      '#orderla-cart-upsell .ca-up .ca-uprow::-webkit-scrollbar{display:none}',
       '#orderla-cart-upsell .ca-upc{flex:0 0 118px;scroll-snap-align:start;border:1.5px solid '+BEIGE+';border-radius:16px;background:#fff;padding:6px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-family:Montserrat,sans-serif;text-align:center}',
       '#orderla-cart-upsell .ca-upc .ph{width:104px;height:104px;border-radius:12px;overflow:hidden;background:'+CREAM+';display:flex;align-items:center;justify-content:center}',
       '#orderla-cart-upsell .ca-upc .ph img{width:100%;height:100%;object-fit:cover}',
@@ -651,7 +651,7 @@
         cards+='<button type="button" class="ca-upc" data-orderla-upsell="'+name.replace(/"/g,'&quot;')+'"><span class="ph">'+(img?'<img alt="" src="'+img+'">':'<b>🎁</b>')+'</span><span class="nm">'+name+'</span><span class="pr">'+price+'</span><span class="ad">+ Add</span></button>';
       });
       up.__caKey=key;
-      up.innerHTML='<div class="ca-up"><div class="hd">Usually goes with</div><div class="row">'+cards+'</div><div class="sw">Swipe to see more →</div></div>';
+      up.innerHTML='<div class="ca-up"><div class="hd">Usually goes with</div><div class="ca-uprow">'+cards+'</div><div class="sw">Swipe to see more →</div></div>';
     }
     var teased=false, lastTot=null, checking=false;
     function draw(){
