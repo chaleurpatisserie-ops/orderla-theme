@@ -494,7 +494,9 @@
       /* take prize items out of the cart when the cart is open */
       $$('tr').filter(function(r){ return /Christmas Lucky Draw - /.test(r.innerText||'') && r.querySelector('[class*="btn-minus-selection"]'); }).forEach(function(r){
         var minus=r.querySelector('[class*="btn-minus-selection"]');
-        if(minus && !minus.__caX){ minus.__caX=1; minus.click(); setTimeout(function(){ minus.__caX=0; },800); }
+        if(minus && !minus.__caX){ minus.__caX=1; minus.click();
+          setTimeout(function(){ var ok=$$('.alerty-action .btn-ok').filter(function(b){ return b.getClientRects().length && /Remove/i.test(b.textContent); })[0]; if(ok) ok.click(); },350);
+          setTimeout(function(){ minus.__caX=0; },1500); }
       });
     }
     var teased=false, lastTot=null;
