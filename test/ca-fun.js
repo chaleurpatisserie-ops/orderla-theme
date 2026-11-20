@@ -440,6 +440,7 @@
       var chip=document.getElementById('ca-dchip'); if(chip) chip.remove();
       if(!D.prize){ D.prize='rm2'; }
       D.wonAt=Date.now(); dsave(D);
+      if(L && L.phone) api('draw_win',{phone:L.phone, prize:D.prize, store:location.pathname.replace(/^\//,'')}, function(j){ if(j && j.ok){ D.token=j.token; if(j.already && j.prize!==D.prize){ /* number had already played */ } dsave(D); } });
       var lead= won ? '' : '<p style="margin:0 0 6px!important"><b>'+(why==='time'?'Time\'s up!':'No pair this time…')+'</b> But at Christmas everyone wins! 🎄</p>';
       var P=PR[D.prize]; confetti();
       modal('<div class="big">'+P.big+'</div>'+lead+'<h3>'+P.h+'</h3><p>'+P.p+'</p><p class="dg-fine">⏱ Check out within 10 minutes to keep your prize.</p><button class="bt" type="button">'+(P.choose?'Choose my cake':'Yay! Back to my order')+'</button>', function(m,close){ m.querySelector('.bt').onclick=close; });
@@ -510,10 +511,10 @@
     function hold(){
       if(!D.wonAt || D.ordered) return;
       try{ followCart(); }catch(e){}
-      var left=D.wonAt+HOLD-Date.now(), chip=document.getElementById('ca-hold');
+      var left=(D.holdUntil||D.wonAt+HOLD)-Date.now(), chip=document.getElementById('ca-hold');
       if(left>0 && !D.expired){
         if(!chip){ chip=document.createElement('div'); chip.id='ca-hold'; document.body.appendChild(chip); chip.onclick=function(){ if(D.prize==='half' && !D.paused && !D.expired) addPrize(PR.half); }; }
-        var mm=Math.floor(left/60000), ss=Math.floor(left%60000/1000);
+        var hh=Math.floor(left/3600000), mm=Math.floor(left%3600000/60000), ss=Math.floor(left%60000/1000); if(hh) mm=hh+':'+(mm<10?'0':'')+mm;
         chip.innerHTML = D.paused ? '🎁 Gift on hold · add back to <b>RM'+DMIN+'</b> to get it' : '🎁 Prize held <b>'+mm+':'+(ss<10?'0':'')+ss+'</b> · check out to keep it'+(D.prize==='half'?' · <u>pick cake</u>':'');
         chip.classList.toggle('hot', left<120000);
         return;
@@ -530,7 +531,12 @@
       });
     }
     /* ---------- Cart leads: ask for WhatsApp number at first Add to Cart ---------- */
-    var LKEY='caLead26', LEAD_URL='';   /* LEAD_URL: endpoint from the Wasapbot chat (empty = keep on the phone only) */
+    var LKEY='caLead26', LD_URL='https://script.google.com/macros/s/AKfycbyWs6BRVmARBdM8DlsgDh_8X-fdg6MD_l0EYsNl8ONPaR4XFEbLBzjBpI0aHR7c55CVew/exec';   /* LD_URL: CA Lucky Draw Ledger web app (empty = keep on the phone only) */
+    function api(action, q, cb){
+      if(!LD_URL){ if(cb) cb(null); return; }
+      var u=LD_URL+'?action='+action; for(var k in q) u+='&'+k+'='+encodeURIComponent(q[k]==null?'':q[k]);
+      fetch(u).then(function(r){ return r.json(); }).then(function(j){ if(cb) cb(j); }).catch(function(){ if(cb) cb(null); });
+    }
     function lload(){ try { return JSON.parse(localStorage.getItem(LKEY)||'null'); } catch(e){ return null; } }
     function lsave(v){ try { localStorage.setItem(LKEY, JSON.stringify(v)); } catch(e){} }
     var L=lload();
@@ -540,28 +546,52 @@
     function sendLead(stage){
       if(!L || !L.phone) return;
       var tot=cartTotal(), items=cartItems(); if(items.length) L.items=items; if(tot!==null) L.total=tot; L.stage=stage||L.stage||'cart'; L.ts=Date.now(); L.store=location.pathname.replace(/^\//,''); lsave(L);
-      if(!LEAD_URL) return;
-      var body=JSON.stringify({action:'cart_lead_v1', phone:L.phone, name:L.name||'', store:L.store, total:L.total||0, items:(L.items||[]).slice(0,30), stage:L.stage, ordered:!!L.ordered, ts:L.ts});
-      if(body===lastSent) return; lastSent=body;
-      try { fetch(LEAD_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:body,keepalive:true}); } catch(e){}
+      var sig=[L.total,(L.items||[]).join('|'),L.stage,!!L.ordered].join('#'); if(sig===lastSent) return; lastSent=sig;
+      api('cart_lead_v1',{phone:L.phone, name:L.name||'', store:L.store, total:L.total||0, items:(L.items||[]).slice(0,30).join(' | '), stage:L.stage, ordered:L.ordered?1:0});
     }
     function askLead(then){
       if(document.getElementById('ca-lead')) return;
       var m=document.createElement('div'); m.id='ca-lead';
-      m.innerHTML='<div class="cd" role="dialog" aria-modal="true"><img alt="" src="'+CA_IMG+'feuille-hello.webp"><h3>Before we box your cakes…</h3><p>Leave your WhatsApp number so we can help with your order.</p>'+
+      m.innerHTML='<div class="cd" role="dialog" aria-modal="true"><img alt="" src="'+CA_IMG+'feuille-hello.webp"><h3>Your WhatsApp number</h3><p>Please fill in your WhatsApp number. <b>We\'ll use this number to confirm your order.</b></p>'+
         '<label>Name <input class="nm" type="text" autocomplete="name" placeholder="Your name"></label>'+
         '<label>WhatsApp number <span class="ph"><b>+60</b><input class="tel" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="12 345 6789"></span></label>'+
         '<p class="err" hidden>Please enter a Malaysian mobile number, e.g. 012 345 6789.</p>'+
         '<button class="bt go" type="button">Continue</button>'+
-        '<p class="fine">We\'ll only WhatsApp you about this order, and once if you leave cakes in your cart. Reply STOP anytime.</p></div>';
+        '<p class="fine">We only WhatsApp you about your order (and once if you leave cakes in your cart). Reply STOP anytime.</p></div>';
       document.body.appendChild(m);
       var tel=m.querySelector('.tel'), nm=m.querySelector('.nm'), err=m.querySelector('.err');
       if(L && L.phone){ tel.value=L.phone.slice(2); nm.value=L.name||''; }
       setTimeout(function(){ (nm.value?tel:nm).focus(); },200);
       function go(){ var p=normPhone(tel.value); if(!p){ err.hidden=false; tel.focus(); return; }
-        L={phone:p, name:(nm.value||'').trim().slice(0,60), at:Date.now()}; lsave(L); m.remove(); sendLead('start'); if(then) setTimeout(then,60); }
+        L={phone:p, name:(nm.value||'').trim().slice(0,60), at:Date.now()}; lsave(L); m.remove(); sendLead('start'); checkPlayed(); if(then) setTimeout(then,60); }
       m.querySelector('.go').onclick=go; tel.onkeydown=function(e){ if(e.key==='Enter') go(); };
     }
+
+    /* one game per WhatsApp number (ledger) */
+    function restoreWin(j, msg){
+      var P=PR[j.prize]; if(!P) return;
+      D={offered:1, done:1, win:true, prize:j.prize, result:j.prize, wonAt:Date.now(), holdUntil:j.hold_until, token:j.token||''};
+      if(P.code){ D.code=P.code; D.v=P.v; } else { D.added=1; D.paused=1; }
+      dsave(D); if(msg) host(msg,7000);
+    }
+    function checkPlayed(){
+      if(!L || !L.phone || !LD_URL) return;
+      api('draw_check',{phone:L.phone}, function(j){
+        if(!j || !j.ok || !j.played) { D=D||{}; D.checked=1; dsave(D); return; }
+        if(j.status==='won' && j.hold_until>Date.now()){ if(!D || !D.done) restoreWin(j,'Welcome back! Your Lucky Draw gift is saved for you 🎁'); }
+        else { D={offered:1, done:1, result:'played', expired:1, checked:1}; dsave(D); }
+      });
+    }
+    /* reopen link from WhatsApp: ?ld=token */
+    (function(){ var m=location.search.match(/[?&]ld=([a-f0-9]{12})/); if(!m) return;
+      var tries=0, iv=setInterval(function(){ if(!LD_URL && ++tries<20) return; clearInterval(iv);
+        api('lead_get',{t:m[1]}, function(j){
+          if(!j || !j.ok) return;
+          L={phone:j.phone, name:j.name||'', at:Date.now()}; lsave(L);
+          if(j.status==='won' && j.hold_until>Date.now()) restoreWin(j,'Welcome back! Your Lucky Draw gift ('+((PR[j.prize]||{}).h||'gift').replace(/!$/,'')+') is saved for you. Add RM'+DMIN+' of cakes to use it 🎁');
+          else host('Welcome back! This Lucky Draw gift has expired, but our cakes are still here 🍰',6000);
+        }); },300);
+    })();
     var leadBypass=false;
     document.addEventListener('click', function(e){
       var b=e.target.closest && e.target.closest('a.form-add-item-btn'); if(!b || leadBypass) return;
@@ -588,7 +618,7 @@
       var b=e.target.closest && e.target.closest('button,a'); if(!b || !L || !L.phone) return;
       if(/Order via WhatsApp|Place Order|Pay Now|Proceed to Pay|Confirm Order/i.test(b.innerText||'')){ L.ordered=1; L.orderedAt=Date.now(); lsave(L); sendLead('ordered'); }
     }, true);
-    var teased=false, lastTot=null;
+    var teased=false, lastTot=null, checking=false;
     function draw(){
       if(Date.now()>GIFT_END) return;
       hideGift(); guardPrize();
@@ -596,6 +626,7 @@
       if(D.done){ try{ hold(); }catch(e){} try{ checkout(); }catch(e){} return; }
       var tot=cartTotal(); if(tot===null) return;
       if(tot>=DMIN){
+        if(LD_URL && L && L.phone && !D.checked){ if(!checking){ checking=true; checkPlayed(); setTimeout(function(){ checking=false; },8000); } return; }
         if(!D.offered && !popupOpen() && !document.getElementById('ca-gm')){ D.offered=1; dsave(D); intro(); }
         else if(D.offered && !document.getElementById('ca-gm')) showChip();
       } else {
