@@ -647,8 +647,8 @@
       var btns=$$('[data-orderla-upsell]',up); if(!btns.length) return;
       var cards='';
       btns.forEach(function(b){
-        var name=b.getAttribute('data-orderla-upsell'), txt=(b.innerText||'').split('\n')[0], price=(txt.match(/RM\s*[\d.]+/)||[''])[0], img=prodImg(name);
-        cards+='<button type="button" class="ca-upc" data-orderla-upsell="'+name.replace(/"/g,'&quot;')+'"><span class="ph">'+(img?'<img alt="" src="'+img+'">':'<b>🎁</b>')+'</span><span class="nm">'+name+'</span><span class="pr">'+price+'</span><span class="ad">+ Add</span></button>';
+        var name=b.getAttribute('data-orderla-upsell'), price=b.getAttribute('data-p') || ((b.innerText||'').match(/RM\s*[\d.]+/)||[''])[0], img=b.getAttribute('data-i') || prodImg(name);
+        cards+='<button type="button" class="ca-upc" data-p="'+price+'" data-i="'+img+'" data-orderla-upsell="'+name.replace(/"/g,'&quot;')+'"><span class="ph">'+(img?'<img alt="" src="'+img+'">':'<b>🎁</b>')+'</span><span class="nm">'+name+'</span><span class="pr">'+price+'</span><span class="ad">+ Add</span></button>';
       });
       up.__caKey=key;
       up.innerHTML='<div class="ca-up"><div class="hd">Usually goes with</div><div class="ca-uprow">'+cards+'</div><div class="sw">Swipe to see more →</div></div>';
