@@ -119,6 +119,18 @@
       '#ca-lead .err{color:'+BURG+'!important;font-weight:700;margin:6px 0 0!important}',
       '#ca-lead .bt{width:100%;margin-top:12px;border:none;border-radius:999px;background:'+BURG+';color:'+CREAM+';font:800 15px Montserrat,sans-serif;padding:12px}',
       '#ca-lead .fine{font-size:11px!important;color:'+CARAMEL+';margin:10px 0 0!important}',
+      '#orderla-cart-upsell .ca-up{margin:6px 0 4px}',
+      '#orderla-cart-upsell .ca-up .hd{font:800 15px Montserrat,sans-serif;color:'+BURG+';margin:0 0 8px}',
+      '#orderla-cart-upsell .ca-up .row{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:2px 2px 8px;margin:0!important}',
+      '#orderla-cart-upsell .ca-up .row::-webkit-scrollbar{display:none}',
+      '#orderla-cart-upsell .ca-upc{flex:0 0 118px;scroll-snap-align:start;border:1.5px solid '+BEIGE+';border-radius:16px;background:#fff;padding:6px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-family:Montserrat,sans-serif;text-align:center}',
+      '#orderla-cart-upsell .ca-upc .ph{width:104px;height:104px;border-radius:12px;overflow:hidden;background:'+CREAM+';display:flex;align-items:center;justify-content:center}',
+      '#orderla-cart-upsell .ca-upc .ph img{width:100%;height:100%;object-fit:cover}',
+      '#orderla-cart-upsell .ca-upc .nm{font:700 11.5px/1.25 Montserrat,sans-serif;color:'+BROWN+';min-height:29px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+      '#orderla-cart-upsell .ca-upc .pr{font:800 12.5px Montserrat,sans-serif;color:'+BURG+'}',
+      '#orderla-cart-upsell .ca-upc .ad{font:800 11.5px Montserrat,sans-serif;color:'+CREAM+';background:'+BURG+';border-radius:999px;padding:4px 12px;margin-top:2px}',
+      '#orderla-cart-upsell .ca-up .sw{font-size:11px;color:'+CARAMEL+';text-align:right}',
+      '#orderla-cart-upsell > div{border:none!important;background:transparent!important;padding:0!important}',
       '#ca-hold{position:fixed;left:50%;transform:translateX(-50%);top:104px;z-index:2147483003;background:'+BURG+';color:'+CREAM+';font:700 12.5px Montserrat,sans-serif;padding:8px 14px;border-radius:999px;box-shadow:0 6px 16px rgba(82,51,37,.35);white-space:nowrap;cursor:pointer}',
       '#ca-hold b{color:'+CREAM+'!important;font-weight:800}',
       '#ca-hold.hot{background:#9A1822;animation:caHop .6s ease-in-out infinite}',
@@ -623,6 +635,24 @@
       var b=e.target.closest && e.target.closest('button,a'); if(!b || !L || !L.phone) return;
       if(/Order via WhatsApp|Place Order|Pay Now|Proceed to Pay|Confirm Order/i.test(b.innerText||'')){ L.ordered=1; L.orderedAt=Date.now(); lsave(L); sendLead('ordered'); }
     }, true);
+
+    /* ---------- checkout add-ons as a swipe row of pictures ("Usually goes with") ---------- */
+    function prodImg(name){
+      var rows=$$('.col-12').filter(function(r){ var t=(r.querySelector('.ca-rt span,strong,h5,h6')||r).textContent||''; return t.trim().toLowerCase()===name.toLowerCase() || (r.innerText||'').split('\n')[0].trim().toLowerCase()===name.toLowerCase(); });
+      var im=rows.length && rows[0].querySelector('img'); return im ? (im.currentSrc||im.src) : '';
+    }
+    function upsellRow(){
+      var up=document.getElementById('orderla-cart-upsell'); if(!up) return;
+      var key=up.getAttribute('data-offers')||''; if(up.__caKey===key && up.querySelector('.ca-up')) return;
+      var btns=$$('[data-orderla-upsell]',up); if(!btns.length) return;
+      var cards='';
+      btns.forEach(function(b){
+        var name=b.getAttribute('data-orderla-upsell'), txt=(b.innerText||'').split('\n')[0], price=(txt.match(/RM\s*[\d.]+/)||[''])[0], img=prodImg(name);
+        cards+='<button type="button" class="ca-upc" data-orderla-upsell="'+name.replace(/"/g,'&quot;')+'"><span class="ph">'+(img?'<img alt="" src="'+img+'">':'<b>🎁</b>')+'</span><span class="nm">'+name+'</span><span class="pr">'+price+'</span><span class="ad">+ Add</span></button>';
+      });
+      up.__caKey=key;
+      up.innerHTML='<div class="ca-up"><div class="hd">Usually goes with</div><div class="row">'+cards+'</div><div class="sw">Swipe to see more →</div></div>';
+    }
     var teased=false, lastTot=null, checking=false;
     function draw(){
       if(Date.now()>GIFT_END) return;
@@ -674,7 +704,7 @@
       try { buildMenu(); } catch(e){}
       try { bigBoxes(); } catch(e){}
       try { garden(); } catch(e){}
-      try { draw(); } catch(e){} try { leadTick(); } catch(e){}
+      try { draw(); } catch(e){} try { leadTick(); } catch(e){} try { upsellRow(); } catch(e){}
       try { popupIntro(); } catch(e){}
     }
     setInterval(tick, 500); tick();
