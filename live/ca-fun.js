@@ -678,6 +678,34 @@
     window.addEventListener('pagehide', evFlush);
     ev('view', document.title||'');
     /* what customers tap */
+    /* stay time + scroll depth: active seconds sent each minute and when the page is hidden */
+    var evAct=0, evLastAct=Date.now(), evMaxSc=0, evSentSc=0;
+    ['click','touchstart','scroll','keydown','mousemove'].forEach(function(n){ window.addEventListener(n, function(){ evLastAct=Date.now(); if(n==='scroll'){ var h=document.documentElement; var p=Math.round(((h.scrollTop||window.scrollY)+innerHeight)/Math.max(1,h.scrollHeight)*100); if(p>evMaxSc) evMaxSc=Math.min(100,p); } }, {passive:true, capture:true}); });
+    setInterval(function(){ if(document.visibilityState==='visible' && Date.now()-evLastAct<120000) evAct+=5; }, 5000);
+    function evStay(){ if(evAct>0){ ev('stay','',evAct); evAct=0; } if(evMaxSc>evSentSc){ ev('scroll','',evMaxSc); evSentSc=evMaxSc; } }
+    setInterval(evStay, 60000);
+    document.addEventListener('visibilitychange', function(){ if(document.visibilityState==='hidden'){ evStay(); evFlush(); } });
+    window.addEventListener('pagehide', function(){ evStay(); evFlush(); });
+    /* rough area from the connection (city level), once per visit; no GPS prompt, IP not kept */
+    (function(){ try { if(sessionStorage.getItem('caGeo26')) return; sessionStorage.setItem('caGeo26','1'); } catch(e){ return; }
+      fetch('https://get.geojs.io/v1/ip/geo.json').then(function(r){ return r.json(); }).then(function(g){
+        if(!g) return; var la=Math.round(parseFloat(g.latitude)*10)/10, lo=Math.round(parseFloat(g.longitude)*10)/10;
+        ev('geo', [g.city||'', g.region||'', g.country_code||'', isNaN(la)?'':la, isNaN(lo)?'':lo].join('|')); evFlush();
+      }).catch(function(){}); })();
+    /* delivery postcode typed at checkout (only the 5 digits are kept, never the address) */
+    var evPc='';
+    document.addEventListener('change', function(e){
+      var t=e.target; if(!t || !/^(INPUT|TEXTAREA)$/.test(t.tagName) || t.type==='tel') return;
+      var hint=((t.name||'')+' '+(t.placeholder||'')+' '+(t.id||'')+' '+((t.closest('.form-group,div')||{}).innerText||'').slice(0,80)).toLowerCase();
+      if(!/address|postcode|post code|poskod|alamat|zip/.test(hint)) return;
+      var m=(t.value||'').match(/(^|\D)([0-9]{5})(?!\d)/); if(m && m[2]!==evPc){ evPc=m[2]; ev('postcode', m[2]); evFlush(); }
+    }, true);
+    /* every tap on something clickable */
+    document.addEventListener('click', function(e){
+      var t=e.target; if(!t.closest) return;
+      var c=t.closest('button,a,[role="button"],.ca-upc,label,input[type="radio"],input[type="checkbox"],select');
+      if(c && !c.closest('#ca-lead')){ var lb=(c.getAttribute('aria-label')||c.innerText||c.value||c.title||'').replace(/\s+/g,' ').trim().slice(0,40); if(!lb && c.querySelector && c.querySelector('img')) lb=(c.querySelector('img').alt||'image').slice(0,40); ev('tap', lb||c.tagName.toLowerCase()); }
+    }, true);
     document.addEventListener('click', function(e){
       var t=e.target; if(!t.closest) return;
       var a=t.closest('a.form-add-item-btn'); if(a){ var row=a.closest('.col-12'); var nm=row && ((row.querySelector('.ca-rt span')||{}).textContent || (row.innerText||'').split('\n')[0]); if(!/Lucky Draw -/.test(nm||'')) ev('open', (nm||'').trim()); return; }
