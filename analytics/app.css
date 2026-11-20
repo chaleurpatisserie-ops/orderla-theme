@@ -1,0 +1,23 @@
+@font-face{font-family:'CA Montserrat';src:url('fonts/montserrat-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'CA Montserrat';src:url('fonts/montserrat-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'CA Montserrat';src:url('fonts/montserrat-600.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'CA Montserrat';src:url('fonts/montserrat-700.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{--cds-font-size-caption:12px;--cds-font-size-body:14px;--cds-font-size-heading:16px;--cds-font-size-title:24px;--cds-font-weight-medium:600;
+  --cds-gap-xs:4px;--cds-gap-sm:8px;--cds-gap-md:14px;--cds-gap-lg:20px;--cds-gap-xl:28px;--cds-pad-sm:8px;--cds-pad-md:12px;--cds-pad-lg:18px;--cds-radius:12px;--cds-shadow-popover:0 10px 30px -10px rgba(82,51,37,.5)}
+html,body{margin:0;background:#FFF0DC;color:#523325;-webkit-text-size-adjust:100%}
+body{font-family:'CA Montserrat',Montserrat,system-ui,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+button,select{font-family:inherit}
+.oa{max-width:1280px;margin:0 auto;min-height:100vh}
+@media (min-width:1300px){.oa{margin:16px auto}}
+#ca-stamp{font-size:11px;opacity:.75;letter-spacing:.04em}
+#ca-signout{background:transparent;border:1px solid rgba(255,240,220,.5);color:#FFF0DC;border-radius:999px;padding:5px 12px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+#ca-gate{position:fixed;inset:0;z-index:50;background:#780C14;color:#FFF0DC;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+#ca-gate[hidden]{display:none}
+#ca-gate .box{max-width:360px}
+#ca-gate img{width:260px;max-width:80vw;margin-bottom:28px}
+#ca-gate h2{font-size:18px;font-weight:700;letter-spacing:.06em;margin:0 0 8px}
+#ca-gate .msg{font-size:13px;opacity:.85;line-height:1.5;margin:0 0 22px}
+#ca-gate button{background:#FFF0DC;color:#780C14;border:0;border-radius:999px;padding:13px 26px;font-weight:700;font-size:14px;letter-spacing:.04em;cursor:pointer}
+#ca-gate .layers{display:grid;grid-template-rows:4px 2px 6px 3px;position:absolute;left:0;right:0;bottom:0}
+#ca-gate .layers span:nth-child(1){background:#7A4926}#ca-gate .layers span:nth-child(2){background:#FFF0DC}#ca-gate .layers span:nth-child(3){background:#C5D0E5}#ca-gate .layers span:nth-child(4){background:#523325}
+.dash-select{appearance:none;-webkit-appearance:none;padding:8px 34px 8px 14px;font-size:13px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23780C14'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}

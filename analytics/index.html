@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-MY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#780C14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CA Analytics">
+<title>CA Orderla Analytics</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preload" href="fonts/montserrat-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="app.css?v=1">
+<link rel="stylesheet" href="page.css?v=1">
+</head>
+<body>
+<div id="ca-gate" hidden>
+  <div class="box">
+    <img src="../img/logo-wordmark-cream.png" alt="Chaleur Atelier Pâtisserie">
+    <h2>Orderla Analytics</h2>
+    <p class="msg">Sign in with the Chaleur Atelier Google account to see your store's visitors and sales.</p>
+    <button type="button" id="ca-signin">Sign in with Google</button>
+  </div>
+  <div class="layers"><span></span><span></span><span></span><span></span></div>
+</div>
+
+<div class="oa">
+  <header class="ca-hd" id="top">
+    <img class="ca-logo" src="../img/logo-wordmark-cream.png" alt="Chaleur Atelier Pâtisserie">
+    <div class="ca-ttl"><div class="ca-k">Online store · HQ, Jiran &amp; KnockKnock</div><h1>Orderla Analytics</h1></div>
+    <div class="ca-right"><span id="ca-stamp"></span><span class="ca-live"><i></i>Live</span><button type="button" id="ca-signout">Sign out</button></div>
+  </header>
+  <div class="ca-layers" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <p class="lede" data-draw="takeaway">—</p>
+  <div class="bar">
+    <select class="dash-select" id="range" aria-label="Period">
+      <option value="1">Today</option>
+      <option value="7" selected>Last 7 days</option>
+      <option value="30">Last 30 days</option>
+    </select>
+    <span class="note">All 3 stores (HQ, Jiran, KnockKnock). Change is against the period before.</span>
+  </div>
+
+  <p class="click-hint">Tap any number, bar or row to see the visits behind it, then tap a visit to see everything that person did.</p>
+  <h2 id="live-h">Live now</h2>
+  <div class="panel" id="live">
+    <div class="cards">
+      <div class="card" id="k-active"><div class="lb">On the store now (last 5 min)</div><div class="vl" data-draw="lv-active">—</div><div class="ch" data-draw="lv-stores">—</div></div>
+      <div class="card" id="k-act30"><div class="lb">Actions in the last 30 min</div><div class="vl" data-draw="lv-act30">—</div><div class="ch" data-draw="lv-last">—</div></div>
+    </div>
+    <div class="bar" style="margin-top:8px"><button type="button" class="oa-btn" id="refresh">Refresh now</button><span class="note">Updates by itself every minute while the app is open.</span></div>
+    <h3>Who's on now</h3>
+    <div class="tw"><table class="oa-t" id="nowon">
+      <thead><tr><th>Who</th><th>Phone / app</th><th>On the store for</th><th>Active time</th><th>Store</th><th>Doing now</th><th>Cart</th><th>Area</th><th>From</th><th>Device</th></tr></thead>
+      <tbody data-draw="nowon"></tbody>
+    </table></div>
+    <h3 style="margin-top:14px">Latest actions</h3>
+    <div class="tw"><table class="oa-t" id="feed">
+      <thead><tr><th>Time</th><th>Store</th><th>Action</th><th>What</th><th>Area</th><th>From</th><th>Device</th></tr></thead>
+      <tbody data-draw="feed"></tbody>
+    </table></div>
+  </div>
+
+  <h2 id="totals-h">Visits and sales</h2>
+  <div class="cards" id="kpis">
+    <div class="card" id="k-visitors"><div class="lb">Visitors</div><div class="vl" data-draw="kv-visitors">—</div><div class="ch" data-draw="kc-visitors">—</div></div>
+    <div class="card" id="k-sessions"><div class="lb">Visits</div><div class="vl" data-draw="kv-sessions">—</div><div class="ch" data-draw="kc-sessions">—</div></div>
+    <div class="card" id="k-orders"><div class="lb">Conversions (orders sent)</div><div class="vl" data-draw="kv-orders">—</div><div class="ch" data-draw="kc-orders">—</div></div>
+    <div class="card" id="k-conv"><div class="lb">Conversion rate (visits that ordered)</div><div class="vl" data-draw="kv-conv">—</div><div class="ch" data-draw="kc-conv">—</div></div>
+    <div class="card" id="k-sales"><div class="lb">Conversion total (cart value sent)</div><div class="vl" data-draw="kv-sales">—</div><div class="ch" data-draw="kc-sales">—</div></div>
+    <div class="card" id="k-aov"><div class="lb">Average order</div><div class="vl" data-draw="kv-aov">—</div><div class="ch" data-draw="kc-aov">—</div></div>
+    <div class="card" id="k-leads"><div class="lb">WhatsApp numbers given</div><div class="vl" data-draw="kv-leads">—</div><div class="ch" data-draw="kc-leads">—</div></div>
+    <div class="card" id="k-new"><div class="lb">New visitors</div><div class="vl" data-draw="kv-newv">—</div><div class="ch" data-draw="kc-newv">—</div></div>
+  </div>
+
+  <h2 id="return-h">Returning</h2>
+  <div class="cards" id="retcards">
+    <div class="card" id="r-ret"><div class="lb">People who came back</div><div class="vl" data-draw="rv-ret">—</div><div class="ch">Visited more than once, or bought before</div></div>
+    <div class="card" id="r-ol"><div class="lb">Past Orderla customers visiting</div><div class="vl" data-draw="rv-ol">—</div><div class="ch">Matched to Orderla orders by phone</div></div>
+    <div class="card" id="r-shop"><div class="lb">Shop members visiting</div><div class="vl" data-draw="rv-shop">—</div><div class="ch">Matched to FEEDME members by phone</div></div>
+    <div class="card" id="r-known"><div class="lb">Visitors we can name</div><div class="vl" data-draw="rv-known">—</div><div class="ch">Gave their WhatsApp number</div></div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <div class="tw"><table class="oa-t" id="retlist">
+      <thead><tr><th>Who</th><th>Type</th><th>Web visits</th><th>Ordered online</th><th>Last web visit</th><th>Orderla orders</th><th>Last order</th><th>Shop visits</th><th>Last shop visit</th></tr></thead>
+      <tbody data-draw="retlist"></tbody>
+    </table></div>
+    <p class="note">People are recognised by their WhatsApp number once they fill in the popup (on any phone or computer), and by device before that. Tap a person to see all their visits.</p>
+  </div>
+
+  <h2 id="trend">Visits and orders by day</h2>
+  <div class="panel"><div class="chart" data-draw="daily"></div></div>
+
+  <h2 id="engage-h">How people browse</h2>
+  <div class="cards" id="engage">
+    <div class="card" id="k-stay"><div class="lb">Average stay time</div><div class="vl" data-draw="ev-stay">—</div><div class="ch" data-draw="ec-stay">—</div></div>
+    <div class="card" id="k-mstay"><div class="lb">Typical stay (median)</div><div class="vl" data-draw="ev-mstay">—</div><div class="ch" data-draw="ec-mstay">—</div></div>
+    <div class="card" id="k-taps"><div class="lb">Total clicks</div><div class="vl" data-draw="ev-taps">—</div><div class="ch" data-draw="ec-taps">—</div></div>
+    <div class="card" id="k-apv"><div class="lb">Clicks per visit</div><div class="vl" data-draw="ev-apv">—</div><div class="ch" data-draw="ec-apv">—</div></div>
+    <div class="card" id="k-bounce"><div class="lb">Left without tapping anything</div><div class="vl" data-draw="ev-bounce">—</div><div class="ch" data-draw="ec-bounce">—</div></div>
+    <div class="card" id="k-scroll"><div class="lb">Average scroll down the page</div><div class="vl" data-draw="ev-scroll">—</div><div class="ch" data-draw="ec-scroll">—</div></div>
+    <div class="card" id="k-aband"><div class="lb">Carts left without ordering</div><div class="vl" data-draw="ev-aband">—</div><div class="ch" data-draw="ec-aband">—</div></div>
+    <div class="card" id="k-ret"><div class="lb">Returning visitors</div><div class="vl" data-draw="ev-ret">—</div><div class="ch" data-draw="ec-ret">—</div></div>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="panel" id="taps"><h3>Most clicked</h3><div class="hb" data-draw="taps"></div></div>
+    <div class="panel" id="hours"><h3>Busy hours (visits started, Malaysia time)</h3><div class="chart" data-draw="hours"></div></div>
+    <div class="panel" id="weekdays"><h3>Busy days</h3><div class="hb" data-draw="weekdays"></div></div>
+    <div class="panel" id="stayband"><h3>How long visits last</h3><div class="hb" data-draw="stayband"></div></div>
+  </div>
+  <p class="note">Stay time counts only seconds when the page was open and someone was active on it.</p>
+
+  <h2 id="funnel-h">Where people stop</h2>
+  <div class="panel" id="funnel"><h3>Visits reaching each step</h3><div class="hb" data-draw="funnel"></div>
+    <p class="note">Each step counts visits that got at least that far. "Gave number" is the WhatsApp popup at the first Add to Cart.</p></div>
+
+  <h2 id="people">Where visitors come from</h2>
+  <div class="grid2">
+    <div class="panel" id="sources"><h3>Traffic source</h3><div class="hb" data-draw="sources"></div></div>
+    <div class="panel" id="devices"><h3>Device</h3><div class="hb" data-draw="devices"></div></div>
+    <div class="panel" id="stores"><h3>Store</h3><div class="hb" data-draw="stores"></div></div>
+  </div>
+
+  <h2 id="location-h">Where visitors are</h2>
+  <div class="grid2">
+    <div class="panel" id="postcodes"><h3>Delivery postcodes (typed at checkout)</h3><div class="hb" data-draw="postcodes"></div>
+      <p class="note">The most accurate area. Only the 5-digit postcode is kept, never the address.</p></div>
+    <div class="panel" id="cities"><h3>Area from their internet connection</h3><div class="hb" data-draw="cities"></div>
+      <p class="note">Rough only: Malaysian internet providers often route through KL, so some JB visitors show as Kuala Lumpur.</p></div>
+    <div class="panel" id="countries"><h3>Country</h3><div class="hb" data-draw="countries"></div></div>
+  </div>
+
+  <h2 id="products">What people look at and add</h2>
+  <div class="grid2">
+    <div class="panel" id="opened"><h3>Most opened</h3><div class="hb" data-draw="opened"></div></div>
+    <div class="panel" id="added"><h3>Most added to cart</h3><div class="hb" data-draw="added"></div></div>
+    <div class="panel" id="upsell"><h3>"Usually goes with" taps</h3><div class="hb" data-draw="upsell"></div></div>
+    <div class="panel" id="boxes"><h3>Box upgrades</h3><div class="hb" data-draw="boxup"></div></div>
+  </div>
+
+  <h2 id="draw-h">Christmas Lucky Draw</h2>
+  <div class="grid2">
+    <div class="panel" id="prizes"><h3>Prizes won</h3><div class="hb" data-draw="prizes"></div></div>
+    <div class="panel" id="gifts"><h3>Gifts</h3><div class="hb" data-draw="gifts"></div>
+      <p class="note">On hold = cart dropped under RM150; came back = cart went back over RM150; expired = not checked out in time.</p></div>
+  </div>
+
+  <h2 id="leads-h">WhatsApp numbers</h2>
+  <div class="panel" id="leads"><div class="hb" data-draw="leadsum"></div>
+    <p class="note">Left without ordering = gave a number, no order sent yet. Reminded = the 1-hour WhatsApp went out (starts when the reminder is switched on).</p></div>
+
+  <dialog class="oa-dlg" id="detail" aria-label="Details">
+    <div class="dh"><b data-draw="detail-title">—</b><span class="sp"></span><button type="button" class="oa-btn" id="detail-back" hidden>← Back to list</button><button type="button" class="oa-btn" id="detail-close">Close</button></div>
+    <div class="db" data-draw="detail"></div>
+  </dialog>
+
+  <details><summary>How these numbers are counted</summary>
+    <p>A visitor is one phone or computer (remembered on that device). A visit ends after 30 minutes without activity. Orders sent counts taps on the final order button at checkout, so it can include orders that were never paid. Pages opened inside Instagram, Facebook, WhatsApp or TikTok are counted under that app. Tracking started on 20 Nov 2026 around 23:45.</p>
+  </details>
+</div>
+
+<script src="d3.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="config.js?v=1"></script>
+<script src="dash.js?v=1"></script>
+<script src="calcs.js?v=1"></script>
+<script src="draws.js?v=1"></script>
+<script src="detail.js?v=1"></script>
+<script>
+dash.start();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});
+</script>
+</body>
+</html>
