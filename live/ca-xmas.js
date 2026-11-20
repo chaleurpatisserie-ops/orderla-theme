@@ -138,7 +138,8 @@
           row.parentNode.insertBefore(r,row);
         });
       }
-      setInterval(place, 1500); setTimeout(place, 600);
+      /* roofs switched off (Alfred 20 Nov 21:29): remove any left on the page */
+      setTimeout(function(){ [].slice.call(document.querySelectorAll('.ca-roof')).forEach(function(r){ r.remove(); }); }, 600);
     })();
 
     // 3. Sleigh with reindeer (flies across now and then)
