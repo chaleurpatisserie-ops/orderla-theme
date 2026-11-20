@@ -692,8 +692,8 @@
         if(!g) return; var la=Math.round(parseFloat(g.latitude)*10)/10, lo=Math.round(parseFloat(g.longitude)*10)/10;
         ev('geo', [g.city||'', g.region||'', g.country_code||'', isNaN(la)?'':la, isNaN(lo)?'':lo].join('|')); evFlush();
       }).catch(function(){}); })();
-    /* which phone/app, and who (name + last 4 digits, only after they fill in the WhatsApp popup) */
-    function whoTag(){ return L && L.phone ? (((L.name||'').trim().split(/\s+/)[0]||'Customer').slice(0,20)+' ·'+String(L.phone).slice(-4)) : ''; }
+    /* which phone/app, and who (name + WhatsApp number, only after they fill in the popup) so return visits are recognised */
+    function whoTag(){ return L && L.phone ? (((L.name||'').trim()||'Customer').slice(0,40)+'|'+String(L.phone).replace(/\D/g,'')) : ''; }
     (function(){ try { if(sessionStorage.getItem('caDev26')) return; sessionStorage.setItem('caDev26','1'); } catch(e){ return; }
       var u=navigator.userAgent||'';
       var os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?(((u.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build|[;)])/)||[])[1]||'').replace(/^K$/,'')||'Android'):/Windows/.test(u)?'Windows PC':/Macintosh|Mac OS X/.test(u)?'Mac':'Other';
