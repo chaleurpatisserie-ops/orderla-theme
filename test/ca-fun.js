@@ -575,7 +575,7 @@
       if(L && L.phone){ tel.value=L.phone.slice(2); nm.value=L.name||''; }
       setTimeout(function(){ (nm.value?tel:nm).focus(); },200);
       function go(){ var p=normPhone(tel.value); if(!p){ err.hidden=false; tel.focus(); return; }
-        L={phone:p, name:(nm.value||'').trim().slice(0,60), at:Date.now()}; lsave(L); ev('lead'); m.remove(); sendLead('start'); checkPlayed(); if(then) setTimeout(then,60); }
+        L={phone:p, name:(nm.value||'').trim().slice(0,60), at:Date.now()}; lsave(L); ev('lead', whoTag()); m.remove(); sendLead('start'); checkPlayed(); if(then) setTimeout(then,60); }
       m.querySelector('.go').onclick=go; tel.onkeydown=function(e){ if(e.key==='Enter') go(); };
     }
 
@@ -692,6 +692,14 @@
         if(!g) return; var la=Math.round(parseFloat(g.latitude)*10)/10, lo=Math.round(parseFloat(g.longitude)*10)/10;
         ev('geo', [g.city||'', g.region||'', g.country_code||'', isNaN(la)?'':la, isNaN(lo)?'':lo].join('|')); evFlush();
       }).catch(function(){}); })();
+    /* which phone/app, and who (name + last 4 digits, only after they fill in the WhatsApp popup) */
+    function whoTag(){ return L && L.phone ? (((L.name||'').trim().split(/\s+/)[0]||'Customer').slice(0,20)+' ·'+String(L.phone).slice(-4)) : ''; }
+    (function(){ try { if(sessionStorage.getItem('caDev26')) return; sessionStorage.setItem('caDev26','1'); } catch(e){ return; }
+      var u=navigator.userAgent||'';
+      var os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?(((u.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build|[;)])/)||[])[1]||'').replace(/^K$/,'')||'Android'):/Windows/.test(u)?'Windows PC':/Macintosh|Mac OS X/.test(u)?'Mac':'Other';
+      if(/Android/.test(u) && os!=='Android') os='Android '+os;
+      var br=/Instagram/.test(u)?'Instagram app':/FBAN|FBAV|FB_IAB/.test(u)?'Facebook app':/TikTok|musical_ly|Bytedance/i.test(u)?'TikTok app':/WhatsApp/.test(u)?'WhatsApp':/Edg\//.test(u)?'Edge':/SamsungBrowser/.test(u)?'Samsung browser':/CriOS|Chrome/.test(u)?'Chrome':/Safari/.test(u)?'Safari':/Firefox|FxiOS/.test(u)?'Firefox':'Browser';
+      ev('device', os+' · '+br); var w=whoTag(); if(w) ev('who', w); })();
     /* delivery postcode typed at checkout (only the 5 digits are kept, never the address) */
     var evPc='';
     document.addEventListener('change', function(e){
