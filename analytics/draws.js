@@ -17,6 +17,13 @@
       if (d) el.classList.add(d > 0 ? 'up' : 'down');
     });
   });
+  ['paid', 'paidv'].forEach(function (k) {
+    dash.draw('pv-' + k, function (el) { var d = dash.data('paid'); if (d.status !== 'ok' || !d.data) return setStatus(el, d.status); el.textContent = fmt(d.data[0][k]); });
+    dash.draw('pc-' + k, function (el) { var d = dash.data('paid'); el.className = 'ch'; if (d.status !== 'ok' || !d.data) { el.textContent = '—'; return; }
+      var r = d.data[0], a = r[k], b = r['prev_' + k], diff = a - b, per = OA.days() === 1 ? 'yesterday' : 'previous ' + OA.days() + ' days';
+      el.textContent = (diff > 0 ? '▲ ' : diff < 0 ? '▼ ' : '') + fmt(Math.abs(diff)) + ' vs ' + per + (k === 'paid' && r.unpaid ? ' · ' + r.unpaid + ' not paid yet' : '');
+      if (diff) el.classList.add(diff > 0 ? 'up' : 'down'); });
+  });
   dash.draw('takeaway', function (el) {
     var s = sum(); if (s.status !== 'ok' || !s.data) { el.textContent = s.status === 'error' ? 'The visit log couldn’t be read: ' + (s.message || '') : 'Loading your store’s numbers…'; return; }
     var r = s.data[0], per = OA.days() === 1 ? 'today' : 'in the last ' + OA.days() + ' days';

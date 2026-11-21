@@ -71,6 +71,17 @@ dash.calc('retsum', {inputs: ['returning'], fn: function (people) {
   var w = OA.window(OA.days()), act = people.filter(function (x) { return x.last >= w.from; });
   return [{ret: act.filter(function (x) { return x.returning; }).length, orderla: act.filter(function (x) { return x.orderla; }).length, shop: act.filter(function (x) { return x.shopVisits || x.lastShop; }).length, known: act.filter(function (x) { return x.phone; }).length}];
 }});
+function mytDay(ms) { return new Date(ms + 8 * 36e5).toISOString().slice(0, 10); }
+function isPaid(r) { var st = String(r.status || '').toUpperCase(); return /PAID/.test(st) && !/NOT_PAID|UNPAID|CANCEL|REFUND|FAIL/.test(st); }
+dash.calc('paid', {inputs: ['orders', 'sessions'], fn: function (orders, sessions) {
+  var w = OA.window(OA.days()), f = mytDay(w.from), t = mytDay(w.to), pf = mytDay(w.pFrom), pt = mytDay(w.pTo - 1);
+  var seen = {}; sessions.forEach(function (s) { if (s.phone) seen[s.phone] = 1; });
+  function count(a, b, endIncl) { var rows = orders.filter(function (r) { return isPaid(r) && r.date >= a && (endIncl ? r.date <= b : r.date < b); }); return {n: rows.length, v: rows.filter(function (r) { return seen[r.phone]; }).length, unpaid: orders.filter(function (r) { return !isPaid(r) && !/CANCEL/i.test(r.status || '') && r.date >= a && (endIncl ? r.date <= b : r.date < b); }).length}; }
+  var a = count(f, t, true), b = count(pf, f, false);
+  var visits = sessions.filter(function (s) { return s.start >= w.from && s.start < w.to; }).length;
+  return [{paid: a.n, prev_paid: b.n, paidv: a.v, prev_paidv: b.v, unpaid: a.unpaid, pconv: visits ? Math.round(a.n / visits * 1000) / 10 : 0}];
+}});
+OA.paidPhones = function (orders) { var m = {}; orders.forEach(function (r) { if (isPaid(r)) (m[r.phone] = m[r.phone] || []).push(r.date); }); return m; };
 dash.calc('summary', {inputs: ['events'], fn: function (events) {
   var w = OA.window(OA.days()), o = {};
   function count(from, to) {

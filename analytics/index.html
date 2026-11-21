@@ -69,8 +69,10 @@
   <div class="cards" id="kpis">
     <div class="card" id="k-visitors"><div class="lb">Visitors</div><div class="vl" data-draw="kv-visitors">—</div><div class="ch" data-draw="kc-visitors">—</div></div>
     <div class="card" id="k-sessions"><div class="lb">Visits</div><div class="vl" data-draw="kv-sessions">—</div><div class="ch" data-draw="kc-sessions">—</div></div>
-    <div class="card" id="k-orders"><div class="lb">Conversions (orders sent)</div><div class="vl" data-draw="kv-orders">—</div><div class="ch" data-draw="kc-orders">—</div></div>
+    <div class="card" id="k-orders"><div class="lb">Orders sent (tapped Pay Now)</div><div class="vl" data-draw="kv-orders">—</div><div class="ch" data-draw="kc-orders">—</div></div>
     <div class="card" id="k-conv"><div class="lb">Conversion rate (visits that ordered)</div><div class="vl" data-draw="kv-conv">—</div><div class="ch" data-draw="kc-conv">—</div></div>
+    <div class="card" id="k-paid"><div class="lb">Paid orders (Orderla)</div><div class="vl" data-draw="pv-paid">—</div><div class="ch" data-draw="pc-paid">—</div></div>
+    <div class="card" id="k-paidv"><div class="lb">Paid, from visitors we tracked</div><div class="vl" data-draw="pv-paidv">—</div><div class="ch" data-draw="pc-paidv">—</div></div>
     <div class="card" id="k-sales"><div class="lb">Conversion total (cart value sent)</div><div class="vl" data-draw="kv-sales">—</div><div class="ch" data-draw="kc-sales">—</div></div>
     <div class="card" id="k-aov"><div class="lb">Average order</div><div class="vl" data-draw="kv-aov">—</div><div class="ch" data-draw="kc-aov">—</div></div>
     <div class="card" id="k-leads"><div class="lb">WhatsApp numbers given</div><div class="vl" data-draw="kv-leads">—</div><div class="ch" data-draw="kc-leads">—</div></div>
@@ -159,7 +161,7 @@
   </dialog>
 
   <details><summary>How these numbers are counted</summary>
-    <p>A visitor is one phone or computer (remembered on that device). A visit ends after 30 minutes without activity. Orders sent counts taps on the final order button at checkout, so it can include orders that were never paid. Pages opened inside Instagram, Facebook, WhatsApp or TikTok are counted under that app. Tracking started on 20 Nov 2026 around 23:45.</p>
+    <p>A visitor is one phone or computer (remembered on that device). A visit ends after 30 minutes without activity. Orders sent counts taps on Pay Now at checkout. Paid orders come from the Orderla order list (CA Voucher Ledger › Orders, filled by the order webhook) and count orders marked PAID by order date; "from visitors we tracked" means the paying phone number also gave its WhatsApp number on the store. Pages opened inside Instagram, Facebook, WhatsApp or TikTok are counted under that app. Tracking started on 20 Nov 2026 around 23:45.</p>
   </details>
 </div>
 
@@ -167,9 +169,9 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="config.js?v=2"></script>
 <script src="dash.js?v=1"></script>
-<script src="calcs.js?v=2"></script>
-<script src="draws.js?v=1"></script>
-<script src="detail.js?v=2"></script>
+<script src="calcs.js?v=3"></script>
+<script src="draws.js?v=2"></script>
+<script src="detail.js?v=3"></script>
 <script>
 dash.start();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});

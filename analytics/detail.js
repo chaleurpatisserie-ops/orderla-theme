@@ -11,7 +11,8 @@
   function hms(ms) { var v = Math.max(0, Math.round(ms / 1000)), h = Math.floor(v / 3600), m = Math.floor(v % 3600 / 60), s = v % 60; return (h ? h + 'h ' : '') + (h || m ? m + 'm ' : '') + s + 's'; }
   function dmy(s) { return s ? String(s).slice(8, 10) + '/' + String(s).slice(5, 7) + '/' + String(s).slice(0, 4) : ''; }
   function area(s) { return s.postcode ? 'Postcode ' + s.postcode : (s.city || s.country || ''); }
-  function result(s) { return s.ordered ? 'Ordered' + (s.value ? ' RM' + rm(s.value) : '') : s.types.indexOf('cart') >= 0 ? 'Left cart' + (s.value ? ' RM' + rm(s.value) : '') : s.bounce ? 'Left straight away' : 'Browsed'; }
+  function paidOf(s) { var od = dash.data('orders'); if (od.status !== 'ok' || !s.phone) return false; var pm = OA.paidPhones(od.data)[s.phone]; return !!(pm && pm.some(function (d) { return d >= s.day; })); }
+  function result(s) { if (paidOf(s)) return 'Paid ✓'; return s.ordered ? 'Ordered' + (s.value ? ' RM' + rm(s.value) : '') : s.types.indexOf('cart') >= 0 ? 'Left cart' + (s.value ? ' RM' + rm(s.value) : '') : s.bounce ? 'Left straight away' : 'Browsed'; }
   function sync() { each('#detail-back', function (b) { b.hidden = !(OA.visit && OA.pick && !OA.pick.visit); }); }
   function cell(tr, txt) { var td = document.createElement('td'); td.textContent = txt == null ? '' : txt; tr.appendChild(td); }
   function sKey(s) { return s.phone || ('dev:' + s.vid); }
@@ -32,6 +33,8 @@
     'k-conv': {title: 'Visits that sent an order', fn: function (s) { return s.ordered; }},
     'k-sales': {title: 'Orders sent, biggest first', fn: function (s) { return s.ordered; }, sort: function (s) { return s.value; }},
     'k-aov': {title: 'Orders sent, biggest first', fn: function (s) { return s.ordered; }, sort: function (s) { return s.value; }},
+    'k-paid': {title: 'Visits by people who paid an Orderla order', paidFn: true},
+    'k-paidv': {title: 'Visits by people who paid an Orderla order', paidFn: true},
     'k-leads': {title: 'Visits that gave a WhatsApp number', fn: function (s) { return s.lead; }},
     'k-active': {title: 'On the store in the last 5 minutes', all: true, fn: function (s) { return Date.now() - s.end < 5 * 6e4; }},
     'k-act30': {title: 'Active in the last 30 minutes', all: true, fn: function (s) { return Date.now() - s.end < 30 * 6e4; }},
@@ -80,6 +83,7 @@
     var row = el.closest('.hb .row'); if (row) { var p = row.closest('.panel[id]'), f = p && PANELS[p.id]; if (f) OA.open({title: (p.querySelector('h3') || {}).textContent + ': ' + row.getAttribute('data-label'), fn: f(row.getAttribute('data-k'))}); return; }
     var card = el.closest('.card[id]'); if (card && CARDS[card.id]) {
       var c = CARDS[card.id], fn = c.fn;
+      if (c.paidFn) { var od = dash.data('orders'), pm = od.status === 'ok' ? OA.paidPhones(od.data) : {}; fn = function (s) { return !!(s.phone && pm[s.phone]); }; }
       if (c.keys) { var ks = retKeys(c.keys); fn = function (s) { return !!ks[sKey(s)]; }; }
       OA.open({title: c.title, fn: fn, sort: c.sort, all: c.all});
     }
