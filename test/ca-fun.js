@@ -643,8 +643,8 @@
       sendLead(stage);
     }
     document.addEventListener('click', function(e){
-      var b=e.target.closest && e.target.closest('button,a'); if(!b || !L || !L.phone) return;
-      if(/Order via WhatsApp|Place Order|Pay Now|Proceed to Pay|Confirm Order/i.test(b.innerText||'')){ L.ordered=1; L.orderedAt=Date.now(); lsave(L); sendLead('ordered'); }
+      var b=e.target.closest && e.target.closest('button,a,[role="button"],input[type="submit"],input[type="button"],label'); if(!b || !L || !L.phone) return;
+      if(/Order via WhatsApp|Place Order|Pay Now|Proceed to Pay|Confirm Order/i.test((b.innerText||b.value||b.getAttribute('aria-label')||'').trim())){ L.ordered=1; L.orderedAt=Date.now(); lsave(L); sendLead('ordered'); }
     }, true);
 
     /* ---------- checkout add-ons as a swipe row of pictures ("Usually goes with") ---------- */
@@ -742,11 +742,12 @@
     document.addEventListener('click', function(e){
       var t=e.target; if(!t.closest) return;
       var a=t.closest('a.form-add-item-btn'); if(a){ var row=a.closest('.col-12'); var nm=row && ((row.querySelector('.ca-rt span')||{}).textContent || (row.innerText||'').split('\n')[0]); if(!/Lucky Draw -/.test(nm||'')) ev('open', (nm||'').trim()); return; }
+      var ob=t.closest('button,a,[role="button"],input[type="submit"],input[type="button"],label');
+      if(ob && /Order via WhatsApp|Place Order|Pay Now|Proceed to Pay|Confirm Order/i.test((ob.innerText||ob.value||ob.getAttribute('aria-label')||'').trim())){ var tot=cartTotal(); if(tot===null){ var mt=(document.body.innerText||'').match(/Total\s*RM\s*([\d,]+\.?\d*)/i); if(mt) tot=parseFloat(mt[1].replace(/,/g,'')); } ev('order', '', tot||''); evFlush(); return; }
       var b=t.closest('button'); if(!b) return;
       var up=b.closest('[data-orderla-upsell]'); if(up){ ev('upsell', up.getAttribute('data-orderla-upsell')); return; }
       var txt=(b.innerText||'').trim();
       if(/^Add to Cart$/i.test(txt)){ var w=b.closest('.modal-content-wrapper'); var h=w && w.querySelector('h1,h2,h3,h4,h5,.product-name,strong'); var nm2=w ? ((w.innerText||'').split('\n').filter(function(x){ return x.trim() && !/^(BUILD YOUR OWN|CHALEUR|RM|LIMIT)/i.test(x.trim()); })[0]||'') : ''; var pr=((w&&w.querySelector('.cart-product-modal-footer'))||{}).innerText||''; var amt=(pr.match(/RM\s*([\d,.]+)/)||[])[1]; ev('add', nm2.trim(), amt?parseFloat(amt.replace(/,/g,'')):''); return; }
-      if(/Order via WhatsApp|Place Order|Pay Now|Proceed to Pay|Confirm Order/i.test(txt)){ ev('order', '', cartTotal()||''); evFlush(); }
     }, true);
     var evStage='';
     function evTick(){
