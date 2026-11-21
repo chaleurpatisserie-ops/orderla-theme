@@ -442,15 +442,20 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         r.parentElement.classList.add('ca-li'); r.classList.add('ca-lr'); info.classList.add('ca-ri'); info.children[0].classList.add('ca-rt'); info.children[1].classList.add('ca-rb');
         var w=img.closest('.lazyload-wrapper'); (w && w.parentElement ? w.parentElement : img.parentElement).classList.add('ca-rimg'); }
     }
-    // Welcome popup: keep the message as it is, just make the popup taller so the picture shows without scrolling
+    // Welcome popup: keep the message as it is; make the popup taller so the picture shows without scrolling.
+    // If the screen is still too short (phones), trim the picture only by the bit that is still missing.
     function fitPoster(){
       var m=document.querySelector('.ReactModal__Content'); if(!m) return;
-      var d=m.querySelector('.card.ca-white>div[style*="overflow"]'); if(!d || !d.querySelector('img.img-fluid')) return;
-      var im=d.querySelector('img.img-fluid'); if(!im.complete || !im.naturalHeight) return;
+      var d=m.querySelector('.card.ca-white>div[style*="overflow"]'); if(!d) return;
+      var im=d.querySelector('img.img-fluid'); if(!im || !im.complete || !im.naturalHeight) return;
       var extra=d.scrollHeight-d.clientHeight; if(extra<=1) return;
       var h=Math.min(m.offsetHeight+extra, window.innerHeight-16);
-      if(Math.abs(h-m.offsetHeight)<2) return;
-      m.style.top=Math.max(8,Math.round((window.innerHeight-h)/2))+'px'; m.style.bottom='auto'; m.style.height=h+'px';
+      if(h-m.offsetHeight>=2){ m.style.top=Math.max(8,Math.round((window.innerHeight-h)/2))+'px'; m.style.bottom='auto'; m.style.height=h+'px'; return; }
+      var other=d.scrollHeight-im.offsetHeight;            // banner + text around the picture
+      if(other>d.clientHeight*0.45) return;                 // lots of text: leave it, it has to scroll
+      var room=d.clientHeight-other-2;
+      if(room>=im.offsetHeight-1) return;
+      im.style.cssText+=';max-height:'+room+'px;width:auto;max-width:100%;display:block;margin:0 auto;object-fit:contain';
     }
     // Build Your Own Box: cover pictures with the new cake photos (Nov 2026)
     function boxCovers(){
