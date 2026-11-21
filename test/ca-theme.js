@@ -119,6 +119,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       '.ca-bx .pk .ci{display:block;width:84px;height:84px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 50% 60%,#fff 0,#F4DCBC 85%);position:relative;transition:transform .15s ease}',
       '.ca-bx .pk .ci img{position:absolute;left:8%;top:6%;width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(82,51,37,.25))}',
       '.ca-bx .pk:active .ci{transform:scale(.88)}',
+      '.ca-bx img[src*="/box/ornament."]{transform:scale(1.2);transform-origin:50% 75%}',
       '.ca-bx .pk .nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:10.5px;font-weight:700;color:'+BURG+'!important;margin-top:4px;line-height:1.15}',
       '.ca-bx .pk .pr{display:block;font-size:10px;font-weight:600;color:'+BROWN+'!important;margin-top:1px}',
       '.ca-bx .pk .q{position:absolute;top:-2px;right:2px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:'+BURG+';color:'+CREAM+'!important;font-size:11px;font-weight:700;line-height:20px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}',
@@ -454,8 +455,9 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
     function boxCovers(){
       var ims=document.querySelectorAll('.ca-rimg img:not([data-ca-cov])');
       for(var i=0;i<ims.length;i++){
-        var im=ims[i], c=im.closest('.card') || im.parentElement.parentElement.parentElement;
-        var m=/Build Your Own Box of (3|4|6|9)\b/i.exec(c ? c.innerText : '');
+        var im=ims[i], c=im.closest('.ca-rimg'); c=c && c.parentElement;
+        var m=/^\s*Build Your Own Box of (3|4|6|9)\b/i.exec(c ? c.innerText : '');
+        im.setAttribute('data-ca-cov','0');
         if(!m) continue;
         im.setAttribute('data-ca-cov','1'); im.removeAttribute('srcset');
         im.src=BOX_IMG_BASE.replace(/box\/$/,'box-cover/')+'box'+m[1]+'.webp?v=1';
