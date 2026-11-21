@@ -450,6 +450,17 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       if(Math.abs(h-m.offsetHeight)<2) return;
       m.style.top=Math.max(8,Math.round((window.innerHeight-h)/2))+'px'; m.style.bottom='auto'; m.style.height=h+'px';
     }
+    // Build Your Own Box: cover pictures with the new cake photos (Nov 2026)
+    function boxCovers(){
+      var ims=document.querySelectorAll('.ca-rimg img:not([data-ca-cov])');
+      for(var i=0;i<ims.length;i++){
+        var im=ims[i], c=im.closest('.card') || im.parentElement.parentElement.parentElement;
+        var m=/Build Your Own Box of (3|4|6|9)\b/i.exec(c ? c.innerText : '');
+        if(!m) continue;
+        im.setAttribute('data-ca-cov','1'); im.removeAttribute('srcset');
+        im.src=BOX_IMG_BASE.replace(/box\/$/,'box-cover/')+'box'+m[1]+'.webp?v=1';
+      }
+    }
     function start(){
       addHead(); scan(document.body); addFeuille();
       try { var fx=document.createElement('script'); fx.src=(window.__caSelf||'https://chaleurpatisserie-ops.github.io/orderla-theme/test/ca-theme.js').replace(/ca-theme\.js.*$/,'ca-fun.js')+'?v='+Date.now().toString().slice(0,-5); document.head.appendChild(fx); } catch(e){}
@@ -459,6 +470,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         try { addWaves(); } catch(e){}
         try { tagRows(); addVan(); } catch(e){}
         try { fitPoster(); } catch(e){}
+        try { boxCovers(); } catch(e){}
         var bs=document.querySelectorAll('.btn-outline-dark'); for (var i=0;i<bs.length;i++){ var b=bs[i]; b.classList.remove('ca-sel'); var bg=getComputedStyle(b).backgroundColor; var m=/rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?/.exec(bg); if(m && (m[4]===undefined || +m[4]>0.2) && +m[1]<235 && Math.abs(m[1]-m[2])<12) b.classList.add('ca-sel'); }
       }, 400);
       mo.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','disabled']});
