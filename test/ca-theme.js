@@ -116,6 +116,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       '.ca-bx .pick{display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:76px;gap:8px 6px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 8px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}',
       '.ca-bx .pk{border:0;background:none;padding:0;text-align:center;cursor:pointer;position:relative;scroll-snap-align:start;-webkit-tap-highlight-color:transparent}',
       '.ca-bx.full .pick .pk .ci{animation:caFullPulse 1.6s ease-in-out infinite}','.ca-bx.full .pick .pk:nth-child(2n) .ci{animation-delay:.4s}','@keyframes caFullPulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(120,12,20,0)}50%{transform:scale(1.07);box-shadow:0 0 0 4px rgba(120,12,20,.18)}}',
+      '@media (min-width:992px){.card.ca-white>div[style*="overflow"] img.img-fluid{max-height:470px;width:auto!important;max-width:100%;display:block;margin:0 auto;object-fit:contain}}',
       '.ca-bx .pk .ci{display:block;width:84px;height:84px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 50% 60%,#fff 0,#F4DCBC 85%);position:relative;transition:transform .15s ease}',
       '.ca-bx .pk .ci img{position:absolute;left:8%;top:6%;width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(82,51,37,.25))}',
       '.ca-bx .pk:active .ci{transform:scale(.88)}',
