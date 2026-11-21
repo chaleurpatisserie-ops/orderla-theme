@@ -120,6 +120,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       '.ca-bx .pk .ci img{position:absolute;left:8%;top:6%;width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(82,51,37,.25))}',
       '.ca-bx .pk:active .ci{transform:scale(.88)}',
       '.ca-bx img[src*="/box/ornament."]{transform:scale(1.2);transform-origin:50% 75%}',
+      '.ca-bx img[src*="/box/mango."],.ca-bx img[src*="/box/kurma."]{transform:scale(.84)}',
       '.ca-bx .pk .nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:10.5px;font-weight:700;color:'+BURG+'!important;margin-top:4px;line-height:1.15}',
       '.ca-bx .pk .pr{display:block;font-size:10px;font-weight:600;color:'+BROWN+'!important;margin-top:1px}',
       '.ca-bx .pk .q{position:absolute;top:-2px;right:2px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:'+BURG+';color:'+CREAM+'!important;font-size:11px;font-weight:700;line-height:20px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}',
