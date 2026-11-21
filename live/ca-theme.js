@@ -440,6 +440,17 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         r.parentElement.classList.add('ca-li'); r.classList.add('ca-lr'); info.classList.add('ca-ri'); info.children[0].classList.add('ca-rt'); info.children[1].classList.add('ca-rb');
         var w=img.closest('.lazyload-wrapper'); (w && w.parentElement ? w.parentElement : img.parentElement).classList.add('ca-rimg'); }
     }
+    // Welcome popup: shrink the poster so the whole picture shows without scrolling
+    function fitPoster(){
+      var d=document.querySelector('.ReactModal__Content .card.ca-white>div[style*="overflow"]'); if(!d) return;
+      var im=d.querySelector('img.img-fluid'); if(!im || !im.complete || !im.naturalHeight) return;
+      var cur=im.offsetHeight, other=d.scrollHeight-cur, room=d.clientHeight-other-2;
+      if(room<260){ if(im.dataset.caFit){ im.style.maxHeight=''; delete im.dataset.caFit; } return; } // lots of text in the popup: leave the picture full size
+      if(Math.abs(cur-room)<3 && im.dataset.caFit) return;
+      if(!im.dataset.caFit && d.scrollHeight<=d.clientHeight) return;
+      im.dataset.caFit='1';
+      im.style.cssText+=';max-height:'+room+'px;width:auto;max-width:100%;display:block;margin:0 auto;object-fit:contain';
+    }
     function start(){
       addHead(); scan(document.body); addFeuille();
       try { var fx=document.createElement('script'); fx.src=(window.__caSelf||'https://chaleurpatisserie-ops.github.io/orderla-theme/live/ca-theme.js').replace(/ca-theme\.js.*$/,'ca-fun.js')+'?v='+Date.now().toString().slice(0,-5); document.head.appendChild(fx); } catch(e){}
@@ -448,6 +459,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         try { boxBuilder(); } catch(e){}
         try { addWaves(); } catch(e){}
         try { tagRows(); addVan(); } catch(e){}
+        try { fitPoster(); } catch(e){}
         var bs=document.querySelectorAll('.btn-outline-dark'); for (var i=0;i<bs.length;i++){ var b=bs[i]; b.classList.remove('ca-sel'); var bg=getComputedStyle(b).backgroundColor; var m=/rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?/.exec(bg); if(m && (m[4]===undefined || +m[4]>0.2) && +m[1]<235 && Math.abs(m[1]-m[2])<12) b.classList.add('ca-sel'); }
       }, 400);
       mo.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','disabled']});
