@@ -4,7 +4,7 @@ window.CA_CONFIG = {
   params: {days: '7'},
   datasets: {
     events:  {sheet: '1FCS-3ouYsmGDplpklWM2T0c4g47q3uaPw0ZCgmBqvMc', range: 'Events!A:K'},
-    leads:   {sheet: '1FCS-3ouYsmGDplpklWM2T0c4g47q3uaPw0ZCgmBqvMc', range: 'Leads!C:J'},
+    leads:   {sheet: '1FCS-3ouYsmGDplpklWM2T0c4g47q3uaPw0ZCgmBqvMc', range: 'Leads!A:J'},
     orders:  {sheet: '1o3xUXqd20h2C9D7zttaOdypaiO9qcLr1UUf3XTYZXis', range: 'Orders!A:Z'},
     members: {sheet: '1o3xUXqd20h2C9D7zttaOdypaiO9qcLr1UUf3XTYZXis', range: 'Members!A:C'}
   }

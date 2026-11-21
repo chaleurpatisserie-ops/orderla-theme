@@ -39,7 +39,7 @@ dash.loader('events', {fn: function ({answer}) {
 dash.loader('leads', {fn: function ({answer}) {
   var t = sheetRows(answer);
   t.rows.forEach(function (r) { r.first_seen = OA.parseTs(r.first_seen); r.last_update = OA.parseTs(r.last_update); r.reminded_at = OA.parseTs(r.reminded_at); r.total = Number(r.total) || 0; r.ordered = String(r.ordered).toUpperCase() === 'TRUE'; });
-  return {columns: ['store', 'total', 'items', 'stage', 'ordered', 'first_seen', 'last_update', 'reminded_at'], rows: t.rows};
+  return {columns: ['phone', 'store', 'total', 'items', 'stage', 'ordered', 'first_seen', 'last_update', 'reminded_at'], rows: t.rows};
 }});
 function normPh(p) { p = String(p || '').replace(/\D/g, ''); if (p.indexOf('0') === 0) p = '6' + p; return p; }
 dash.loader('orders', {fn: function ({answer}) {
@@ -73,10 +73,11 @@ dash.calc('retsum', {inputs: ['returning'], fn: function (people) {
 }});
 function mytDay(ms) { return new Date(ms + 8 * 36e5).toISOString().slice(0, 10); }
 function isPaid(r) { var st = String(r.status || '').toUpperCase(); return /PAID/.test(st) && !/NOT_PAID|UNPAID|CANCEL|REFUND|FAIL/.test(st); }
-dash.calc('paid', {inputs: ['orders', 'sessions'], fn: function (orders, sessions) {
+dash.calc('paid', {inputs: ['orders', 'sessions', 'leads'], fn: function (orders, sessions, leads) {
+  var lt = {}; leads.forEach(function (l) { var p = normPh(l.phone); if (p && l.total > 0) lt[p] = l.total; });
   var w = OA.window(OA.days()), f = mytDay(w.from), t = mytDay(w.to), pf = mytDay(w.pFrom), pt = mytDay(w.pTo - 1);
   var seen = {}; sessions.forEach(function (s) { if (s.phone) (seen[s.phone] = seen[s.phone] || []).push(s); });
-  function amt(r) { if (r.total > 0) return r.total; var ss = (seen[r.phone] || []).filter(function (s) { return s.day <= r.date && s.value > 0; }).sort(function (x, y) { return y.start - x.start; }); return ss.length ? ss[0].value : 0; }
+  function amt(r) { if (r.total > 0) return r.total; if (lt[r.phone]) return lt[r.phone]; var ss = (seen[r.phone] || []).filter(function (s) { return s.day <= r.date && s.value > 0; }).sort(function (x, y) { return y.start - x.start; }); return ss.length ? ss[0].value : 0; }
   function count(a, b, endIncl) { var inR = function (r) { return r.date >= a && (endIncl ? r.date <= b : r.date < b); };
     var rows = orders.filter(function (r) { return isPaid(r) && inR(r); }), withAmt = rows.map(amt).filter(function (x) { return x > 0; }), rmv = withAmt.reduce(function (t, x) { return t + x; }, 0);
     return {n: rows.length, v: rows.filter(function (r) { return seen[r.phone]; }).length, rm: Math.round(rmv * 100) / 100, aov: withAmt.length ? Math.round(rmv / withAmt.length * 100) / 100 : 0, known: withAmt.length, unpaid: orders.filter(function (r) { return !isPaid(r) && !/CANCEL/i.test(r.status || '') && inR(r); }).length}; }
