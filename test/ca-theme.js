@@ -445,7 +445,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       var d=document.querySelector('.ReactModal__Content .card.ca-white>div[style*="overflow"]'); if(!d) return;
       var im=d.querySelector('img.img-fluid'); if(!im || !im.complete || !im.naturalHeight) return;
       var cur=im.offsetHeight, other=d.scrollHeight-cur, room=d.clientHeight-other-2;
-      if(room<200) room=200;
+      if(room<260){ if(im.dataset.caFit){ im.style.maxHeight=''; delete im.dataset.caFit; } return; } // lots of text in the popup: leave the picture full size
       if(Math.abs(cur-room)<3 && im.dataset.caFit) return;
       if(!im.dataset.caFit && d.scrollHeight<=d.clientHeight) return;
       im.dataset.caFit='1';
