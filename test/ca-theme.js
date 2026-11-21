@@ -440,16 +440,15 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         r.parentElement.classList.add('ca-li'); r.classList.add('ca-lr'); info.classList.add('ca-ri'); info.children[0].classList.add('ca-rt'); info.children[1].classList.add('ca-rb');
         var w=img.closest('.lazyload-wrapper'); (w && w.parentElement ? w.parentElement : img.parentElement).classList.add('ca-rimg'); }
     }
-    // Welcome popup: shrink the poster so the whole picture shows without scrolling
+    // Welcome popup: keep the message as it is, just make the popup taller so the picture shows without scrolling
     function fitPoster(){
-      var d=document.querySelector('.ReactModal__Content .card.ca-white>div[style*="overflow"]'); if(!d) return;
-      var im=d.querySelector('img.img-fluid'); if(!im || !im.complete || !im.naturalHeight) return;
-      var cur=im.offsetHeight, other=d.scrollHeight-cur, room=d.clientHeight-other-2;
-      if(room<260){ if(im.dataset.caFit){ im.style.maxHeight=''; delete im.dataset.caFit; } return; } // lots of text in the popup: leave the picture full size
-      if(Math.abs(cur-room)<3 && im.dataset.caFit) return;
-      if(!im.dataset.caFit && d.scrollHeight<=d.clientHeight) return;
-      im.dataset.caFit='1';
-      im.style.cssText+=';max-height:'+room+'px;width:auto;max-width:100%;display:block;margin:0 auto;object-fit:contain';
+      var m=document.querySelector('.ReactModal__Content'); if(!m) return;
+      var d=m.querySelector('.card.ca-white>div[style*="overflow"]'); if(!d || !d.querySelector('img.img-fluid')) return;
+      var im=d.querySelector('img.img-fluid'); if(!im.complete || !im.naturalHeight) return;
+      var extra=d.scrollHeight-d.clientHeight; if(extra<=1) return;
+      var h=Math.min(m.offsetHeight+extra, window.innerHeight-16);
+      if(Math.abs(h-m.offsetHeight)<2) return;
+      m.style.top=Math.max(8,Math.round((window.innerHeight-h)/2))+'px'; m.style.bottom='auto'; m.style.height=h+'px';
     }
     function start(){
       addHead(); scan(document.body); addFeuille();
