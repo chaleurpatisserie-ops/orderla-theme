@@ -73,6 +73,8 @@
     <div class="card" id="k-conv"><div class="lb">Conversion rate (visits that ordered)</div><div class="vl" data-draw="kv-conv">—</div><div class="ch" data-draw="kc-conv">—</div></div>
     <div class="card" id="k-paid"><div class="lb">Paid orders (Orderla)</div><div class="vl" data-draw="pv-paid">—</div><div class="ch" data-draw="pc-paid">—</div></div>
     <div class="card" id="k-paidv"><div class="lb">Paid, from visitors we tracked</div><div class="vl" data-draw="pv-paidv">—</div><div class="ch" data-draw="pc-paidv">—</div></div>
+    <div class="card" id="k-paidrm"><div class="lb">Paid sales (RM)</div><div class="vl" data-draw="pv-paidrm">—</div><div class="ch" data-draw="pc-paidrm">—</div></div>
+    <div class="card" id="k-paidaov"><div class="lb">Average paid order</div><div class="vl" data-draw="pv-paidaov">—</div><div class="ch" data-draw="pc-paidaov">—</div></div>
     <div class="card" id="k-sales"><div class="lb">Conversion total (cart value sent)</div><div class="vl" data-draw="kv-sales">—</div><div class="ch" data-draw="kc-sales">—</div></div>
     <div class="card" id="k-aov"><div class="lb">Average order</div><div class="vl" data-draw="kv-aov">—</div><div class="ch" data-draw="kc-aov">—</div></div>
     <div class="card" id="k-leads"><div class="lb">WhatsApp numbers given</div><div class="vl" data-draw="kv-leads">—</div><div class="ch" data-draw="kc-leads">—</div></div>
@@ -167,11 +169,11 @@
 
 <script src="d3.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="config.js?v=2"></script>
+<script src="config.js?v=3"></script>
 <script src="dash.js?v=1"></script>
-<script src="calcs.js?v=3"></script>
-<script src="draws.js?v=2"></script>
-<script src="detail.js?v=3"></script>
+<script src="calcs.js?v=4"></script>
+<script src="draws.js?v=3"></script>
+<script src="detail.js?v=4"></script>
 <script>
 dash.start();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function () {});

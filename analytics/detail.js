@@ -35,6 +35,8 @@
     'k-aov': {title: 'Orders sent, biggest first', fn: function (s) { return s.ordered; }, sort: function (s) { return s.value; }},
     'k-paid': {title: 'Visits by people who paid an Orderla order', paidFn: true},
     'k-paidv': {title: 'Visits by people who paid an Orderla order', paidFn: true},
+    'k-paidrm': {title: 'Visits by people who paid an Orderla order', paidFn: true},
+    'k-paidaov': {title: 'Visits by people who paid an Orderla order', paidFn: true},
     'k-leads': {title: 'Visits that gave a WhatsApp number', fn: function (s) { return s.lead; }},
     'k-active': {title: 'On the store in the last 5 minutes', all: true, fn: function (s) { return Date.now() - s.end < 5 * 6e4; }},
     'k-act30': {title: 'Active in the last 30 minutes', all: true, fn: function (s) { return Date.now() - s.end < 30 * 6e4; }},
