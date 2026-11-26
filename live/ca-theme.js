@@ -119,6 +119,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       '.ca-bx .pk .ci{display:block;width:84px;height:84px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 50% 60%,#fff 0,#F4DCBC 85%);position:relative;transition:transform .15s ease}',
       '.ca-bx .pk .ci img{position:absolute;left:8%;top:6%;width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(82,51,37,.25))}',
       '.ca-bx .pk:active .ci{transform:scale(.88)}',
+      '@media (max-width:575px){.ReactModal__Content .card.ca-white>div:last-child{padding-top:6px!important;padding-bottom:6px!important}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey{flex-direction:column;padding:6px 8px!important}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey>.col{flex:0 0 auto;max-width:100%;width:100%;padding-top:2px!important}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey>div:not([class]){display:none}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey h6{margin-bottom:4px;font-size:12px}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey .row.no-gutters{flex-wrap:nowrap;gap:6px}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey .row.no-gutters>[class*=col]{flex:1 1 0;max-width:none;margin-bottom:4px!important}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey .row.no-gutters .btn{padding:4px 6px!important;font-size:11px!important;line-height:1.25;height:100%}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey a.btn.theme-color-orange{display:flex!important;align-items:center;justify-content:center;gap:6px;padding:4px 6px!important;font-size:12px}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey a.btn.theme-color-orange br{display:none}.ReactModal__Content .card.ca-white>div:last-child .row.ca-grey a.btn.theme-color-orange>div{width:auto!important;display:inline}}',
       '.ca-bx img[src*="/box/ornament."]{transform:scale(1.2);transform-origin:50% 75%}',
       '.ca-bx img[src*="/box/mango."],.ca-bx img[src*="/box/kurma."]{transform:scale(.84)}',
       '.ca-bx .pk .nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:10.5px;font-weight:700;color:'+BURG+'!important;margin-top:4px;line-height:1.15}',
@@ -442,15 +443,19 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         r.parentElement.classList.add('ca-li'); r.classList.add('ca-lr'); info.classList.add('ca-ri'); info.children[0].classList.add('ca-rt'); info.children[1].classList.add('ca-rb');
         var w=img.closest('.lazyload-wrapper'); (w && w.parentElement ? w.parentElement : img.parentElement).classList.add('ca-rimg'); }
     }
-    // Welcome popup: shrink the poster so the whole picture shows without scrolling
+    // Welcome popup: keep the message as it is; make the popup taller so the picture shows without scrolling.
+    // If the screen is still too short (phones), trim the picture only by the bit that is still missing.
     function fitPoster(){
-      var d=document.querySelector('.ReactModal__Content .card.ca-white>div[style*="overflow"]'); if(!d) return;
+      var m=document.querySelector('.ReactModal__Content'); if(!m) return;
+      var d=m.querySelector('.card.ca-white>div[style*="overflow"]'); if(!d) return;
       var im=d.querySelector('img.img-fluid'); if(!im || !im.complete || !im.naturalHeight) return;
-      var cur=im.offsetHeight, other=d.scrollHeight-cur, room=d.clientHeight-other-2;
-      if(room<260){ if(im.dataset.caFit){ im.style.maxHeight=''; delete im.dataset.caFit; } return; } // lots of text in the popup: leave the picture full size
-      if(Math.abs(cur-room)<3 && im.dataset.caFit) return;
-      if(!im.dataset.caFit && d.scrollHeight<=d.clientHeight) return;
-      im.dataset.caFit='1';
+      var extra=d.scrollHeight-d.clientHeight; if(extra<=1) return;
+      var h=Math.min(m.offsetHeight+extra, window.innerHeight-16);
+      if(h-m.offsetHeight>=2){ m.style.top=Math.max(8,Math.round((window.innerHeight-h)/2))+'px'; m.style.bottom='auto'; m.style.height=h+'px'; return; }
+      var other=d.scrollHeight-im.offsetHeight;            // banner + text around the picture
+      if(other>d.clientHeight*0.45) return;                 // lots of text: leave it, it has to scroll
+      var room=d.clientHeight-other-2;
+      if(room>=im.offsetHeight-1) return;
       im.style.cssText+=';max-height:'+room+'px;width:auto;max-width:100%;display:block;margin:0 auto;object-fit:contain';
     }
     // Build Your Own Box: cover pictures with the new cake photos (Nov 2026)
