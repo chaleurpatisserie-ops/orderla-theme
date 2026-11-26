@@ -383,7 +383,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       var s={}; document.querySelectorAll('.ca-rimg').forEach(function(x){ var p=x.parentElement; if(!p || p.closest('.ReactModal__Content,.modal')) return; var t=p.innerText||''; if(!/SOLD OUT/i.test(t)) return; var n=t.trim().split('\n')[0].trim().toLowerCase(); s[n]=1; });
       bxSoldOut.t=now; bxSoldOut.s=s; return s;
     }
-    function bxIsOut(name){ var s=bxSoldOut(), n=(name||'').toLowerCase().trim(); if(s[n]) return true; var b=n.split(' (')[0].trim(); for(var k in s){ if(k.split(' (')[0].trim()===b) return true; } return false; }
+    function bxIsOut(name){ var s=bxSoldOut(), n=(name||'').toLowerCase().trim(); var cs=window.__caStock; if(cs){ var nn=n.replace(/\s+/g,' '); if(cs[nn]!==undefined && cs[nn]<=0) return true; } if(s[n]) return true; var b=n.split(' (')[0].trim(); for(var k in s){ if(k.split(' (')[0].trim()===b) return true; } return false; }
     function bxSync(ui, list){
       var N=ui.__N, rows=bxRows(list), total=0, counts={};
       rows.forEach(function(r){ total+=r.qty; counts[r.name]=r.qty; });

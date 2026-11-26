@@ -554,6 +554,17 @@
     }
     function lload(){ try { return JSON.parse(localStorage.getItem(LKEY)||'null'); } catch(e){ return null; } }
     function lsave(v){ try { localStorage.setItem(LKEY, JSON.stringify(v)); } catch(e){} }
+    /* Stock sheet (one count for single cakes + Build Your Own Box): sold out at 0 */
+    function caMarkSoldOut(){
+      var st=window.__caStock; if(!st) return;
+      if(!document.getElementById('ca-so-css')){ var cs=document.createElement('style'); cs.id='ca-so-css'; cs.textContent='.ca-so{opacity:.55;filter:grayscale(.7)}.ca-so a,.ca-so button,.ca-so .ca-rimg{pointer-events:none}.ca-so-tag{display:inline-block;margin:4px 0;background:#780C14;color:#FFF0DC;font:700 11px/1 Montserrat,sans-serif;letter-spacing:.05em;padding:4px 8px;border-radius:8px;text-transform:uppercase}'; document.head.appendChild(cs); }
+      document.querySelectorAll('.ca-rimg').forEach(function(x){ var c=x.parentElement; if(!c || c.closest('.ReactModal__Content,.modal')) return;
+        var n=((c.innerText||'').trim().split('\n')[0]||'').toLowerCase().replace(/\s+/g,' ').trim(), v=st[n], out=(v!==undefined && v<=0);
+        if(out && !c.classList.contains('ca-so')){ c.classList.add('ca-so'); var t=document.createElement('div'); t.className='ca-so-tag'; t.textContent='Sold out today'; c.appendChild(t); }
+        else if(!out && c.classList.contains('ca-so')){ c.classList.remove('ca-so'); var o=c.querySelector('.ca-so-tag'); if(o) o.remove(); } });
+    }
+    function caStockPoll(){ api('stock',{},function(j){ if(j && j.ok && j.items){ window.__caStock=j.items; window.__caStockT=Date.now(); try{ caMarkSoldOut(); }catch(e){} } }); }
+    try { caStockPoll(); setInterval(caStockPoll, 60000); setInterval(function(){ try{ caMarkSoldOut(); }catch(e){} }, 1500); } catch(e){}
     var L=lload();
     /* Malaysia (+60, 01x…) or Singapore (+65, 8 digits starting 3/6/8/9) → 60XXXXXXXXX / 65XXXXXXXX */
     function normPhone(v, cc){ var d=(v||'').replace(/\D/g,'');

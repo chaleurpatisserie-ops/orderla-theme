@@ -23,6 +23,7 @@ function doGet(e) {
         case 'lead_get':     out = leadGet(p); break;
         case 'ping':         out = {ok:true}; break;
         case 'stats':        out = stats_(p); break;
+        case 'stock':        out = stockGet_(); break;
         default:             out = {ok:false, error:'unknown action'};
       }
     } finally { lock.releaseLock(); }
@@ -35,6 +36,11 @@ function doGet(e) {
 function doPost(e) {
   try {
     var body = JSON.parse((e && e.postData && e.postData.contents) || '{}');
+    if (body.action === 'stock_sold_v1') {
+      var lk = LockService.getScriptLock(); lk.waitLock(20000); var res;
+      try { res = stockSold_(body); } finally { lk.releaseLock(); }
+      return ContentService.createTextOutput(JSON.stringify(res)).setMimeType(ContentService.MimeType.JSON);
+    }
     if (body.action === 'ev' && body.events && body.events.length) {
       var lock = LockService.getScriptLock(); lock.waitLock(10000);
       try { saveEvents_(body); } finally { lock.releaseLock(); }
@@ -136,3 +142,52 @@ function markReminded(phone) {
 }
 
 function setup() { sheet_('Leads', LEAD_HDR); sheet_('Draw', DRAW_HDR); sheet_('Events', EV_HDR); var s = SpreadsheetApp.getActive().getSheetByName('Sheet1'); if (s && s.getLastRow()===0) SpreadsheetApp.getActive().deleteSheet(s); }
+
+/* ===== STOCK (one stock count for single cakes AND Build Your Own Box picks) =====
+ * Tab Stock: staff type today's count in column "stock". Paid Orderla orders count it down.
+ * Tab StockLog: one row per item taken off (order_code makes each order count once).
+ * Store reads ?action=stock (public, counts only). Voucher Checker POSTs stock_sold_v1 with the shared key
+ * (Script Property STOCK_KEY in both scripts; never written in a sheet or chat).
+ */
+var STOCK_HDR = ['item','stock','sold_online','updated','note'];
+var SLOG_HDR = ['ts','order_code','store','item','qty','before','after','source'];
+function norm_(s){ return String(s||'').toLowerCase().replace(/\s+/g,' ').trim(); }
+function stockGet_() {
+  var c = CacheService.getScriptCache(), hit = c.get('stock1'); if (hit) return JSON.parse(hit);
+  var sh = sheet_('Stock', STOCK_HDR), n = sh.getLastRow(), out = {ok:true, t:Date.now(), items:{}};
+  if (n > 1) sh.getRange(2,1,n-1,2).getValues().forEach(function(r){ if (r[0] !== '' && r[1] !== '' && r[1] !== null) out.items[norm_(r[0])] = Number(r[1]); });
+  c.put('stock1', JSON.stringify(out), 30);
+  return out;
+}
+/* body: {action, key, order_code, store, items:[{name, qty, options:[{name, qty}]}]} - send once the order is PAID */
+function stockSold_(b) {
+  var key = PropertiesService.getScriptProperties().getProperty('STOCK_KEY');
+  if (!key || b.key !== key) return {ok:false, error:'no access'};
+  var code = clip_(b.order_code, 40); if (!code) return {ok:false, error:'no order_code'};
+  var log = sheet_('StockLog', SLOG_HDR);
+  if (find_(log, 2, code)) return {ok:true, duplicate:true};
+  var sh = sheet_('Stock', STOCK_HDR), n = sh.getLastRow(), rows = n > 1 ? sh.getRange(2,1,n-1,3).getValues() : [], idx = {};
+  rows.forEach(function(r,i){ idx[norm_(r[0])] = i; });
+  var take = {};
+  (b.items || []).forEach(function(it){
+    var q = Math.max(Number(it.qty)||1, 1), nm = norm_(it.name);
+    if (idx[nm] !== undefined) take[nm] = (take[nm]||0) + q;
+    (it.options || []).forEach(function(o){ var on = norm_(o.name); if (idx[on] !== undefined) take[on] = (take[on]||0) + q*Math.max(Number(o.qty)||1,1); });
+  });
+  var logRows = [], now = now_(), done = [];
+  Object.keys(take).forEach(function(nm){
+    var i = idx[nm], before = Number(rows[i][1])||0, after = before - take[nm];
+    sh.getRange(i+2, 2, 1, 3).setValues([[after, (Number(rows[i][2])||0) + take[nm], now]]);
+    logRows.push([now, code, clip_(b.store,60), rows[i][0], take[nm], before, after, 'orderla']); done.push(rows[i][0]+' -'+take[nm]);
+  });
+  if (!logRows.length) logRows.push([now, code, clip_(b.store,60), '(no stock items)', 0, '', '', 'orderla']);
+  log.getRange(log.getLastRow()+1, 1, logRows.length, SLOG_HDR.length).setValues(logRows);
+  CacheService.getScriptCache().remove('stock1');
+  return {ok:true, taken:done};
+}
+/* run once from the editor: makes the tabs and a STOCK_KEY (shown only in the Script Properties page) */
+function stockSetup() {
+  sheet_('Stock', STOCK_HDR); sheet_('StockLog', SLOG_HDR);
+  var pr = PropertiesService.getScriptProperties();
+  if (!pr.getProperty('STOCK_KEY')) pr.setProperty('STOCK_KEY', Utilities.getUuid().replace(/-/g,''));
+}
