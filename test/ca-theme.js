@@ -308,7 +308,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
 
     /* Build-your-own box: turns Orderla's "Choose your N cakes" picker into a visual box. Orderla's own +/- buttons still do the ordering. */
     var BOX_IMG_BASE='https://chaleurpatisserie-ops.github.io/orderla-theme/img/box/';
-    var BOX_IMGS={"Acorn": "acorn.webp", "Apam Balik": "apam-balik.webp", "Camellia": "camellia.webp", "Cherry": "cherry.webp", "Coconut": "coconut.webp", "Kurma": "kurma.webp", "La Fleur": "la-fleur.webp", "Mango": "mango.webp", "Mochi Strawberry Shortcake": "mochi-strawberry-shortcake.webp", "Mrs. Bunny": "mrs-bunny.webp", "Noir": "noir.webp", "Ornament": "ornament.webp", "Passionfruit": "passionfruit.webp", "Pear": "pear.webp", "Pecan Tartlet": "pecan-tartlet.webp", "Pistachio": "pistachio.webp", "Raspberry": "raspberry.webp", "Rudolph": "rudolph.webp", "Strawberry": "strawberry.webp"};
+    var BOX_IMGS={"Acorn": "acorn.webp", "Apam Balik": "apam-balik.webp", "Camellia": "camellia.webp", "Cherry": "cherry.webp", "Coconut": "coconut.webp", "Kurma": "kurma.webp", "La Fleur": "la-fleur.webp", "Mango": "mango.webp", "Mochi Strawberry Shortcake": "mochi-strawberry-shortcake.webp", "Mrs. Bunny": "mrs-bunny.webp", "Noir": "noir.webp?v=2", "Ornament": "ornament.webp", "Passionfruit": "passionfruit.webp", "Pear": "pear.webp", "Pecan Tartlet": "pecan-tartlet.webp", "Pistachio": "pistachio.webp", "Raspberry": "raspberry.webp", "Rudolph": "rudolph.webp", "Strawberry": "strawberry.webp"};
     window.__caBxImg=function(n){ return bxImg(n); };
     function bxImg(name){
       var key=name.split(' (')[0].trim();
@@ -467,7 +467,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         im.setAttribute('data-ca-cov','0');
         if(!m) continue;
         im.setAttribute('data-ca-cov','1'); im.removeAttribute('srcset');
-        im.src=BOX_IMG_BASE.replace(/box\/$/,'box-cover/')+'box'+m[1]+'.webp?v=1';
+        im.src=BOX_IMG_BASE.replace(/box\/$/,'box-cover/')+'box'+m[1]+'.webp?v=2';
       }
     }
     function start(){
