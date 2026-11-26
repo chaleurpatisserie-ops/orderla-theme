@@ -152,10 +152,21 @@ function setup() { sheet_('Leads', LEAD_HDR); sheet_('Draw', DRAW_HDR); sheet_('
 var STOCK_HDR = ['item','stock','sold_online','updated','note'];
 var SLOG_HDR = ['ts','order_code','store','item','qty','before','after','source'];
 function norm_(s){ return String(s||'').toLowerCase().replace(/\s+/g,' ').trim(); }
+var SET_HDR = ['set','item','qty'];
+/* Tab Sets: fixed boxes / hampers -> the cakes inside (one row per cake). A set is sold out when any cake inside runs short. */
+function sets_() {
+  var sh = sheet_('Sets', SET_HDR), n = sh.getLastRow(), out = {};
+  if (n > 1) sh.getRange(2,1,n-1,3).getValues().forEach(function(r){ var k = norm_(r[0]), it = norm_(r[1]); if (!k || !it) return; (out[k] = out[k] || []).push([it, Math.max(Number(r[2])||1,1)]); });
+  return out;
+}
 function stockGet_() {
   var c = CacheService.getScriptCache(), hit = c.get('stock1'); if (hit) return JSON.parse(hit);
   var sh = sheet_('Stock', STOCK_HDR), n = sh.getLastRow(), out = {ok:true, t:Date.now(), items:{}};
   if (n > 1) sh.getRange(2,1,n-1,2).getValues().forEach(function(r){ if (r[0] !== '' && r[1] !== '' && r[1] !== null) out.items[norm_(r[0])] = Number(r[1]); });
+  var sets = sets_();
+  Object.keys(sets).forEach(function(k){ var can = null;
+    sets[k].forEach(function(c){ var v = out.items[c[0]]; if (v === undefined) return; var m = Math.floor(v / c[1]); can = (can === null) ? m : Math.min(can, m); });
+    if (can !== null) out.items[k] = (out.items[k] !== undefined) ? Math.min(out.items[k], can) : can; });
   c.put('stock1', JSON.stringify(out), 30);
   return out;
 }
@@ -168,10 +179,11 @@ function stockSold_(b) {
   if (find_(log, 2, code)) return {ok:true, duplicate:true};
   var sh = sheet_('Stock', STOCK_HDR), n = sh.getLastRow(), rows = n > 1 ? sh.getRange(2,1,n-1,3).getValues() : [], idx = {};
   rows.forEach(function(r,i){ idx[norm_(r[0])] = i; });
-  var take = {};
+  var take = {}, sets = sets_();
   (b.items || []).forEach(function(it){
     var q = Math.max(Number(it.qty)||1, 1), nm = norm_(it.name);
     if (idx[nm] !== undefined) take[nm] = (take[nm]||0) + q;
+    (sets[nm] || []).forEach(function(c){ if (idx[c[0]] !== undefined) take[c[0]] = (take[c[0]]||0) + q*c[1]; });
     (it.options || []).forEach(function(o){ var on = norm_(o.name); if (idx[on] !== undefined) take[on] = (take[on]||0) + q*Math.max(Number(o.qty)||1,1); });
   });
   var logRows = [], now = now_(), done = [];
@@ -187,7 +199,7 @@ function stockSold_(b) {
 }
 /* run once from the editor: makes the tabs and a STOCK_KEY (shown only in the Script Properties page) */
 function stockSetup() {
-  sheet_('Stock', STOCK_HDR); sheet_('StockLog', SLOG_HDR);
+  sheet_('Stock', STOCK_HDR); sheet_('StockLog', SLOG_HDR); sheet_('Sets', SET_HDR);
   var pr = PropertiesService.getScriptProperties();
   if (!pr.getProperty('STOCK_KEY')) pr.setProperty('STOCK_KEY', Utilities.getUuid().replace(/-/g,''));
 }
