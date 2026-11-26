@@ -379,6 +379,7 @@
         add.addEventListener('click',function(e){ if(!allowPrize){ e.preventDefault(); e.stopImmediatePropagation(); } },true); }
     }
     function addPrize(P){
+      if(closeOrderlaModal()){ setTimeout(function(){ addPrize(P); setTimeout(function(){ host('Your prize is in the cart 🎁 Tap Cart to continue your order.',6000); },1800); },700); return; }
       var b=giftRow(P.re); if(!b){ host('Hmm, the prize is hiding. Please tell our staff 🙏',5000); return; }
       allowPrize=true; b.click();
       if(P.choose){ D.added=1; dsave(D); setTimeout(function(){ host('Pick your cake, it\'s half price! 🍰',6000); },900); setTimeout(function(){ allowPrize=false; },120000); return; }
@@ -756,15 +757,31 @@
       if(st && st!==evStage){ evStage=st; ev(st,'',cartTotal()||''); } else if(!st) evStage='';
     }
     var teased=false, lastTot=null, checking=false;
+    /* the game may open over the cart / checkout window, but not over a product being added or our own popups */
+    function gameCanOpen(){
+      if(document.getElementById('ca-gm') || document.getElementById('ca-lead')) return false;
+      var m=$$('.ReactModal__Content,.modal.show,.modal-content-wrapper').filter(function(x){ return x.getClientRects().length; });
+      return !m.some(function(x){ return x.querySelector('.ca-bx') || $$('button',x).some(function(b){ return /^\s*Add to Cart\s*$/i.test(b.innerText) && b.getClientRects().length; }); });
+    }
+    /* close Orderla's cart / checkout window (so the prize can be added on the main page) */
+    function closeOrderlaModal(){
+      var m=$$('.ReactModal__Content').filter(function(x){ return x.getClientRects().length; })[0]; if(!m) return false;
+      var x=$$('button,a,[role="button"]',m).filter(function(b){ return b.getClientRects().length && (/close|dismiss/i.test((b.getAttribute('aria-label')||'')+' '+b.className) || /^\s*[×✕xX]\s*$/.test(b.innerText||'')); })[0];
+      if(x){ x.click(); return true; }
+      var ov=document.querySelector('.ReactModal__Overlay'); if(ov){ ov.dispatchEvent(new MouseEvent('mousedown',{bubbles:true})); ov.click(); return true; }
+      return false;
+    }
     function draw(){
       if(Date.now()>GIFT_END) return;
       hideGift(); guardPrize();
       if(!D) D={};
       if(D.done){ try{ hold(); }catch(e){} try{ checkout(); }catch(e){} return; }
+      /* check early (as soon as we know the number) so the game is ready the moment the cart reaches RM150 */
+      if(LD_URL && L && L.phone && !D.checked && !checking){ checking=true; checkPlayed(); setTimeout(function(){ checking=false; },8000); }
       var tot=cartTotal(); if(tot===null) return;
       if(tot>=DMIN){
-        if(LD_URL && L && L.phone && !D.checked){ if(!checking){ checking=true; checkPlayed(); setTimeout(function(){ checking=false; },8000); } return; }
-        if(!D.offered && !popupOpen() && !document.getElementById('ca-gm')){ D.offered=1; dsave(D); intro(); }
+        if(LD_URL && L && L.phone && !D.checked) return;
+        if(!D.offered && gameCanOpen()){ D.offered=1; dsave(D); intro(); }
         else if(D.offered && !document.getElementById('ca-gm')) showChip();
       } else {
         var c=document.getElementById('ca-dchip'); if(c) c.remove();
