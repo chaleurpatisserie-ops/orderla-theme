@@ -119,6 +119,8 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       '.ca-bx .pk .ci{display:block;width:84px;height:84px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 50% 60%,#fff 0,#F4DCBC 85%);position:relative;transition:transform .15s ease}',
       '.ca-bx .pk .ci img{position:absolute;left:8%;top:6%;width:84%;height:84%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(82,51,37,.25))}',
       '.ca-bx .pk:active .ci{transform:scale(.88)}',
+      '.ca-bx img[src*="/box/ornament."]{transform:scale(1.2);transform-origin:50% 75%}',
+      '.ca-bx img[src*="/box/mango."],.ca-bx img[src*="/box/kurma."]{transform:scale(.84)}',
       '.ca-bx .pk .nm{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:10.5px;font-weight:700;color:'+BURG+'!important;margin-top:4px;line-height:1.15}',
       '.ca-bx .pk .pr{display:block;font-size:10px;font-weight:600;color:'+BROWN+'!important;margin-top:1px}',
       '.ca-bx .pk .q{position:absolute;top:-2px;right:2px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:'+BURG+';color:'+CREAM+'!important;font-size:11px;font-weight:700;line-height:20px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.25)}',
@@ -304,8 +306,8 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
     }
 
     /* Build-your-own box: turns Orderla's "Choose your N cakes" picker into a visual box. Orderla's own +/- buttons still do the ordering. */
-    var BOX_IMG_BASE='/storage/img/';
-    var BOX_IMGS={"Mochi Strawberry Shortcake": "cW12vmcEDRQie62TijMc9B52R3t968wchey7pNac.webp", "Noir": "6xmETKjqD5ZudEPJGpZGAZl6vvZ7s1lm3e0agNEW.webp", "Camellia": "Pwl1LAakkYqAZCSiEwrokezj5p3XS9rOm2c9tdxR.webp", "Mrs. Bunny": "6aaGzxFOyAfxX05UHiZZxLZBMPDeXI8Oe6UxpGuW.webp", "La Fleur": "Isk9G74iWlxxMFy8JbWh1Ns3RxwUHeuQNPQ3Aq0B.webp", "Apam Balik": "wlXpx37iLLhUkkotFNfHqi5LSFISpWU7ardxPlSq.webp", "Pecan Tartlet": "gCsLJ8UPFTfzKg0obtUJhi8pKbxVsfcZriZGWOG9.webp", "Rudolph": "wvxp2dhFhwSf7ew6gijIqrqwBAfKYtdIsHHG3C4c.webp", "Ornament": "MSzccZe3T2UnhfljWwlLvhwleFTNf7buLfoDZLa2.webp", "Cherry": "cwBBdWbL38rO3kEw4cLj0HDWrSjNlywnBuZyl1Xe.webp", "Acorn": "3t0sr0iJlvOIlCBMHd8o6ZvbhIuFwISrzIOWbkGM.webp", "Strawberry": "WK3BcYAr5lRpozVoIrOH6JB34P9EoFSOdRhT7LVd.webp", "Raspberry": "d9Vl7KToazeXd8dEdyHZ97KCx6IfL4ALvBGKyjQv.webp", "Mango": "3KrGgTpurNDeEv3RPJnKRwd07MTzJM2A4q0BdT4d.webp", "Pistachio": "w8OFnaAvJsleCRY0g4lxrsvFFzbGCPr1Z3Jcld1Y.webp", "Kurma": "SMa09OitGfqzvObWaWidws6VrLazzM8MHoyz3LK0.webp", "Coconut": "s4hXivNT0ELSbDT9ZtGD5M0iN77Nw2OxeM10UHMs.webp", "Passionfruit": "J4fXFf1S3QcS7tRmdKTLS9wTBiVsQdwXh13R4ESH.webp", "Pear": "g3joFZxYP2MaAnToHu36Piuid3oRUSXsQi1sJwda.webp"};
+    var BOX_IMG_BASE='https://chaleurpatisserie-ops.github.io/orderla-theme/img/box/';
+    var BOX_IMGS={"Acorn": "acorn.webp", "Apam Balik": "apam-balik.webp", "Camellia": "camellia.webp", "Cherry": "cherry.webp", "Coconut": "coconut.webp", "Kurma": "kurma.webp", "La Fleur": "la-fleur.webp", "Mango": "mango.webp", "Mochi Strawberry Shortcake": "mochi-strawberry-shortcake.webp", "Mrs. Bunny": "mrs-bunny.webp", "Noir": "noir.webp", "Ornament": "ornament.webp", "Passionfruit": "passionfruit.webp", "Pear": "pear.webp", "Pecan Tartlet": "pecan-tartlet.webp", "Pistachio": "pistachio.webp", "Raspberry": "raspberry.webp", "Rudolph": "rudolph.webp", "Strawberry": "strawberry.webp"};
     window.__caBxImg=function(n){ return bxImg(n); };
     function bxImg(name){
       var key=name.split(' (')[0].trim();
@@ -451,6 +453,18 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
       im.dataset.caFit='1';
       im.style.cssText+=';max-height:'+room+'px;width:auto;max-width:100%;display:block;margin:0 auto;object-fit:contain';
     }
+    // Build Your Own Box: cover pictures with the new cake photos (Nov 2026)
+    function boxCovers(){
+      var ims=document.querySelectorAll('.ca-rimg img:not([data-ca-cov])');
+      for(var i=0;i<ims.length;i++){
+        var im=ims[i], c=im.closest('.ca-rimg'); c=c && c.parentElement;
+        var m=/^\s*Build Your Own Box of (3|4|6|9)\b/i.exec(c ? c.innerText : '');
+        im.setAttribute('data-ca-cov','0');
+        if(!m) continue;
+        im.setAttribute('data-ca-cov','1'); im.removeAttribute('srcset');
+        im.src=BOX_IMG_BASE.replace(/box\/$/,'box-cover/')+'box'+m[1]+'.webp?v=1';
+      }
+    }
     function start(){
       addHead(); scan(document.body); addFeuille();
       try { var fx=document.createElement('script'); fx.src=(window.__caSelf||'https://chaleurpatisserie-ops.github.io/orderla-theme/live/ca-theme.js').replace(/ca-theme\.js.*$/,'ca-fun.js')+'?v='+Date.now().toString().slice(0,-5); document.head.appendChild(fx); } catch(e){}
@@ -460,6 +474,7 @@ window.__caSelf=window.__caSelf||(document.currentScript&&document.currentScript
         try { addWaves(); } catch(e){}
         try { tagRows(); addVan(); } catch(e){}
         try { fitPoster(); } catch(e){}
+        try { boxCovers(); } catch(e){}
         var bs=document.querySelectorAll('.btn-outline-dark'); for (var i=0;i<bs.length;i++){ var b=bs[i]; b.classList.remove('ca-sel'); var bg=getComputedStyle(b).backgroundColor; var m=/rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?/.exec(bg); if(m && (m[4]===undefined || +m[4]>0.2) && +m[1]<235 && Math.abs(m[1]-m[2])<12) b.classList.add('ca-sel'); }
       }, 400);
       mo.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['style','disabled']});
