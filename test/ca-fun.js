@@ -400,7 +400,14 @@
         '<ol class="dg-rules"><li>9 cake coins are hiding face-down.</li><li>Each turn, flip <b>2 coins</b>. No match? They flip back.</li><li>You get <b>3 turns</b> in <b>30 seconds</b>.</li><li>Find <b>2 of the same cake</b> to open your prize!</li><li>Check out within <b>10 minutes</b> to keep it.</li></ol>'+
         '<p class="dg-prz"><b>Everyone wins something this Christmas! 🎄</b><br>🌟 RM20 off · 🎟️ RM2 off · 🍰 next cake 50% off · 🧁 RM6.99 surprise cake · 🍪 free cookie · 🎂 free birthday kit</p>'+
         '<button class="bt go" type="button">Start the game</button><button class="bt o later" type="button">Maybe later</button><p class="dg-fine">One game per phone · while stocks last · until 31 Dec 2026</p>',
-        function(m,close){ m.querySelector('.go').onclick=function(){ close(); play(); }; m.querySelector('.later').onclick=function(){ close(); D.later=1; dsave(D); showChip(); host('Tap the 🎁 button whenever you\'re ready to play!',5000); }; }, 'dg');
+        function(m,close){ ev('draw_offer');
+          m.querySelector('.go').onclick=function(){ var go=this; if(go.__busy) return;
+            if(D.done){ close(); host('This WhatsApp number has already played our Lucky Draw 🎁',6000); return; }
+            /* one game per number: if the ledger check hasn't come back yet, wait for it here (max 5s) */
+            if(LD_URL && L && L.phone && !D.checked){ go.__busy=1; go.textContent='One moment…';
+              checkPlayed(function(){ go.__busy=0; close(); if(D.done){ host('This WhatsApp number has already played our Lucky Draw 🎁',6000); return; } play(); }, 5000); return; }
+            close(); play(); };
+          m.querySelector('.later').onclick=function(){ close(); ev('draw_later'); D.later=1; dsave(D); showChip(); host('Tap the 🎁 button whenever you\'re ready to play!',5000); }; }, 'dg');
     }
     function showChip(){
       if(document.getElementById('ca-dchip') || D.done) return;
@@ -606,12 +613,16 @@
       if(P.code){ D.code=P.code; D.v=P.v; } else { D.added=1; D.paused=1; }
       dsave(D); if(msg) host(msg,7000);
     }
-    function checkPlayed(){
-      if(!L || !L.phone || !LD_URL) return;
+    function checkPlayed(cb, wait){
+      var fired=false; function fin(){ if(fired) return; fired=true; if(cb) cb(); }
+      if(!L || !L.phone || !LD_URL){ fin(); return; }
+      if(cb && wait) setTimeout(function(){ if(!fired){ D=D||{}; D.checked=1; dsave(D); fin(); } }, wait);   /* ledger slow: let them play (the ledger still keeps one game per number) */
       api('draw_check',{phone:L.phone}, function(j){
-        if(!j || !j.ok || !j.played) { D=D||{}; D.checked=1; dsave(D); return; }
+        if(fired && cb) return;
+        if(!j || !j.ok || !j.played) { D=D||{}; D.checked=1; dsave(D); fin(); return; }
         if(j.status==='won' && j.hold_until>Date.now()){ if(!D || !D.done) restoreWin(j,'Welcome back! Your Lucky Draw gift is saved for you 🎁'); }
         else { D={offered:1, done:1, result:'played', expired:1, checked:1}; dsave(D); }
+        fin();
       });
     }
     /* reopen link from WhatsApp: ?ld=token */
@@ -791,8 +802,9 @@
       if(LD_URL && L && L.phone && !D.checked && !checking){ checking=true; checkPlayed(); setTimeout(function(){ checking=false; },8000); }
       var tot=cartTotal(); if(tot===null) return;
       if(tot>=DMIN){
-        if(LD_URL && L && L.phone && !D.checked) return;
+        var onSummary=!!$('input.text-monospace') && /Order Summary/.test(document.body.innerText||'');
         if(!D.offered && gameCanOpen()){ D.offered=1; dsave(D); intro(); }
+        else if(D.offered && !D.lastCall && onSummary && !document.getElementById('ca-gm') && gameCanOpen()){ D.lastCall=1; dsave(D); ev('draw_last'); var c0=document.getElementById('ca-dchip'); if(c0) c0.remove(); intro(); }   /* last call before paying */
         else if(D.offered && !document.getElementById('ca-gm')) showChip();
       } else {
         var c=document.getElementById('ca-dchip'); if(c) c.remove();
